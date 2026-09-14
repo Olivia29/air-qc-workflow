@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIIA-AI · AIR+质控工作流编排界面 · 原型 V1.0</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#E9F1FB;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#B9C6DC;border-radius:4px}
+
+/* 顶栏 */
+.top{height:50px;background:#101B31;display:flex;align-items:center;padding:0 18px;color:#fff;gap:12px;flex-shrink:0}
+.top .logo{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700}
+.top .logo .cube{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2A7FFF,#00C896);display:flex;align-items:center;justify-content:center;font-size:13px}
+.top .tagline{font-size:11.5px;color:#8AA0C8}
+.top .sp{flex:1}
+.top .live{display:flex;align-items:center;gap:6px;font-size:11px;color:#8EF0CD;background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.3);padding:3px 12px;border-radius:20px}
+.dot{width:7px;height:7px;border-radius:50%;background:#00C896;animation:pl 1.6s infinite}
+@keyframes pl{50%{opacity:.3}}
+.top .user{display:flex;align-items:center;gap:8px;font-size:12px;color:#B7C6DE}
+.av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2A7FFF,#00C896);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+/* 导航 */
+.nav{height:44px;background:#1B2B4C;display:flex;align-items:center;padding:0 12px;gap:2px;flex-shrink:0}
+.nav .ni{display:flex;align-items:center;gap:7px;padding:0 18px;height:100%;color:#9FB2D4;font-size:13.5px;border-bottom:3px solid transparent;cursor:pointer;user-select:none}
+.nav .ni:hover{color:#fff}
+.nav .ni.on{color:#fff;border-bottom-color:#4DA3FF;font-weight:600}
+.nav .ni .badge{background:#E54040;color:#fff;font-size:9.5px;padding:0 7px;border-radius:10px;line-height:15px}
+.nav .note{margin-left:auto;font-size:11px;color:#6E84AD;display:flex;gap:10px;align-items:center}
+/* 页面 */
+.page{display:none;height:calc(100vh - 94px);overflow-y:auto}
+.page.on{display:block}
+.wrap{max-width:1440px;margin:0 auto;padding:16px 20px 30px}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.ph h2{font-size:19px;color:#16294D}
+.ph .crumb{font-size:12px;color:#7E93B8}
+.ph .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.card{background:#fff;border:1px solid #D8E4F5;border-radius:12px;margin-bottom:14px;box-shadow:0 1px 4px rgba(24,60,130,.05)}
+.card .ch{padding:12px 18px;border-bottom:1px solid #EBF1FA;display:flex;align-items:center;font-weight:700;font-size:14px;color:#16294D}
+.card .ch .r{margin-left:auto;display:flex;gap:8px;font-weight:400;align-items:center}
+.card .cb{padding:14px 18px}
+/* 检查列表 */
+.srow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.stat{background:#fff;border:1px solid #D8E4F5;border-radius:12px;padding:12px 16px}
+.stat .k{font-size:11.5px;color:#7E93B8}
+.stat .v{font-size:22px;font-weight:800;color:#16294D;margin-top:2px}
+.stat .s{font-size:11px;color:#8AA0C8;margin-top:2px}
+table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
+.tb th{background:#F3F7FD;color:#62779E;font-weight:600;padding:9px 12px;text-align:left;border-bottom:1px solid #E3ECF9;white-space:nowrap}
+.tb td{padding:10px 12px;border-bottom:1px solid #EEF3FB;vertical-align:middle}
+.tb tr:hover td{background:#F8FBFE}
+.tb tr.cur td{background:#EDF4FF}
+.mono{font-family:Consolas,monospace}
+.mut{color:#8AA0C8}
+/* 迷你轨迹 */
+.mini-pipe{display:flex;align-items:center;gap:2px;min-width:230px}
+.mp-node{width:16px;height:16px;border-radius:50%;border:2px solid #C9D7EC;background:#fff;flex-shrink:0;position:relative}
+.mp-node i{position:absolute;inset:-5px;font-size:9px;font-style:normal;display:flex;align-items:center;justify-content:center}
+.mp-line{height:2px;flex:1;background:#DCE6F5;min-width:8px}
+.mp-node.done{background:#16A34A;border-color:#16A34A}
+.mp-line.done{background:#16A34A}
+.mp-node.run{background:#2A7FFF;border-color:#2A7FFF;animation:pl 1s infinite}
+.mp-node.warn{background:#F59E0B;border-color:#F59E0B}
+.mp-node.block{background:#E54040;border-color:#E54040}
+.mp-node.gray{background:#B8C6DE;border-color:#B8C6DE}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:12px;font-size:11px;white-space:nowrap}
+.tag.gray{background:#EEF2F8;color:#5E7496}.tag.green{background:#E3F7EC;color:#0E8A4C}
+.tag.red{background:#FDE7E7;color:#D92D20}.tag.blue{background:#E4EEFF;color:#1A5FD0}
+.tag.orange{background:#FEF0DC;color:#C25E00}.tag.purple{background:#F1E9FD;color:#6E3FD4}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:7px;font-size:12.5px;background:#fff;border:1px solid #C4D4EC;color:#35507E;transition:all .12s;white-space:nowrap}
+.btn:hover{border-color:#2A7FFF;color:#1A5FD0}
+.btn.pri{background:#2A7FFF;border-color:#2A7FFF;color:#fff}
+.btn.pri:hover{background:#1E6FEE;color:#fff}
+.btn.grn{background:#0E8A4C;border-color:#0E8A4C;color:#fff}
+.btn.sm{padding:4px 11px;font-size:11.5px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+/* ====== 轨迹条（核心） ====== */
+.pipe-head{padding:16px 18px 4px}
+.pipe-legend{display:flex;gap:14px;font-size:10.5px;color:#7E93B8;margin-bottom:8px;flex-wrap:wrap}
+.pipe-legend span{display:flex;align-items:center;gap:5px}
+.pipe-legend .sw{width:11px;height:11px;border-radius:50%;display:inline-block}
+.pipe{display:flex;align-items:flex-start;padding:6px 8px 2px;position:relative}
+.stage{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative;z-index:2}
+.stage .st-ico{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:#F0F4FB;border:2.5px solid #CBD9EF;position:relative;transition:all .15s;z-index:2}
+.stage:hover .st-ico{transform:scale(1.07)}
+.stage .st-ico .ring{position:absolute;inset:-6px;border:2px solid rgba(42,127,255,.3);border-radius:50%;display:none}
+.stage.run .st-ico{background:#E4EEFF;border-color:#2A7FFF;box-shadow:0 0 0 5px rgba(42,127,255,.13)}
+.stage.run .st-ico .ring{display:block;border-color:rgba(42,127,255,.25);border-top-color:transparent;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stage.done .st-ico{background:#16A34A;border-color:#16A34A;color:#fff}
+.stage.warn .st-ico{background:#F59E0B;border-color:#F59E0B;color:#fff}
+.stage.block .st-ico{background:#E54040;border-color:#E54040;color:#fff;box-shadow:0 0 0 5px rgba(229,64,64,.13)}
+.stage.fail .st-ico{background:#B8C6DE;border-color:#8A9FC8;color:#fff}
+.stage.skip .st-ico{background:#F5F7FB;border-color:#DDE6F3;color:#B8C6DE}
+.stage .st-name{font-size:12px;font-weight:700;color:#35507E;margin-top:6px;white-space:nowrap}
+.stage.skip .st-name{color:#9FB0CE}
+.stage .st-sub{font-size:10px;color:#7E93B8;margin-top:2px;white-space:nowrap}
+.stage .st-t{font-size:9.5px;color:#A9B8D2;margin-top:1px}
+.stage .st-res{display:none;margin-top:3px}
+.stage .st-badge{font-size:9px;padding:1px 7px;border-radius:8px}
+.stage.block .st-badge{display:inline-block;background:#FDE7E7;color:#D92D20}
+.stage.warn .st-badge{display:inline-block;background:#FEF0DC;color:#C25E00}
+.stage.done .st-badge{display:inline-block;background:#E3F7EC;color:#0E8A4C}
+.stage.sel .st-ico{outline:3px solid rgba(42,127,255,.45);outline-offset:2px}
+.conn{height:2.5px;flex:0 0 34px;background:#CBD9EF;margin-top:21px;position:relative;z-index:1;min-width:20px}
+.conn.done{background:#16A34A}
+.conn.run{background:#2A7FFF}
+.conn.skp{background:#E3EAF6}
+/* 异常聚焦卡 */
+.focus-card{display:flex;align-items:center;gap:12px;border-radius:10px;padding:11px 16px;margin:10px 16px 4px;border:1px solid;animation:pop .25s}
+@keyframes pop{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
+.focus-card.block{background:#FEF3F2;border-color:#F4C4C4}
+.focus-card.warn{background:#FFF8EB;border-color:#F2D9A8}
+.focus-card.fail{background:#F4F6FB;border-color:#CFD9EC}
+.focus-card .f-ico{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;flex-shrink:0}
+.focus-card.block .f-ico{background:#E54040}.focus-card.warn .f-ico{background:#F59E0B}.focus-card.fail .f-ico{background:#8A9FC8}
+.focus-card .f-tx{flex:1;min-width:0}
+.focus-card .f-t{font-weight:700;font-size:13px}
+.focus-card .f-s{font-size:11.5px;color:#5E7496;margin-top:2px;line-height:1.6}
+/* case 详情 */
+.case-top{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.case-top .who{display:flex;gap:10px;align-items:center}
+.ava-lg{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#2A7FFF,#5FB3FF);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700}
+.tabs{display:flex;gap:2px;border-bottom:2px solid #DCE6F5;margin-top:6px;flex-wrap:wrap}
+.tabx{padding:8px 16px;font-size:13px;color:#5E7496;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:6px}
+.tabx.on{color:#1A5FD0;font-weight:700;border-bottom-color:#2A7FFF}
+.tabx.off{color:#B8C6DE;cursor:not-allowed}
+/* 环节明细 */
+.stage-detail{display:none;border:1px solid #DCE6F5;border-left:4px solid #2A7FFF;border-radius:10px;background:#F8FBFE;padding:14px 18px;margin:10px 16px}
+.stage-detail.show{display:block;animation:pop .2s}
+.sd-h{font-weight:700;color:#16294D;font-size:13.5px;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sd-h .x{margin-left:auto;color:#A9B8D2;cursor:pointer;font-size:16px}
+.sd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 16px;font-size:12px}
+.sd-grid .it{display:flex;justify-content:space-between;border-bottom:1px dashed #E3ECF9;padding:5px 0}
+.sd-grid .it .k{color:#7E93B8}
+/* 报告文本 */
+.docbox{background:#fff;border:1px solid #DCE6F5;border-radius:10px;padding:14px 18px;line-height:2;font-size:13px}
+.docbox h4{color:#16294D;font-size:13px;display:flex;align-items:center;gap:7px;margin:8px 0 2px}
+.docbox h4::before{content:"";width:3px;height:13px;background:#2A7FFF;border-radius:2px}
+.hl-r{background:#FEE4E4;border-bottom:2px solid #E54040;padding:0 2px;border-radius:2px}
+.hl-y{background:#FEF3C7;border-bottom:2px solid #F59E0B;padding:0 2px;border-radius:2px}
+/* 播放旅程 */
+.journey-line{display:flex;gap:8px;align-items:center;padding:10px 0;flex-wrap:wrap}
+.jnode{display:flex;align-items:center;gap:7px;padding:6px 13px;border-radius:20px;font-size:12px;background:#F0F4FB;border:1px solid #DCE6F5;color:#62779E;opacity:.5;transition:all .3s}
+.jnode .jn{width:20px;height:20px;border-radius:50%;background:#B8C6DE;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center}
+.jnode.act{opacity:1;background:#E4EEFF;border-color:#2A7FFF;color:#1A5FD0;font-weight:700}
+.jnode.act .jn{background:#2A7FFF}
+.jnode.over{opacity:1;background:#E3F7EC;border-color:#9BDCB8;color:#0E8A4C}
+.jnode.over .jn{background:#16A34A}
+.jnode.blocked{opacity:1;background:#FEF3F2;border-color:#F4C4C4;color:#D92D20}
+.jnode.blocked .jn{background:#E54040}
+.jarr{color:#B8C6DE}
+/* 模板编辑 */
+.tpl-wrap{display:grid;grid-template-columns:270px 1fr;gap:14px;align-items:start}
+.tpl-item{border:1px solid #DCE6F5;border-radius:10px;padding:11px 13px;margin-bottom:8px;cursor:pointer;background:#fff;font-size:12.5px}
+.tpl-item:hover{border-color:#9DBDF2}
+.tpl-item.on{border-color:#2A7FFF;background:#F4F8FF;box-shadow:0 0 0 2px rgba(42,127,255,.12)}
+.tpl-item .tn{font-weight:700;color:#16294D}
+.tpl-item .ts{font-size:11px;color:#8AA0C8;margin-top:3px;line-height:1.7}
+.switch{position:relative;width:34px;height:19px;background:#C9D7EC;border-radius:20px;transition:.2s;flex-shrink:0}
+.switch.on{background:#16A34A}
+.switch::after{content:"";position:absolute;width:15px;height:15px;background:#fff;border-radius:50%;top:2px;left:2px;transition:.2s}
+.switch.on::after{left:17px}
+.switch.lock{background:#E3EAF6;cursor:not-allowed}
+.switch.lock::after{background:#B8C6DE}
+.sw-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #EEF3FB;font-size:12.5px}
+.sw-row:last-child{border:none}
+.sw-row .st-ico{width:30px;height:30px;border-radius:50%;background:#F0F4FB;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sw-row .tt{flex:1;min-width:0}
+.sw-row .tt b{color:#35507E;font-size:12.5px}
+.sw-row .tt .ds{font-size:11px;color:#8AA0C8;margin-top:2px;line-height:1.6}
+/* 画布预览 */
+.canvas-bg{background:#0F1D38;border-radius:12px;padding:20px;min-height:330px;position:relative;overflow:hidden}
+.canvas-bg::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#233252 1px,transparent 1px);background-size:22px 22px}
+.cv-node{position:absolute;background:#fff;border-radius:10px;padding:9px 12px;font-size:11.5px;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:2;display:flex;align-items:center;gap:8px;min-width:130px}
+.cv-node .ci{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0}
+.cv-node .ct b{font-size:11.5px;color:#16294D;display:block}
+.cv-node .ct span{font-size:9.5px;color:#8AA0C8}
+.cv-node.sel{outline:2.5px solid #4DA3FF;outline-offset:2px}
+.cv-node.blocked .ci{background:#E54040}
+.cv-node.done .ci{background:#16A34A}
+.cv-node.ai .ci{background:#2A7FFF}
+.cv-node.man .ci{background:#6E3FD4}
+.cv-line{position:absolute;background:#4DA3FF;height:2px;transform-origin:left center;z-index:1;opacity:.75}
+.cv-line.bad{background:#E54040}
+/* 弹层 / toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#16294D;color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;z-index:99;display:none;box-shadow:0 8px 26px rgba(0,0,0,.3)}
+.toast.show{display:block;animation:pop .25s}
+.legend-inline{display:flex;gap:12px;font-size:11px;color:#7E93B8;align-items:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="logo"><span class="cube">⛓</span>MIIA-AI <span style="font-size:12px;font-weight:400;color:#8AA0C8">AIR + 质控工作流编排界面</span></div>
+  <span class="tagline">中期落地规划 · P0 方案原型</span>
+  <div class="sp"></div>
+  <div class="live"><span class="dot"></span>流水线引擎运行中</div>
+  <div class="user"><span class="av">VV</span>产品 · VV</div>
+</div>
+<div class="nav">
+  <div class="ni on" data-v="cases">📋 检查流水线</div>
+  <div class="ni" data-v="detail">🔍 单 Case 轨迹 <span class="badge" id="navAlert" style="display:none">P0</span></div>
+  <div class="ni" data-v="tpl">⚙️ 流程模板（表单版）</div>
+  <div class="ni" data-v="canvas">🧩 编排画布 <span class="tag purple" style="padding:0 6px;font-size:9px">二期</span></div>
+  <div class="note"><span>轨迹可见 · 异常聚焦 · 规则可配 · 单 case 多应用同源</span></div>
+</div>
+
+<!-- ============ 页面1：检查流水线列表 ============ -->
+<div class="page on" id="pg-cases">
+  <div class="wrap">
+    <div class="ph"><h2>📋 检查流水线</h2><span class="crumb">一次检查 = 一条流水线 · 状态全程可见</span>
+      <div class="r"><button class="btn sm" onclick="toast('演示环境 · 数据为模拟')">⬆ 批量发起</button></div></div>
+    <div class="srow">
+      <div class="stat"><div class="k">今日检查</div><div class="v">5</div><div class="s">胸部/颅脑/乳腺/DR</div></div>
+      <div class="stat"><div class="k">流水线运行中</div><div class="v" style="color:#2A7FFF">2</div><div class="s">AI 检出 / 质控执行中</div></div>
+      <div class="stat"><div class="k">P0 拦截待处理</div><div class="v" style="color:#E54040">1</div><div class="s">报告质控 · 需医生处理</div></div>
+      <div class="stat"><div class="k">全流程通过</div><div class="v" style="color:#0E8A4C">2</div><div class="s">已发布归档</div></div>
+    </div>
+    <div class="card">
+      <div class="ch">流水线状态总览 <span class="r"><div class="legend-inline">
+        <span><span class="sw" style="background:#CBD9EF"></span>待执行</span><span><span class="sw" style="background:#2A7FFF"></span>执行中</span>
+        <span><span class="sw" style="background:#16A34A"></span>通过</span><span><span class="sw" style="background:#F59E0B"></span>告警</span>
+        <span><span class="sw" style="background:#E54040"></span>拦截/失败</span></div></span></div>
+      <div class="cb" style="padding:4px 0 0">
+        <table class="tb"><tr><th>患者</th><th>检查</th><th>流水线轨迹</th><th>当前环节</th><th>结果</th><th>操作</th></tr>
+        <tbody id="caseRows"></tbody></table>
+      </div>
+    </div>
+    <div class="card"><div class="cb" style="font-size:12px;color:#62779E;line-height:1.9">
+      💡 本页 = 融合 PRD「患者 list 质控入口」+ 编排规划「过程可见」。点击任意 case 进入<b>单 case 轨迹视图</b>：五环节状态、异常聚焦、环节明细、与各应用 Tab 联动。
+    </div></div>
+  </div>
+</div>
+
+<!-- ============ 页面2：单 Case 轨迹 ============ -->
+<div class="page" id="pg-detail">
+  <div class="wrap">
+    <div class="ph"><h2>🔍 单 Case 工作流轨迹</h2>
+      <span class="crumb" id="crumbCase"></span>
+      <div class="r">
+        <button class="btn sm" onclick="goView('cases')">← 返回列表</button>
+        <button class="btn sm" onclick="toggleJourney()" id="btnJourney">▶ 播放完整旅程</button>
+      </div></div>
+
+    <!-- case 顶栏 -->
+    <div class="card" style="margin-bottom:10px"><div class="cb case-top">
+      <div class="who"><span class="ava-lg" id="csAv"></span><div>
+        <div style="font-size:16px;font-weight:800;color:#16294D" id="csName"></div>
+        <div class="mut" style="font-size:12px" id="csMeta"></div></div></div>
+      <div style="border-left:1px solid #E3ECF9;padding-left:18px" class="mut" id="csItem"></div>
+      <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px" id="csRes"></div>
+    </div></div>
+
+    <!-- 轨迹条 -->
+    <div class="card" style="margin-bottom:10px">
+      <div class="pipe-head"><div class="legend-inline" style="margin-bottom:4px">流水线：按「胸部 CT AIR+质控」模板执行 · 环节状态与质控系统同源</div></div>
+      <div class="pipe" id="pipeline"></div>
+      <div id="focusCard"></div>
+      <div class="stage-detail" id="stageDetail"></div>
+    </div>
+
+    <!-- 旅程播放 -->
+    <div class="card" id="journeyCard" style="display:none"><div class="ch">▶ Case 完整旅程演示 <span class="r"><button class="btn sm" onclick="toggleJourney(false)">收起</button></span></div>
+      <div class="cb"><div class="journey-line" id="journeyLine"></div>
+      <div style="margin-top:8px;font-size:12px;color:#62779E;line-height:1.9" id="journeyLog"></div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button class="btn sm pri" onclick="journeyStep()">⏭ 下一步</button>
+        <button class="btn sm" onclick="journeyReset()">↺ 重播</button>
+        <span class="mut" style="font-size:11px;align-self:center">分步演示每个环节的进入、输出、状态变化</span></div>
+      </div></div>
+
+    <!-- 多应用 Tab -->
+    <div class="tabs" id="caseTabs"></div>
+    <div id="tabBody"></div>
+  </div>
+</div>
+
+<!-- ============ 页面3：流程模板表单版 ============ -->
+<div class="page" id="pg-tpl">
+  <div class="wrap">
+    <div class="ph"><h2>⚙️ 流程模板编辑器（表单版）</h2><span class="crumb">定义视图 · 管理员配置 · 一期先做表单不做画布</span>
+      <div class="r"><button class="btn sm pri" onclick="toast('已保存模板「胸部CT AIR+质控 v1.2」')">💾 保存模板</button></div></div>
+    <div class="tpl-wrap">
+      <div>
+        <div class="tpl-item on"><div class="tn">胸部 CT AIR + 质控</div><div class="ts">全流程：AI检出→影像质控→AIR报告→报告质控→人工审核<br>版本 v1.2 · 使用中 · 4 家机构</div></div>
+        <div class="tpl-item"><div class="tn">颅脑 CT AIR + 质控</div><div class="ts">复制于胸部模板 · 待验证<br>版本 v0.9 · 草稿</div></div>
+        <div class="tpl-item"><div class="tn">DR 胸片 · 仅质控</div><div class="ts">无 AIR 报告环节（置灰跳过）<br>版本 v1.0 · 使用中</div></div>
+        <div class="tpl-item"><div class="tn">乳腺 MR · 质控(实时)</div><div class="ts">仅实时质控 · 终末待接入<br>版本 v0.5 · 草稿</div></div>
+        <button class="btn sm" style="width:100%;justify-content:center" onclick="toast('克隆当前模板为新草稿（演示）')">＋ 克隆模板</button>
+      </div>
+      <div class="card">
+        <div class="ch">模板：胸部 CT AIR + 质控 <span class="r"><span class="tag green">使用中</span></span></div>
+        <div class="cb">
+          <div class="sw-row"><span class="st-ico" style="background:#E4EEFF">🤖</span><div class="tt"><b>① AI 检出编排</b><div class="ds">并行调用多家 AI（肺结节/骨折/肺炎），按核心定义表归并，门槛 v1.1</div></div><div class="switch on" onclick="swT(this)"></div></div>
+          <div class="sw-row"><span class="st-ico" style="background:#E3F7EC">🖼️</span><div class="tt"><b>② 影像质控 · 终末</b><div class="ds">扫描后触发；体位/图像质量/序列完整性/伪影</div></div><div class="switch on" onclick="swT(this)"></div></div>
+          <div class="sw-row"><span class="st-ico" style="background:#F1E9FD">📄</span><div class="tt"><b>③ AIR 报告生成</b><div class="ds">多语料喂 LLM → 报告草稿（影像所见+诊断意见）</div></div><div class="switch on" onclick="swT(this)"></div></div>
+          <div class="sw-row"><span class="st-ico" style="background:#FEF0DC">🛡️</span><div class="tt"><b>④ 报告质控</b><div class="ds">实时（草稿保存时）+ 终末（提交时）；术语/逻辑/影像-报告矛盾</div></div><div class="switch on" onclick="swT(this)"></div></div>
+          <div class="sw-row"><span class="st-ico" style="background:#F4F6FB">✍️</span><div class="tt"><b>⑤ 人工审核</b><div class="ds">医生确认 / 质控员终审</div></div><div class="switch on" onclick="swT(this)"></div></div>
+          <div class="sw-row"><span class="st-ico" style="background:#F4F6FB">📦</span><div class="tt"><b>发布归档</b><div class="ds">以影禾名义发布 · 留痕</div></div><div class="switch on" onclick="swT(this)"></div></div>
+        </div>
+        <div class="cb" style="border-top:1px solid #EEF3FB;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div><div style="font-weight:700;color:#35507E;font-size:12.5px;margin-bottom:6px">🚦 拦截策略</div>
+            <div class="sw-row" style="padding:6px 0"><div class="tt" style="font-size:12px">报告质控 P0 矛盾 → 强制拦截</div><span class="tag red" style="font-size:10px">平台锁死</span></div>
+            <div class="sw-row" style="padding:6px 0"><div class="tt" style="font-size:12px">影像质控未达标 → 放行并标记</div><div class="switch" onclick="swT(this)"></div></div>
+            <div class="sw-row" style="padding:6px 0"><div class="tt" style="font-size:12px">Text-Only 边界校验</div><span class="tag red" style="font-size:10px">平台锁死</span></div></div>
+          <div><div style="font-weight:700;color:#35507E;font-size:12.5px;margin-bottom:6px">⏱ 超时/重试策略</div>
+            <div class="sw-row" style="padding:6px 0"><div class="tt" style="font-size:12px">AI 检出 &gt; 120s → 自动重试 1 次 → 转人工</div><div class="switch on" onclick="swT(this)"></div></div>
+            <div class="sw-row" style="padding:6px 0"><div class="tt" style="font-size:12px">质控服务不可用 → 降级放行（P0 除外）</div><div class="switch on" onclick="swT(this)"></div></div>
+            <div class="sw-row" style="padding:6px 0"><div class="tt" style="font-size:12px">报告质控响应 &gt; 5s → 提示稍后重试</div><div class="switch" onclick="swT(this)"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card"><div class="cb" style="font-size:12px;color:#62779E;line-height:1.9">📌 设计说明：一期先做<b>表单版</b>——解决"规则可配 + 可追溯"；可视化拖拽画布是二期体验升级，同一套数据模型，不重复建设。D3 决策：P0 拦截与 Text-Only 平台锁死，医院只能配阈值与提醒。</div></div>
+  </div>
+</div>
+
+<!-- ============ 页面4：编排画布（二期预览） ============ -->
+<div class="page" id="pg-canvas">
+  <div class="wrap">
+    <div class="ph"><h2>🧩 编排画布（二期预览）</h2><span class="crumb">同一套流程数据模型的可视化编辑器 · 示意</span>
+      <div class="r"><span class="tag purple">二期范围 · 本期仅供方向确认</span></div></div>
+    <div class="card"><div class="cb">
+      <div class="canvas-bg" id="cvBg" style="height:360px;position:relative"></div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn sm" onclick="toast('画布为二期功能（演示）')">＋ 环节库</button>
+        <button class="btn sm" onclick="toast('分支条件编辑（演示）')">🔀 连线条件</button>
+        <span class="mut" style="font-size:11px">拖拽节点 → 连线 → 条件：「通过→下一步」「P0→转人工循环」「未达标非P0→标记放行」</span></div>
+    </div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+
+/* ================= 数据模型 ================= */
+/* 环节定义 */
+const STAGES=[
+  {id:'ai',   icon:'🤖', name:'AI 检出', sub:'多厂商并行', roles:'平台'},
+  {id:'img',  icon:'🖼️', name:'影像质控', sub:'体位/图像', roles:'AI+技师'},
+  {id:'air',  icon:'📄', name:'AIR 报告', sub:'LLM 生成', roles:'AI'},
+  {id:'rep',  icon:'🛡️', name:'报告质控', sub:'实时/终末', roles:'AI+医生'},
+  {id:'audit',icon:'✍️', name:'人工审核', sub:'医生/质控员', roles:'医生'},
+  {id:'pub',  icon:'📦', name:'发布归档', sub:'发布留痕', roles:'平台'}
+];
+/* case 数据：st = 每环节状态 none/run/done/warn/block/fail/skip */
+const CASES=[
+ {name:'杨十',sex:'男',age:68,av:'杨',pid:'PID1564613',exam:'EXAM2026018',date:'2026-03-12 14:30',item:'上腹部+盆腔增强CT',modal:'CT',tpl:'胸部 CT AIR+质控',
+  sts:{ai:'done',img:'done',air:'done',rep:'block',audit:'none',pub:'none'},
+  times:{ai:'12:01',img:'12:03',air:'12:05',rep:'12:06'},
+  focus:{type:'block',stage:'rep',title:'报告质控 P0 拦截 · 需医生处理',desc:'影像中检测到胆囊，报告中描述"胆囊缺如""胆囊术后缺如"，存在矛盾。采纳建议后自动修订报告文本并重打分，方可提交。',act:'采纳建议 → 修订报告'},
+  repIssues:[
+    {t:'影像-报告器官存在性矛盾',sev:'P0',d:'影像检测到胆囊，报告描述"胆囊缺如"，矛盾。',sug:'改为"胆囊切除术后改变"',ok:true},
+    {t:'器官存在性矛盾',sev:'P0',d:'影像检测到子宫，报告描述"子宫术后缺如"。',sug:'核对病史后修正',ok:false},
+    {t:'术语不规范',sev:'P1',d:'"肠管外置"表述不规范。',sug:'改为"肠管疝出（腹壁疝）"',ok:false}
+  ],
+  repScore:92,
+  findings:'肝脏大小形态未见异常。门静脉不宽，肝内外胆管无扩张，<b class="hl-r">胆囊术后缺如</b>。脾不大。膀胱充盈良好。双侧附件区未见异常。左下腹可见<b class="hl-y">肠管外置</b>改变。'},
+ {name:'李慧',sex:'女',age:45,av:'李',pid:'PID1573201',exam:'EXAM2026055',date:'2026-03-12 09:18',item:'胸部 CT 平扫',modal:'CT',tpl:'胸部 CT AIR+质控',
+  sts:{ai:'done',img:'done',air:'done',rep:'done',audit:'done',pub:'done'},
+  times:{ai:'09:20',img:'09:22',air:'09:24',rep:'09:26',audit:'09:41',pub:'09:42'},
+  focus:null,repIssues:[],repScore:98,
+  findings:'双侧胸廓对称。双肺纹理清晰，未见实变及肿块。纵隔居中。' },
+ {name:'王强',sex:'男',age:52,av:'王',pid:'PID1542208',exam:'EXAM2026011',date:'2026-03-12 09:05',item:'颅脑 CT 平扫',modal:'CT',tpl:'颅脑 CT AIR+质控',
+  sts:{ai:'done',img:'warn',air:'none',rep:'none',audit:'none',pub:'none'},
+  times:{ai:'09:07',img:'09:09'},focus:{type:'warn',stage:'img',title:'影像质控告警 · 可放行',desc:'后颅窝可见硬化束伪影，脑干显示受限（P2）。已标记放行，不影响 AIR 继续。',act:'继续流程'},
+  repIssues:[],repScore:null,
+  findings:'双侧大脑半球对称，中线结构居中。右侧基底节区点状低密度灶，考虑腔隙性梗塞。' },
+ {name:'赵敏',sex:'女',age:33,av:'赵',pid:'PID1538004',exam:'EXAM2026088',date:'2026-03-11 16:42',item:'乳腺 MR 增强',modal:'MR',tpl:'乳腺 MR · 质控(实时)',
+  sts:{ai:'fail',img:'run',air:'none',rep:'none',audit:'none',pub:'none'},
+  times:{ai:'16:44'},focus:{type:'fail',stage:'ai',title:'AI 检出失败 · 已自动重试 1 次',desc:'服务超时 &gt;120s，自动重试后仍失败。可手动重新调用或标记人工处理。',act:'重新调用'},
+  repIssues:[],repScore:null,
+  findings:'双侧乳腺实质内未见明确肿块。' },
+ {name:'陈晨',sex:'男',age:28,av:'陈',pid:'PID1588110',exam:'EXAM2026022',date:'2026-03-11 11:02',item:'DR 胸部正位',modal:'DR',tpl:'DR 胸片 · 仅质控',
+  sts:{ai:'skip',img:'skip',air:'skip',rep:'done',audit:'done',pub:'done'},
+  times:{rep:'11:10',audit:'11:15',pub:'11:16'},focus:null,repIssues:[],repScore:null,
+  findings:'双肺纹理清晰，心影不大。' }
+];
+let cur=0, curStage=null, journeyState=null, journeyTimer=null;
+
+/* ================= 通用 ================= */
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2500);}
+function goView(v){$$('.page').forEach(p=>p.classList.remove('on'));$('#pg-'+v).classList.add('on');$$('.nav .ni').forEach(n=>n.classList.toggle('on',n.dataset.v===v));if(v==='cases')renderCases();if(v==='detail')renderDetail();if(v==='canvas')renderCanvas();window.scrollTo(0,0);}
+$$('.nav .ni').forEach(n=>n.addEventListener('click',()=>goView(n.dataset.v)));
+
+function stIcon(s){return {done:'✓',run:'…',warn:'!',block:'✕',fail:'↻',skip:'–',none:'·'}[s]||'·';}
+function stClass(s){return s;}
+
+/* ================= 检查流水线列表 ================= */
+function renderCases(){
+  const tb=$('#caseRows');
+  tb.innerHTML=CASES.map((c,i)=>{
+    const allDone=Object.entries(c.sts).filter(([k])=>k!=='pub').every(([,v])=>v==='done'||v==='skip')&&c.sts.pub==='done';
+    const hasBlock=Object.values(c.sts).includes('block');
+    const curStageName=Object.entries(c.sts).find(([,v])=>v==='run'||v==='block'||v==='warn')?.[0];
+    const curLbl=curStageName?STAGES.find(s=>s.id===curStageName).name:(hasBlock?'需处理':(allDone?'已发布':'运行中'));
+    const resTag = hasBlock?'<span class="tag red">P0 待处理</span>':allDone?'<span class="tag green">✓ 已发布</span>':(Object.values(c.sts).includes('fail')?'<span class="tag gray">失败可重试</span>':'<span class="tag blue">进行中</span>');
+    return `<tr class="${i===0?'cur':''}" onclick="openCase(${i})" style="cursor:pointer">
+      <td><div style="display:flex;gap:9px;align-items:center"><span class="ava-lg" style="width:34px;height:34px;font-size:13px">${c.av}</span><div><b>${c.name}</b> ${c.sex} ${c.age}岁<br><span class="mut mono" style="font-size:10.5px">${c.pid}</span></div></div></td>
+      <td><b>${c.exam}</b><br><span class="mut" style="font-size:10.5px">${c.date}</span></td>
+      <td>${miniPipe(c.sts)}</td>
+      <td><b style="color:#35507E">${curLbl}</b></td><td>${resTag}</td>
+      <td><span class="btn sm pri" style="pointer-events:none">查看轨迹 ›</span></td></tr>`;
+  }).join('');
+}
+function miniPipe(sts){
+  const ids=STAGES.map(s=>s.id);
+  return `<div class="mini-pipe">${ids.map((id,i)=>{
+    const s=sts[id]||'none';
+    const cls=s==='done'?'done':s==='run'?'run':s==='warn'?'warn':s==='block'?'block':(s==='skip'?'gray':(s==='fail'?'warn':''));
+    const ico={done:'✓',run:'',warn:'!',block:'✕',fail:'↻'}[s]||'';
+    return `${i>0?`<span class="mp-line ${s==='done'?'done':''}"></span>`:''}<span class="mp-node ${cls}">${ico?'<i>'+ico+'</i>':''}</span>`;
+  }).join('')}</div>`;
+}
+
+/* ================= 单 Case 轨迹 ================= */
+function openCase(i){cur=i;curStage=null;journeyReset(true);goView('detail');}
+function renderDetail(){
+  const c=CASES[cur];
+  const sts=c.sts;
+  $('#crumbCase').textContent=`${c.exam} · ${c.tpl}`;
+  $('#csAv').textContent=c.av;
+  $('#csName').textContent=`${c.name} ${c.sex} ${c.age}岁`;
+  $('#csMeta').textContent=`${c.pid} · ${c.date}`;
+  $('#csItem').innerHTML=`<div style="font-size:11px;color:#7E93B8">检查项目</div><b style="color:#35507E">${c.item}</b>`;
+  const hasBlock=Object.values(sts).includes('block');
+  const allDone=Object.values(sts).every(v=>v==='done'||v==='skip');
+  const scoreHtml = c.repScore?`<div style="display:flex;align-items:baseline;gap:4px"><b style="font-size:26px;color:${c.repScore>=90?'#0E8A4C':'#C25E00'}">${c.repScore}</b><span class="mut">/100</span></div>`:'';
+  $('#csRes').innerHTML = hasBlock
+    ? `<span class="tag red" style="font-size:12px">✕ 拦截待处理</span>${scoreHtml}`
+    : allDone?`<span class="tag green">✓ 全流程通过 · 已发布</span>${scoreHtml}`
+    : `<span class="tag blue">⏳ 流水线运行中</span>${scoreHtml}`;
+  $('#navAlert').style.display=hasBlock?'inline-block':'none';
+  renderPipe();
+  renderTabs();
+}
+function renderPipe(){
+  const c=CASES[cur];const sts=c.sts;
+  $('#pipeline').innerHTML=STAGES.map((s,i)=>{
+    const st=sts[s.id]||'none';
+    const sub=st==='done'?(c.times[s.id]||''):st==='run'?'执行中…':st==='warn'?'告警':st==='block'?'拦截':st==='fail'?'失败':st==='skip'?'未接入':'待执行';
+    return `${i>0?`<div class="conn ${st==='done'?'done':st==='run'?'run':''}"></div>`:''}
+      <div class="stage ${st} ${curStage===s.id?'sel':''}" onclick="pickStage('${s.id}')" data-st="${s.id}">
+        <div class="st-ico">${s.icon}<span class="ring"></span></div>
+        <div class="st-name">${s.name}</div>
+        <div class="st-sub">${sub}</div>
+        <div class="st-t">${c.times[s.id]?('· '+c.times[s.id]):''}</div>
+      </div>`;
+  }).join('');
+  renderFocus();
+}
+function pickStage(id){
+  curStage = curStage===id?null:id;
+  const c=CASES[cur];
+  $('#pipeline').querySelectorAll('.stage').forEach(el=>el.classList.toggle('sel',el.dataset.st===id));
+  const sd=$('#stageDetail');
+  if(!id){sd.classList.remove('show');return;}
+  const s=STAGES.find(x=>x.id===id), st=c.sts[id]||'none';
+  const rows={
+    ai:[['调用 AI','肺结节·联影 / 骨折·联影 / 肺炎·推想'],['归并','核心定义表 v1.1 · 文本结果'],['耗时','12.4s'],['状态',st==='done'?'✓ 检出 3 病灶':st==='fail'?'✕ 超时失败':'—']],
+    img:[['检查','胸部 CT 平扫'],['评分',c.repScore!=null?'96 / A 级':'—'],['问题',st==='warn'?'1 项(P2 体位)':'0 项'],['处置',st==='done'?'达标放行':st==='warn'?'标记放行':st==='run'?'质控执行中…':'待执行']],
+    air:[['报告草稿','已生成（影像所见+诊断意见）'],['模型','AIR 报告 LLM'],['耗时','8.1s'],['状态',st==='done'?'✓ 已生成':st==='block'?'待质控通过后重生成':'—']],
+    rep:[['模式','实时(草稿)+终末(提交)'],['问题',c.repIssues.length?`${c.repIssues.length} 处`:'0 处'],['P0',c.repIssues.filter(x=>x.sev==='P0'&&!x.ok).length+' 处待处理'],['得分',c.repScore??'—']],
+    audit:[['待办人',c.sts.audit==='done'?'质控员 VV':'诊断医生'],['动作','确认报告 / 终审'],['状态',st==='done'?'✓ 已审核':st==='run'?'审核中…':'待执行']],
+    pub:[['发布','以影禾名义 · Text-Only'],['归档','质控记录 + 审核日志'],['状态',st==='done'?'✓ 已发布':'待执行']]
+  }[id]||[];
+  sd.innerHTML=`<div class="sd-h">环节明细 · ${s.name} <span class="tag gray">${s.sub}</span><span class="x" onclick="pickStage(null)">×</span></div>
+    <div class="sd-grid">${rows.map(r=>`<div class="it"><span class="k">${r[0]}</span><b style="font-weight:600;color:#35507E">${r[1]}</b></div>`).join('')}</div>
+    ${id==='rep'&&c.repIssues.length?`<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">${c.repIssues.map((q,i)=>`<div style="display:flex;gap:8px;align-items:center;font-size:11.5px;background:${q.sev==='P0'?'#FEF3F2':'#FFF8EB'};border:1px solid ${q.sev==='P0'?'#F4C4C4':'#F2D9A8'};border-radius:8px;padding:7px 11px"><span style="flex:1">${q.sev==='P0'?'<b style="color:#D92D20">P0</b>':'<b style="color:#C25E00">P1</b>'} ${q.d}</span><span class="mut" style="font-size:10.5px">${q.sug}</span>${q.ok?'<span class="tag green">已处理</span>':`<button class="btn sm grn" onclick="fixIssue(${i})">采纳</button>`}</div>`).join('')}</div>`:''}`;
+  sd.classList.add('show');
+}
+function renderFocus(){
+  const c=CASES[cur];
+  const fc=$('#focusCard');
+  if(!c.focus){fc.innerHTML='';return;}
+  const f=c.focus;
+  fc.innerHTML=`<div class="focus-card ${f.type}">
+    <div class="f-ico">${f.type==='block'?'✕':f.type==='warn'?'!':'↻'}</div>
+    <div class="f-tx"><div class="f-t">${f.title}</div><div class="f-s">${f.desc}</div></div>
+    ${f.type==='block'?`<button class="btn grn" onclick="resolveBlock()">${f.act||'处理'}</button>`:
+      f.type==='warn'?`<button class="btn pri" onclick="resolveWarn()">${f.act||'继续'}</button>`:
+      `<button class="btn pri" onclick="retryStage()">${f.act||'重试'}</button>`}
+  </div>`;
+}
+/* 处理 P0 拦截（演示：采纳全部 → 重打分 → 环节转 done） */
+function resolveBlock(){
+  const c=CASES[cur];
+  c.repIssues.forEach(q=>{if(q.sev==='P0')q.ok=true;});
+  c.sts.rep='done';c.repScore=97;c.sts.audit='run';
+  c.times.rep='12:08';c.times.audit='12:08';
+  c.focus=null;curStage=null;
+  renderDetail();
+  toast('✓ 已采纳修改建议 · 报告文本自动修订 · 重打分 97/100 → 进入人工审核');
+}
+function resolveWarn(){
+  const c=CASES[cur];c.sts.img='done';c.focus=null;c.sts.air='run';c.times.air='09:10';
+  renderDetail();toast('已标记放行 · AIR 报告继续生成');
+  setTimeout(()=>{c.sts.air='done';c.times.air='09:12';c.sts.rep='run';renderDetail();toast('AIR 报告已生成 · 报告质控触发中');},1200);
+  setTimeout(()=>{c.sts.rep='done';c.sts.audit='run';c.repScore=95;c.times.rep='09:13';c.times.audit='09:13';renderDetail();toast('报告质控通过 95 分 · 待医生审核');},2600);
+}
+function retryStage(){
+  const c=CASES[cur];c.sts.ai='run';c.focus=null;
+  renderDetail();toast('重新调用 AI 检出…');
+  setTimeout(()=>{c.sts.ai='done';c.times.ai='16:46';renderDetail();toast('✓ 重试成功 · 检出完成');},1400);
+}
+function fixIssue(i){
+  const c=CASES[cur];c.repIssues[i].ok=true;
+  if(c.repIssues.every(q=>q.sev!=='P0'||q.ok)){c.repScore=Math.min(100,c.repScore+(100-c.repScore)*.4|0);}
+  renderDetail();
+  toast('✓ 已处理该问题');
+}
+
+/* ================= 多应用 Tab ================= */
+function renderTabs(){
+  const c=CASES[cur];
+  const tabs=[
+    {id:'air',n:'🤖 AIR 报告',on:c.sts.air!=='skip'},
+    {id:'img',n:'🖼️ 影像质控',on:c.sts.img!=='skip'},
+    {id:'rep',n:'🛡️ 报告质控',on:true}
+  ];
+  $('#caseTabs').innerHTML=tabs.map((t,i)=>`<div class="tabx ${i===0?'on':''} ${t.on?'':'off'}" ${t.on?`onclick="showTab('${t.id}')"`:''}>${t.n}${t.on?'':' 🔒'}</div>`).join('');
+  showTab(tabs[0].id);
+}
+let curTab='air';
+function showTab(id){
+  curTab=id;const c=CASES[cur];
+  $$('#caseTabs .tabx').forEach(el=>el.classList.remove('on'));
+  $$('#caseTabs .tabx').forEach(el=>{if(el.textContent.includes({air:'AIR',img:'影像',rep:'报告质控'}[id]))el.classList.add('on');});
+  let body='';
+  if(id==='air'){
+    body=`<div class="card"><div class="ch">🤖 AIR 报告草稿</div><div class="cb"><div class="docbox">
+      <h4>影像所见</h4>${c.findings}
+      <h4>诊断意见</h4>${c.item.includes('盆腔')?'1. 胆囊切除术后改变。2. 左下腹肠管疝出，建议结合临床。':'未见明确异常，建议随访。'}
+    </div></div></div>`;
+  }else if(id==='img'){
+    body=`<div class="card"><div class="ch">🖼️ 影像质控结果</div><div class="cb"><div class="docbox" style="text-align:center;color:#8AA0C8;padding:36px">
+      ${c.sts.img==='run'?'<span class="dot" style="display:inline-block"></span> 影像质控执行中…':c.sts.img==='warn'?'⚠ 1 项 P2 告警（后颅窝伪影）· 已标记放行':c.sts.img==='done'?'✓ 影像质控通过 · 达标':'该 case 无影像质控（Tab 置灰）'}
+    </div></div></div>`;
+  }else{
+    const issues=c.repIssues.length?c.repIssues.map(q=>`<div style="display:flex;gap:8px;align-items:center;font-size:12px;background:${q.sev==='P0'?'#FEF3F2':'#FFF8EB'};border:1px solid ${q.sev==='P0'?'#F4C4C4':'#F2D9A8'};border-radius:8px;padding:8px 12px;margin-bottom:6px"><span style="flex:1">${q.d}</span><span class="mut">${q.sug}</span>${q.ok?'<span class="tag green">已处理</span>':`<button class="btn sm grn" onclick="fixIssue(${CASES.indexOf(c)>=0?c.repIssues.indexOf(q):0})">采纳</button>`}</div>`).join(''):'<div style="text-align:center;color:#0E8A4C;padding:16px">✓ 报告质控通过</div>';
+    body=`<div class="card"><div class="ch">🛡️ 报告质控（实时+终末） <span class="r">${c.repScore?`<span class="tag green">${c.repScore}/100</span>`:''}</span></div><div class="cb">${issues}</div></div>`;
+  }
+  $('#tabBody').innerHTML=body;
+}
+
+/* ================= 旅程演示 ================= */
+const JOURNEY=[
+  {t:'流水线启动',msg:'检查完成，按「胸部 CT AIR+质控」模板进入流水线 · 准入通过（项目已启用、必填字段齐全）',n:0},
+  {t:'① AI 检出',msg:'并行调用肺结节/骨折/肺炎 3 家 AI · 结果按核心定义表归并',n:1},
+  {t:'检出完成',msg:'✓ 检出 3 处病灶（12:01）· 耗时 12.4s',n:1},
+  {t:'② 影像质控',msg:'体位/图像质量/序列完整性自动校验（12:03）',n:2},
+  {t:'影像质控通过',msg:'✓ 达标 · 评分 96/A（12:03）',n:2},
+  {t:'③ AIR 报告',msg:'多语料喂 LLM 生成报告草稿（12:05）· 医生收到轻提示',n:3},
+  {t:'医生提交草稿',msg:'触发 ④ 报告质控 · 实时校验',n:4},
+  {t:'P0 拦截',msg:'✕ 发现影像-报告矛盾（胆囊）· 提交被拦截 · 轨迹红色聚焦',n:4},
+  {t:'医生采纳建议',msg:'✓ 报告文本自动修订 · 重打分 97 · 再次提交通过',n:4},
+  {t:'⑤ 人工审核 → 发布',msg:'质控员终审 · 发布归档 · 轨迹全绿收起为一行摘要',n:5}
+];
+function toggleJourney(force){
+  const jc=$('#journeyCard');
+  const show = force!==undefined?force:jc.style.display==='none';
+  jc.style.display=show?'block':'none';
+  $('#btnJourney').textContent=show?'隐藏旅程':'▶ 播放完整旅程';
+  if(show&&!journeyState)journeyReset();
+}
+function journeyReset(silent){
+  if(journeyTimer)clearTimeout(journeyTimer);
+  journeyState=0;
+  if(!silent){
+    $('#journeyLog').textContent='点击「下一步」逐步演示 …';
+    $('#journeyLine').innerHTML='';
+  }
+  if(silent){$('#journeyLog').innerHTML='';$('#journeyLine').innerHTML='';}
+}
+function journeyStep(){
+  if(journeyState>=JOURNEY.length){toast('旅程演示结束');return;}
+  const step=JOURNEY[journeyState++];
+  $('#journeyLog').textContent=`[${step.t}] ${step.msg}`;
+  // 高亮
+  const names=['启动','AI 检出','影像质控','AIR 报告','报告质控','人工审核','发布'];
+  const idxMap=[0,1,2,3,4,5,6];
+  const parts=[['流水线启动','over'],['AI 检出','over'],['影像质控','over'],['AIR 报告','over'],['报告质控','blocked'],['人工审核'],['发布']];
+  $('#journeyLine').innerHTML = parts.map((p,i)=>`<span class="jnode ${p[1]||(i===step.n?'act':'')}" style="${i>=step.n?'opacity:.55':''}">${p[1]==='over'?'✓':p[1]==='blocked'?'✕':'▶'} ${p[0]}</span>${i<6?'<span class="jarr">›</span>':''}`).join('');
+  toast(step.t);
+}
+function initJourneyLine(){
+  $('#journeyLine').innerHTML=['流水线启动','AI 检出','影像质控','AIR 报告','报告质控','人工审核','发布'].map((n,i)=>`<span class="jnode"><span class="jn">${i+1}</span>${n}</span>${i<6?'<span class="jarr">›</span>':''}`).join('');
+}
+
+/* ================= 模板 / 画布 ================= */
+function swT(el){el.classList.toggle('on');toast(el.classList.contains('on')?'环节已启用':'环节已停用（该 case 对应步骤置灰/跳过）');}
+function renderCanvas(){
+  const bg=$('#cvBg');if(!bg)return;
+  bg.innerHTML='';
+  const nodes=[
+    {x:30,y:120,t:'AI 检出',c:'ai',ic:'🤖',st:''},
+    {x:230,y:60,t:'影像质控',c:'blocked',ic:'🖼️',st:'拦截策略'},
+    {x:230,y:210,t:'影像质控-放行',c:'done',ic:'✓',st:'非P0 标记放行'},
+    {x:440,y:130,t:'AIR 报告',c:'ai',ic:'📄',st:''},
+    {x:650,y:60,t:'报告质控·实时',c:'blocked',ic:'🛡️',st:'P0 拦截'},
+    {x:650,y:210,t:'报告质控·终末',c:'ai',ic:'🛡️',st:''},
+    {x:860,y:130,t:'人工审核',c:'man',ic:'✍️',st:'医生/质控员'},
+    {x:1060,y:130,t:'发布归档',c:'done',ic:'📦',st:'留痕'}
+  ];
+  nodes.forEach(n=>{
+    const el=document.createElement('div');
+    el.className='cv-node '+n.c;
+    el.style.left=n.x+'px';el.style.top=n.y+'px';
+    el.innerHTML=`<span class="ci">${n.ic}</span><span class="ct"><b>${n.t}</b><span>${n.st}</span></span>`;
+    bg.appendChild(el);
+  });
+  const lines=[[0,1,'','',150,95],[0,2,'bad','P0',150,215],[1,3,'','',350,80],[2,3,'bad','',350,220],[3,4,'','',570,75],[3,5,'','',570,215],[4,6,'bad','P0拦截',780,65],[5,6,'','',780,215],[6,7,'','',980,140]];
+  lines.forEach(l=>{
+    const d=document.createElement('div');
+    d.className='cv-line'+(l[2]==='bad'?' bad':'');
+    const x1=l[0][0]?0:0;
+    // 简单横线
+    d.style.left=l[4]+'px';d.style.top=l[5]+'px';d.style.width=(l[6]-l[4]||110)+'px';
+    d.style.background=l[2]==='bad'?'#E54040':'#4DA3FF';
+    bg.appendChild(d);
+  });
+}
+document.addEventListener('DOMContentLoaded',initJourneyLine);
+
+/* init */
+renderCases();
+goView('cases');
+console.log('AIR+质控工作流编排界面原型 V1.0 已加载');
+</script>
+</body>
+</html>
