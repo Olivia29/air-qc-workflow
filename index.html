@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.4（报告整段改写 + PACS 拉取）</title>
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.5（整段改写支持字段引用）</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#F0F2F5;height:100vh;overflow:hidden}
@@ -70,6 +70,25 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .parain{width:100%;box-sizing:border-box;border:1px solid #9DBDF2;border-radius:9px;padding:11px 13px;
   font-size:13px;line-height:2;color:#16294D;font-family:inherit;resize:vertical;outline:none;background:#fff}
 .parain:focus{border-color:#2A7FFF;box-shadow:0 0 0 3px rgba(42,127,255,.12)}
+/* 字段引用 */
+.refpal{margin-top:11px;border:1px solid #DCE6F5;border-radius:9px;background:#FBFDFF;padding:10px 12px}
+.refttl{font-size:11.5px;font-weight:700;color:#5E7496;margin-bottom:8px}
+.refgrp{margin-bottom:9px}
+.refgrh{display:flex;align-items:center;gap:8px;font-size:12px;color:#16294D;margin-bottom:5px}
+.refgrh b{font-size:12px}
+.refgrh code{font-size:10.5px;background:#EAF1FC;color:#2A5FBF;padding:1px 6px;border-radius:4px}
+.refchips{display:flex;flex-wrap:wrap;gap:6px}
+.refchip{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;cursor:pointer;
+  border:1px solid #DCE6F5;background:#fff;border-radius:7px;padding:5px 9px;font-family:inherit;max-width:330px}
+.refchip:hover{border-color:#5C9DFF;background:#F4F8FF}
+.refchip code{font-size:10.5px;color:#2A5FBF;white-space:nowrap}
+.refchip .refsen{font-size:10.5px;color:#0E8A4C;line-height:1.5}
+.prevbox{margin-top:11px;border:1px solid #CBE7D8;border-radius:9px;background:#F4FBF7;padding:10px 12px}
+.prevttl{font-size:11.5px;font-weight:700;color:#0E8A4C;margin-bottom:7px}
+.prevtxt{font-size:12.5px;color:#16294D;line-height:2}
+.refv{background:#E4F6EC;color:#0E8A4C;font-weight:700;border-radius:4px;padding:1px 4px;border-bottom:1px dashed #7FC6A0;cursor:help}
+.refbad{background:#FDECEC;color:#D92D20;font-weight:700;border-radius:4px;padding:1px 4px;font-size:11.5px}
+.refnote{font-size:11px;color:#5E7496;line-height:1.9}
 /* PACS 拉取 */
 .pacsbox{border:1px solid #E3ECF9;border-radius:10px;padding:12px 14px;background:#FAFCFF}
 .pachd{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
@@ -1179,6 +1198,13 @@ const AIRS=[
     {id:'i2', txt:'建议随诊复查。'}
   ]}
 ];
+/* 模型编码 —— 报告里用 {模型编码}{字段key} 引用该模型的字段 */
+const MCODES={P01:'UNITED_LUNG_NODULE_AI', P02:'INFERVISION_RIB_FX_AI', P03:'MIIA_MODEL_BRAIN_HEMORRHAGE',
+  P04:'MIIA_MODEL_AIR_CHEST', P05:'MIIA_QC_IMAGE_QUALITY', P06:'MIIA_QC_REPORT_CONSISTENCY',
+  P07:'INFERVISION_PNEUMONIA_AI'};
+PRODUCTS.forEach(p=>{ p.code = MCODES[p.id] || ('MIIA_MODEL_'+p.id); });
+AIRS.forEach(a=>{ a.code = a.id==='AIR01' ? 'MIIA_MODEL_AIR_CHEST' : 'MIIA_MODEL_AIR_BRAIN'; });
+function nmCodeOf(p){ return (p && p.code) || 'MIIA_MODEL_UNKNOWN'; }
 function nmSmalls(){ return PRODUCTS.filter(p=>p.vendor!=='影禾自研' && p.type!=='报告生成'); }
 
 const SENT={
@@ -1273,6 +1299,7 @@ let NM={step:0, name:'胸部 AIR 增强版（联合第三方小模型）', code:
         pick:{}, slot:{}, prio:{}, caseId:null, ran:false, running:false, published:[],
         sec:{findings:[], impression:[]}, editing:null, exSeq:0, uploads:[],
         para:{findings:null, impression:null}, paraOpen:{findings:0, impression:0}, paraBuf:null,
+        paraSrc:{findings:0, impression:0},
         pacsQ:'', pacsPulling:{}};
 const NM_STEPS=['基本信息','选择基础 AIR','第三方小模型','字段拼接','测试输出','预览与发布'];
 
@@ -1378,7 +1405,7 @@ function nmSections(){
   const out={};
   ['findings','impression'].forEach(sec=>{
     if(NM.para[sec]!=null){
-      out[sec]=[{key:'para_'+sec, kind:'para', txt:NM.para[sec], src:'人工整段改写'}];
+      out[sec]=[{key:'para_'+sec, kind:'para', txt:nmResolveRefs(NM.para[sec]).text, src:'人工整段改写'}];
     } else {
       out[sec]=(NM.sec[sec]||[]).filter(x=>!x.del);
     }
@@ -1441,18 +1468,142 @@ function nmAddDesc(sec){
 function nmResetEdits(){
   NM.sec={findings:[],impression:[]}; NM.editing=null;
   NM.para={findings:null,impression:null}; NM.paraOpen={findings:0,impression:0}; NM.paraBuf=null;
+  NM.paraSrc={findings:0,impression:0};
   nmSyncSections(); NM.ran=false; renderNewModel();
   toast('已恢复为按配置自动生成的报告（人工改写与补充描述已清除）');
 }
 function nmEditStat(){
-  let ed=0, ex=0, rm=0, pa=0;
+  let ed=0, ex=0, rm=0, pa=0, rf=0;
   ['findings','impression'].forEach(sec=>{
     if(NM.para[sec]!=null) pa++;
     (NM.sec[sec]||[]).forEach(it=>{
       if(it.edited) ed++; if(it.kind==='extra') ex++; if(it.del) rm++; });
   });
-  return {ed:ed, ex:ex, rm:rm, pa:pa};
+  return {ed:ed, ex:ex, rm:rm, pa:pa, rf:nmParaRefStat()};
 }
+
+/* ---- 字段引用：{模型编码}{字段key} —— 保存后渲染成该字段对应的语义文字 ---- */
+function nmRefSources(){
+  const a=nmAir(), out=[];
+  if(a){
+    out.push({code:(NM.code||nmCodeOf(a)), label:a.name+'（本模型输出）', sub:'影禾自研 · 当前模型', pid:'__self__', kind:'self'});
+    out.push({code:nmCodeOf(a), label:a.name, sub:'影禾自研 · 基底 AIR', pid:'__air__', kind:'air'});
+  }
+  NM.sel.forEach(id=>{ const p=nmSmall(id); if(p)
+    out.push({code:nmCodeOf(p), label:p.name, sub:p.vendor+' · 第三方小模型', pid:id, kind:'small'}); });
+  return out;
+}
+function nmRefFields(src){
+  const a=nmAir(); if(!a) return [];
+  if(src.kind==='air'){
+    return a.findings.map(x=>Object.assign({},x,{sec:'findings'}))
+      .concat(a.impression.map(x=>Object.assign({},x,{sec:'impression'})))
+      .filter(x=>x.ph).map(x=>({key:x.ph, cn:x.label, sec:x.sec, kind:'slot'}));
+  }
+  const pids = src.kind==='self' ? NM.sel : [src.pid], out=[];
+  pids.forEach(pid=>{ const p=nmSmall(pid); if(!p) return;
+    p.caps.forEach(k=>{ if(out.some(x=>x.key===k)) return;
+      const c=CAPS.find(x=>x.key===k)||{key:k,cn:k};
+      out.push({key:k, cn:c.cn, pid:pid, kind:'cap'}); }); });
+  return out;
+}
+/* 一个引用 → 它的语义文字 */
+function nmRefSentence(code, field){
+  const a=nmAir();
+  const slot = (a? a.findings.concat(a.impression):[]).find(x=>x.ph===field);
+  if(slot){
+    const r=nmRows().find(x=>x.on && x.target && nmTarget(x.target) && nmTarget(x.target).ph===field);
+    return r ? nmSentence(r) : ('【'+slot.label+' · 待第三方拼入】');
+  }
+  const src=nmRefSources().find(x=>x.code===code);
+  const pids = src ? (src.kind==='self'? NM.sel : [src.pid]) : NM.sel;
+  let row=nmRows().find(x=>pids.indexOf(x.pid)>=0 && x.key===field);
+  if(!row) row=nmRows().find(x=>x.key===field);
+  return row ? nmSentence(row) : '';
+}
+function nmRefIndex(){
+  const idx={};
+  nmRefSources().forEach(s=>nmRefFields(s).forEach(f=>{
+    idx[s.code+'|'+f.key]={code:s.code, field:f.key, cn:f.cn, model:s.label, af:s}; }));
+  const bare={};
+  Object.keys(idx).forEach(k=>{ const f=idx[k].field;
+    if(idx[k].af.kind!=='air'){ bare[f]=bare[f]||[]; bare[f].push(idx[k]); } });
+  return {paired:idx, bare:bare};
+}
+/* 解析整段文本里的引用 → {text 纯文本, html 带标记, refs, bad} */
+function nmResolveRefs(text){
+  const IX=nmRefIndex(), refs=[], bad=[];
+  const re=/\{([A-Za-z0-9_]+)\}(?:\{([A-Za-z0-9_]+)\})?/g;
+  let out='', html='', last=0, m;
+  const push=o=>{ out+=o; html+=nmEsc(o); };
+  while((m=re.exec(text))!==null){
+    push(text.slice(last, m.index));
+    const code=m[1], field=m[2];
+    let e=null;
+    if(field) e = IX.paired[code+'|'+field];
+    else { const arr=IX.bare[code]; if(arr && arr.length===1) e=arr[0]; }
+    if(e){
+      const sent=nmRefSentence(e.code, e.field);
+      if(sent){
+        refs.push({token:m[0], model:e.model, model_code:e.code, field:e.field, cn:e.cn, sentence:sent});
+        out+=sent;
+        html+='<span class="refv" title="'+nmEsc(e.code+'.'+e.field+' → '+e.model+' · '+e.cn)+'">'+nmEsc(sent)+'</span>';
+      } else {
+        bad.push({token:m[0], reason:'该字段尚未拼入，暂无取值'});
+        out+=m[0]; html+='<span class="refbad">'+nmEsc(m[0])+'</span>';
+      }
+    } else {
+      bad.push({token:m[0], reason: field? '模型编码或字段不在当前配置中' : '字段名不唯一或不来自第三方模型，请写成 {模型编码}{字段key}'});
+      out+=m[0]; html+='<span class="refbad">'+nmEsc(m[0])+'</span>';
+    }
+    last=re.lastIndex;
+  }
+  push(text.slice(last));
+  html=html.replace(/\n/g,'<br>');
+  return {text:out, html:html, refs:refs, bad:bad};
+}
+function nmBadRefs(){
+  let n=0; ['findings','impression'].forEach(x=>{ if(NM.para[x]!=null) n+=nmResolveRefs(NM.para[x]).bad.length; });
+  return n;
+}
+function nmParaRefStat(){
+  let n=0; ['findings','impression'].forEach(x=>{ if(NM.para[x]!=null) n+=nmResolveRefs(NM.para[x]).refs.length; });
+  return n;
+}
+/* 可用引用面板 */
+function nmRefPalette(){
+  const srcs=nmRefSources(); if(!srcs.length) return '';
+  const groups=srcs.map(s=>{
+    const fs=nmRefFields(s); if(!fs.length) return '';
+    return `<div class="refgrp"><div class="refgrh"><b>${s.label}</b>
+        <code class="mono">${s.code}</code><span class="mut">${s.sub}</span></div>
+      <div class="refchips">${fs.map(f=>{
+        const tok='{'+s.code+'}{'+f.key+'}';
+        const sent=nmRefSentence(s.code, f.key)||'（该字段尚未拼入）';
+        return `<button class="refchip" onclick="nmRefInsert('${tok.replace(/'/g,"\\'")}')" title="${nmEsc(f.cn)}">
+          <code class="mono">${tok}</code><span class="refsen">${nmEsc(sent)}</span></button>`; }).join('')}</div></div>`;
+  }).join('');
+  return `<div class="refpal"><div class="refttl">可用字段引用 —— 点一下插入到光标处（保存后报告里显示右侧的语义文字）</div>${groups}</div>`;
+}
+function nmRefInsert(tok){
+  const t=document.getElementById('para_'+NM.paraSec);
+  if(!t){ toast('请先进入整段改写状态'); return; }
+  const a=t.selectionStart!=null? t.selectionStart : t.value.length;
+  const b=t.selectionEnd!=null? t.selectionEnd : a;
+  const v=t.value.slice(0,a)+tok+t.value.slice(b);
+  t.value=v; NM.paraBuf=v;
+  t.focus(); t.setSelectionRange(a+tok.length, a+tok.length);
+  nmParaPreview();
+}
+function nmParaPreview(){
+  const el=document.getElementById('paraPrev'); if(!el) return;
+  const r=nmResolveRefs(NM.paraBuf||'');
+  el.innerHTML=`<div class="prevttl">实时预览 —— 保存后报告里显示的文字</div>
+    <div class="prevtxt">${r.html}</div>
+    ${r.refs.length?`<div class="refnote">已解析 <b>${r.refs.length}</b> 处引用：${r.refs.map(x=>'<code class="mono">'+nmEsc(x.model_code)+'.'+nmEsc(x.field)+'</code> → '+nmEsc(x.sentence)).join('　')}</div>`:''}
+    ${r.bad.length?`<div class="refbad" style="margin-top:8px">⚠ 无法解析的引用 ${r.bad.length} 处：${r.bad.map(b=>'<code class="mono">'+nmEsc(b.token)+'</code>（'+b.reason+'）').join('　')}</div>`:''}`;
+}
+function nmParaToggleSrc(sec){ NM.paraSrc[sec]=NM.paraSrc[sec]?0:1; renderNewModel(); }
 
 /* ---- 整段自由改写：把「影像所见」/「诊断意见」当成一篇文章来写 ---- */
 function nmParaName(sec){ return sec==='findings' ? '影像所见' : '诊断意见'; }
@@ -1471,13 +1622,21 @@ function nmParaEdit(sec){
   NM.paraOpen[sec]=1; NM.editing=null; renderNewModel();
   const t=document.getElementById('para_'+sec);
   if(t){ t.focus(); t.setSelectionRange(t.value.length, t.value.length); }
+  nmParaPreview();   /* 一打开就把实时预览填上，别留空框 */
 }
 function nmParaSet(v){ NM.paraBuf=v; }
 function nmParaSave(sec){
   const v=(NM.paraBuf||'').replace(/\r/g,'').trim();
   if(!v){ toast('段落内容不能为空 —— 如需放弃请点「取消」'); return; }
+  const rs=nmResolveRefs(v);
   NM.para[sec]=v; NM.paraOpen[sec]=0; NM.paraBuf=null; NM.ran=false; renderNewModel();
-  toast('已保存整段改写：「'+nmParaName(sec)+'」以人工文本为准，不再按句拼接');
+  if(rs.bad.length){
+    toast('已保存，但有 '+rs.bad.length+' 处引用无法解析（'+rs.bad[0].token+'）—— 请检查模型是否已选、字段是否已拼入');
+  } else if(rs.refs.length){
+    toast('已保存整段改写 · 解析出 '+rs.refs.length+' 处字段引用，报告里将显示对应的语义文字');
+  } else {
+    toast('已保存整段改写：「'+nmParaName(sec)+'」以人工文本为准，不再按句拼接');
+  }
 }
 function nmParaCancel(sec){ NM.paraOpen[sec]=0; NM.paraBuf=null; renderNewModel(); }
 function nmParaReset(sec){
@@ -1492,6 +1651,7 @@ function nmSetAir(id){
   NM.airId=id; NM.pick={}; NM.slot={}; NM.prio={}; NM.ran=false; NM.caseId=null;
   NM.sec={findings:[],impression:[]}; NM.editing=null; NM.exSeq=0;
   NM.para={findings:null,impression:null}; NM.paraOpen={findings:0,impression:0}; NM.paraBuf=null;
+  NM.paraSrc={findings:0,impression:0};
   const a=nmAir(); if(a){ NM.exam=a.exam; NM.modal=a.modal; }
   nmDefaultSplice();
   renderNewModel(); toast('已选择基础 AIR：'+a.name+' '+a.ver+' · 已重置拼接配置与报告编辑');
@@ -1552,7 +1712,7 @@ function nmReset(){
   NM=Object.assign(NM,{step:0, airId:'AIR01', sel:['P01','P02'], pick:{}, slot:{}, prio:{},
     caseId:null, ran:false, running:false, sec:{findings:[],impression:[]}, editing:null, exSeq:0,
     para:{findings:null,impression:null}, paraOpen:{findings:0,impression:0}, paraBuf:null,
-    uploads:[], pacsQ:'', pacsPulling:{}});
+    paraSrc:{findings:0,impression:0}, uploads:[], pacsQ:'', pacsPulling:{}});
   nmDefaultSplice(); nmSyncSections(); renderNewModel(); toast('已重置创建模型配置');
 }
 /* ---- 影像：平台自带 + 本地上传 ---- */
@@ -1642,6 +1802,7 @@ function nmPublish(){
   const noTarget=rows.filter(r=>!r.target);
   if(noTarget.length){ toast('还有 '+noTarget.length+' 个字段未指定拼入位置：'+noTarget.map(r=>r.cn).join('、')); nmGo(3); return; }
   if(conf.length){ toast('有 '+conf.length+' 个位置存在多个模型写入，请指定合并或优先：'+conf.map(c=>c.ph).join('、')); nmGo(3); return; }
+  if(nmBadRefs()){ toast('报告里有 '+nmBadRefs()+' 处字段引用无法解析，请回到「字段拼接」检查（模型/字段是否可用）'); nmGo(3); return; }
   if(!NM.ran){ toast('请先在「测试输出」里选一条影像跑一遍拼接结果'); nmGo(4); return; }
   NM.published.push({name:NM.name, code:NM.code, ver:NM.ver, air:nmAir().name,
     n:NM.sel.length, fields:rows.length, edits:st.ed+'/'+st.ex+(st.pa?(' · 整段'+st.pa):''), at:'2026-09-19 15:1'+(NM.published.length)});
@@ -1675,10 +1836,18 @@ function nmJson(){
       else if(it.edited)    ed.push({section:nm2, text:it.txt, from:it.src||'AIR 原句'});
     });
   });
+  o.reference_syntax={ pattern:'{模型编码}{字段key}',
+    example:'{'+NM.code+'}{nodule_count}',
+    note:'整段改写里用该写法引用第三方字段，保存后报告中显示该字段的语义文字（如“共检出结节 3 枚。”）。' };
   o.manual_edits={ rewritten:ed, added_descriptions:ex, removed:rm,
-    rewritten_paragraphs:['findings','impression'].filter(s=>NM.para[s]!=null)
-      .map(s=>({section:nmParaName(s), granularity:'整段', text:NM.para[s],
-                supersedes:(NM.sec[s]||[]).length+' 句自动拼接结果'})),
+    rewritten_paragraphs:['findings','impression'].filter(s=>NM.para[s]!=null).map(s=>{
+      const rs=nmResolveRefs(NM.para[s]);
+      return {section:nmParaName(s), granularity:'整段', template:NM.para[s], resolved_text:rs.text,
+        field_refs:rs.refs.map(r=>({model_code:r.model_code, model:r.model, field:r.field,
+                                    cn:r.cn, sentence:r.sentence})),
+        unresolved_refs:rs.bad.map(b=>({token:b.token, reason:b.reason})),
+        supersedes:(NM.sec[s]||[]).length+' 句自动拼接结果'};
+    }),
     note:'人工改写 / 补充描述会随模型定义一同保存，运行时可复现；如需回到自动生成，点「恢复默认」即可。' };
   o.output_report=Object.assign({}, ...['findings','impression'].map(sec=>({
     [(sec==='findings'?'影像所见':'诊断意见')]: secs[sec].map(x=>x.txt) })));
@@ -1696,21 +1865,34 @@ function nmSecBlock(sec, items, editable){
   const st=NM.editing;
   /* 整段自由改写：已改写 → 只读展示整段 */
   if(editable && NM.para[sec]!=null){
+    const rs=nmResolveRefs(NM.para[sec]);
+    const showSrc=NM.paraSrc[sec];
     return `<div class="rsec"><div class="rsec-h">${nm2}
         <span class="cnt">人工整段改写</span>
         <span class="r" style="display:flex;gap:6px">
+          ${rs.refs.length?`<span class="tag purple">字段引用 ${rs.refs.length} 处</span>
+          <button class="btn sm" onclick="nmParaToggleSrc('${sec}')">${showSrc?'👁 显示语义文字':'👁 显示引用源码'}</button>`:''}
           <button class="btn sm" onclick="nmParaEdit('${sec}')">✎ 继续编辑整段</button>
           <button class="btn sm" onclick="nmParaReset('${sec}')">↺ 撤销整段改写</button></span></div>
       <div class="parabox"><span class="stag ed">人工整段改写</span>
-        <div class="paratxt">${nmEsc(NM.para[sec]).replace(/\n/g,'<br>')}</div></div></div>`;
+        <div class="paratxt">${showSrc ? nmEsc(NM.para[sec]).replace(/\n/g,'<br>') : rs.html}</div>
+        ${rs.refs.length?`<div class="refnote" style="margin-top:8px">${
+          rs.refs.map(x=>'<code class="mono">'+nmEsc(x.model_code)+'.'+nmEsc(x.field)+'</code> → '+nmEsc(x.sentence)).join('　')}</div>`:''}
+        ${rs.bad.length?`<div class="refbad" style="margin-top:6px">⚠ 有 ${rs.bad.length} 处引用无法解析：${rs.bad.map(b=>'<code class="mono">'+nmEsc(b.token)+'</code>').join('、')}</div>`:''}
+      </div></div>`;
   }
   /* 整段自由改写：编辑中 → 大文本框 */
   if(editable && NM.paraOpen[sec]){
     const pre = NM.paraBuf!=null ? NM.paraBuf : nmParaRaw(sec);
+    NM.paraSec=sec;
     return `<div class="rsec"><div class="rsec-h">${nm2}<span class="cnt">整段改写中</span></div>
-      <textarea class="parain" id="para_${sec}" rows="9" oninput="nmParaSet(this.value)"
-        placeholder="把「${nm2}」当成一篇文章直接写，不再受逐句结构限制">${nmEsc(pre)}</textarea>
-      <div class="shint">把「${nm2}」<b>当成一篇文章来写</b>：调整措辞、合并句子、补写结论都行，不再受逐句结构限制。
+      <textarea class="parain" id="para_${sec}" rows="9" oninput="nmParaSet(this.value);nmParaPreview()"
+        onkeyup="nmParaPreview()" onclick="nmParaPreview()"
+        placeholder="把「${nm2}」当成一篇文章直接写；也可以用 {模型编码}{字段key} 引用第三方字段">${nmEsc(pre)}</textarea>
+      ${nmRefPalette()}
+      <div class="prevbox" id="paraPrev"></div>
+      <div class="shint">把「${nm2}」<b>当成一篇文章来写</b>：调整措辞、合并句子、补写结论都行，不再受逐句结构限制；
+        还可以用 <code class="mono">{模型编码}{字段key}</code> <b>引用第三方字段</b>，保存后自动显示成对应的语义文字。
         保存后该段以人工文本为准，<b>段内的「【… · 待第三方拼入】」方括号提示不会再被第三方结果自动替换</b> ——
         请自行补写或删掉；随时点 ↺ 撤销即可回到逐句拼接（逐句的改写与补充描述不会丢）。</div>
       <div class="sact" style="margin-top:9px;gap:8px">
@@ -1872,6 +2054,7 @@ function nmStepBody(){
             ${st.ex?`<span class="tag blue">人工补充 ${st.ex} 条</span>`:''}
             ${st.rm?`<span class="tag red">已移除 ${st.rm} 句</span>`:''}
             ${st.pa?`<span class="tag purple">整段改写 ${st.pa} 段</span>`:''}
+            ${st.rf?`<span class="tag blue">字段引用 ${st.rf} 处</span>`:''}
             <button class="btn sm" onclick="nmResetEdits()">↺ 恢复默认</button>
           </span></div>
         <div class="cb">
@@ -1986,7 +2169,8 @@ function nmStepBody(){
   const rowsOn=rows.filter(r=>r.on);
   const un=rowsOn.filter(r=>!r.target);
   const confU=nmConflicts().filter(c=>!NM.prio[c.ph]);
-  const ready=(NM.name.trim()&&NM.code.trim()&&a&&NM.sel.length&&rowsOn.length&&!un.length&&!confU.length&&NM.ran);
+  const badRef=nmBadRefs();
+  const ready=(NM.name.trim()&&NM.code.trim()&&a&&NM.sel.length&&rowsOn.length&&!un.length&&!confU.length&&NM.ran&&!badRef);
   return `<div class="card"><div class="ch">最终报告输出（运行结果）</div><div class="cb">
       <div class="rgrid">
         ${nmSecBlock('findings', secs.findings, false)}
@@ -1994,13 +2178,13 @@ function nmStepBody(){
       </div>
       <div style="margin-top:10px;font-size:12px;color:#62779E">
         共 ${secs.findings.length+secs.impression.length} 句 · 其中第三方拼入 ${secs.findings.concat(secs.impression).filter(x=>x.kind==='spliced').length} 句 ·
-        人工改写 ${st.ed} 句 · 人工补充描述 ${st.ex} 条${st.rm?(' · 已移除 '+st.rm+' 句'):''}
+        人工改写 ${st.ed} 句 · 人工补充描述 ${st.ex} 条${st.rm?(' · 已移除 '+st.rm+' 句'):''}${st.pa?(' · 整段改写 '+st.pa+' 段'):''}${st.rf?(' · 字段引用 '+st.rf+' 处'):''}
       </div></div></div>
     <div class="card"><div class="ch">模型定义 JSON（实时）</div>
       <div class="cb"><div class="jsonbox">${nmEsc(JSON.stringify(nmJson(),null,2))}</div></div></div>
     <div class="card"><div class="ch">发布校验</div><div class="cb">
       ${ready?`<div class="nmok">✔ 校验通过：以「${a.name}」为基底 · ${NM.sel.length} 个第三方小模型 · 拼入 ${rowsOn.length} 个字段 ·
-        占位符冲突已处理 · 报告编辑已留痕（改写 ${st.ed} 句 / 补充 ${st.ex} 条${st.pa?(' / 整段改写 '+st.pa+' 段'):''}）·
+        占位符冲突已处理 · 报告编辑已留痕（改写 ${st.ed} 句 / 补充 ${st.ex} 条${st.pa?(' / 整段改写 '+st.pa+' 段'):''}${st.rf?(' / 字段引用 '+st.rf+' 处'):''}）·
         已在「${(nmCases().find(c=>c.id===NM.caseId)||{}).name||''}」上跑通拼接输出。</div>`
       :`<div style="font-size:12.5px;color:#D92D20;line-height:1.95">✗ 尚未通过：${[
           (!NM.name.trim()||!NM.code.trim())?'模型名称 / 编码未填写':'',
@@ -2009,6 +2193,7 @@ function nmStepBody(){
           !rowsOn.length?'未勾选任何要拼入的字段':'',
           un.length?('有 '+un.length+' 个字段未指定拼入位置'):'',
           confU.length?('有 '+confU.length+' 处位置冲突未处理'):'',
+          badRef?('报告整段改写里有 '+badRef+' 处字段引用无法解析，请回到第 4 步处理'):'',
           !NM.ran?'尚未在「测试输出」里跑过影像':''
         ].filter(Boolean).join(' ｜ ')}</div>`}
       <div style="margin-top:12px;display:flex;gap:8px">
@@ -2126,7 +2311,7 @@ function renderExLib(){
 /* init */
 renderMenu();
 goView('newmodel');
-console.log('MIIA-AI 原型 V3.4 已加载（顶栏静默化 · 报告支持整段自由改写 · 测试输出新增 PACS 拉取来源）');
+console.log('MIIA-AI 原型 V3.5 已加载（整段自由改写支持 {模型编码}{字段key} 字段引用，保存后渲染为语义文字）');
 
 </script>
 </body>
