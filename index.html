@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.8</title>
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.9</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#F0F2F5;height:100vh;overflow:hidden}
@@ -1562,7 +1562,7 @@ document.addEventListener('click', e=>{
   if(NM.msOpen && !(e.target && e.target.closest && e.target.closest('.msel'))){ NM.msOpen=null; renderNewModel(); }
 });
 
-/* ---- 字段引用：{模型编码}{字段key} ----
+/* ---- 字段引用：{模型编码}{字段key} —— 保存后渲染成该字段对应的语义文字 ---- */
 function nmRefSources(){
   const a=nmAir(), out=[];
   if(a){
@@ -2412,7 +2412,7 @@ function renderExLib(){
 /* init */
 renderMenu();
 goView('newmodel');
-console.log('MIIA-AI 原型 V3.8 已加载（AIR 卡片新增「拼接应用」一行）');
+console.log('MIIA-AI 原型 V3.9 已加载（修复：整段自由改写因未闭合注释吞掉 nmRefSources/nmRefFields 而点击无反应）');
 
 </script>
 </body>
