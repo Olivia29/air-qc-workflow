@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.7</title>
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.8</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#F0F2F5;height:100vh;overflow:hidden}
@@ -349,6 +349,12 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .aircard .row{display:flex;justify-content:space-between;font-size:11.5px;padding:4px 0;
   border-bottom:1px dashed #EEF3FB;color:#5E7496}
 .aircard .row b{color:#35507E}
+.aircard .apx{display:inline-flex;align-items:center;gap:5px}
+.aircard .adot{width:6px;height:6px;border-radius:50%;background:#8AA0C8;flex:0 0 auto}
+.aircard .apx.green{color:#0E8A4C}
+.aircard .apx.green .adot{background:#16A34A}
+.aircard .apx.gray{color:#8AA0C8;font-weight:400}
+.aircard .apx.gray .adot{background:#C3CBD8}
 .airpick{position:absolute;top:-9px;right:12px;background:#2A7FFF;color:#fff;font-size:10.5px;
   padding:2px 9px;border-radius:10px}
 .rgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
@@ -1199,6 +1205,7 @@ const AIRS=[
  {id:'AIR01', name:'胸部 AIR 报告生成', ver:'V2.0', exam:'胸部 CT', modal:'CT', ic:'🫁',
   status:'已上线', status2:'green',
   need:{modal:'CT', part:'胸部', scan:'平扫', series:'薄层', thick:'≤1.5mm'},
+  apps:'已完成 3 个报告拼接应用', apps2:'green',
   findings:[
     {id:'f1', txt:'双肺纹理清晰。'},
     {id:'f2', ph:'lung_lesion_sentence', label:'肺内病灶描述'},
@@ -1213,6 +1220,7 @@ const AIRS=[
  {id:'AIR02', name:'颅脑 CT AIR 报告生成', ver:'V0.9', exam:'颅脑 CT', modal:'CT', ic:'🧠',
   status:'待验证', status2:'orange',
   need:{modal:'CT', part:'颅脑', scan:'平扫', series:'常规轴位', thick:'≤5mm'},
+  apps:'暂无 · 验证通过后开放', apps2:'gray',
   findings:[
     {id:'f1', txt:'脑实质密度均匀。'},
     {id:'f2', ph:'brain_lesion_sentence', label:'颅内病灶描述'},
@@ -2058,6 +2066,8 @@ function nmStepBody(){
           <span class="tag ${x.status2}">${x.status}</span></div>
         <div class="row"><span>数据需求</span><b>${x.need.part} / ${x.need.scan} / ${x.need.thick}</b></div>
         <div class="row"><span>报告结构</span><b>影像所见 ${x.findings.length} 句 · 诊断意见 ${x.impression.length} 句</b></div>
+        <div class="row"><span>拼接应用</span>
+          <b class="apx ${x.apps2}"><span class="adot"></span>${x.apps}</b></div>
         ${onSel?'<div class="airpick">✓ 基础air模型</div>':''}
       </div>`;}).join('');
     return `<div class="card"><div class="ch">② 选择基础 AIR（本公司自研）
@@ -2402,7 +2412,7 @@ function renderExLib(){
 /* init */
 renderMenu();
 goView('newmodel');
-console.log('MIIA-AI 原型 V3.7 已加载（选择基础 AIR：角标改「基础air模型」、去掉卡片描述小字与标题括号）');
+console.log('MIIA-AI 原型 V3.8 已加载（AIR 卡片新增「拼接应用」一行）');
 
 </script>
 </body>
