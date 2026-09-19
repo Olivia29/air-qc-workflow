@@ -3,30 +3,72 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V2.1</title>
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.0（新增模型中心 / 创建模型 / 标准异常体系库）</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#E9F1FB;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#F0F2F5;height:100vh;overflow:hidden}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#B9C6DC;border-radius:4px}
-/* 顶栏 */
-.top{height:52px;background:#101B31;display:flex;align-items:center;padding:0 18px;color:#fff;gap:12px;flex-shrink:0}
-.top .logo{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700}
-.top .logo .cube{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2A7FFF,#00C896);display:flex;align-items:center;justify-content:center;font-size:13px}
-.top .tagline{font-size:11.5px;color:#8AA0C8}
-.top .sp{flex:1}
-.top .pill{font-size:11px;color:#9FE3C4;background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.3);padding:4px 13px;border-radius:20px;display:flex;align-items:center;gap:6px}
-.dot{width:7px;height:7px;border-radius:50%;background:#00C896}
-.top .user{display:flex;align-items:center;gap:8px;font-size:12px;color:#B7C6DE}
-.av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2A7FFF,#00C896);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-/* 导航 */
-.nav{height:44px;background:#1B2B4C;display:flex;align-items:center;padding:0 10px;flex-shrink:0;overflow-x:auto}
-.nav .ni{display:flex;align-items:center;gap:6px;padding:0 15px;height:100%;color:#9FB2D4;font-size:13px;border-bottom:3px solid transparent;cursor:pointer;user-select:none;white-space:nowrap}
-.nav .ni:hover{color:#fff}
-.nav .ni.on{color:#fff;border-bottom-color:#4DA3FF;font-weight:600}
-.nav .note{margin-left:auto;font-size:11px;color:#6E84AD;padding-right:8px;white-space:nowrap}
-.page{display:none;height:calc(100vh - 96px);overflow-y:auto}
+/* ============ 应用外壳：深蓝渐变左侧栏 + 白色顶栏（对齐 MIIA-AI 现有系统 UI）============
+   参考：现有系统截图 —— 侧边栏竖向渐变 #30457C→#273966、宽约 291px（2538px 宽窗口）；
+   顶栏纯白 56px、底部 1px 分隔线、无阴影；强调色 #5C9DFF；
+   选中菜单 = 浅蓝底 + 左侧亮蓝竖条 + 文字加粗。                                      */
+.shell{display:flex;height:100vh;overflow:hidden}
+.side{width:220px;flex-shrink:0;background:linear-gradient(180deg,#30457C 0%,#273966 100%);
+  display:flex;flex-direction:column;overflow:hidden;transition:width .18s ease}
+.side.collapsed{width:62px}
+.side .brand{height:56px;display:flex;align-items:center;gap:10px;padding:0 17px;flex-shrink:0;
+  border-bottom:1px solid rgba(255,255,255,.07)}
+.side .brand .lg{flex-shrink:0;display:flex}
+.side .brand .nm{font-size:15.5px;font-weight:700;color:#5CC8FF;letter-spacing:.4px;white-space:nowrap}
+.side.collapsed .brand{padding:0 18px}
+.side.collapsed .brand .nm{display:none}
+.side .menu{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px 0 18px}
+.side .menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18)}
+.side .mi{display:flex;align-items:center;gap:11px;height:43px;padding:0 17px;color:#C6D2E8;
+  font-size:13px;cursor:pointer;position:relative;white-space:nowrap;user-select:none}
+.side .mi:hover{background:rgba(255,255,255,.07);color:#fff}
+.side .mi.on{background:rgba(92,157,255,.20);color:#fff;font-weight:700}
+.side .mi.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#5CC8FF}
+.side .mi .icp{width:17px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.side .mi .arw{margin-left:auto;font-size:9px;color:#9FB2D4;transition:transform .16s;display:inline-block}
+.side .mi.open .arw{transform:rotate(90deg)}
+.side .sub{overflow:hidden;max-height:0;transition:max-height .22s ease}
+.side .sub.open{max-height:460px}
+.side .si{display:flex;align-items:center;height:37px;padding:0 17px 0 45px;color:#9FB2D4;
+  font-size:12.5px;cursor:pointer;white-space:nowrap;position:relative}
+.side .si:hover{color:#fff;background:rgba(255,255,255,.05)}
+.side .si.on{color:#5CC8FF;font-weight:700;background:rgba(92,157,255,.13)}
+.side .si.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#5CC8FF}
+.side.collapsed .mi .tx,.side.collapsed .mi .arw{display:none}
+.side.collapsed .mi{justify-content:center;padding:0}
+.side.collapsed .sub{max-height:0!important}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column;height:100vh}
+/* 顶栏（参照系统：白底 56px + 1px 分隔线 + 无阴影）*/
+.topbar{height:56px;flex-shrink:0;background:#fff;border-bottom:1px solid #EDEEF0;
+  display:flex;align-items:center;gap:11px;padding:0 20px}
+.topbar .fold{width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  border-radius:6px;cursor:pointer;color:#333;flex-shrink:0}
+.topbar .fold:hover{background:#F5F7FA}
+.topbar .crumb{font-size:13px;color:#8A94A6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .crumb b{color:#333;font-weight:600}
+.topbar .sp{flex:1}
+.topbar .pill{font-size:11.5px;color:#0E8A4C;background:#E8F8EF;border:1px solid #B7E4CC;
+  padding:4px 12px;border-radius:20px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.topbar .tbtn{height:32px;padding:0 13px;border-radius:6px;font-size:12.5px;display:inline-flex;
+  align-items:center;gap:5px;white-space:nowrap}
+.topbar .tbtn.pri{background:#5C9DFF;color:#fff}
+.topbar .tbtn.pri:hover{background:#4A8FF5}
+.topbar .tbtn.gray{background:#F5F7FA;color:#666}
+.topbar .tbtn.gray:hover{background:#EDF0F4}
+.topbar .usr{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#333;cursor:pointer;white-space:nowrap}
+.topbar .av{width:30px;height:30px;border-radius:6px;background:#5C9DFF;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.content{flex:1;overflow-y:auto;background:#F0F2F5}
+.page{display:none}
 .page.on{display:block}
+.dot{width:7px;height:7px;border-radius:50%;background:#16A34A;display:inline-block}
 .wrap{max-width:1520px;margin:0 auto;padding:16px 20px 34px}
 .ph{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .ph h2{font-size:19px;color:#16294D}
@@ -193,26 +235,83 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .inp{width:100%;padding:7px 10px;border:1px solid #D3DEFF;border-radius:7px;font-size:12.5px;font-family:inherit;color:#2A3040;background:#F8FAFF;margin-top:4px}
 .hl{animation:hlf 1.6s}
 @keyframes hlf{0%{background:#FFF6D6}100%{background:transparent}}
+/* ===== 创建模型（模型中心）===== */
+.nmsteps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.nmstep{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:20px;font-size:12.5px;
+  color:#62779E;background:#F3F7FD;border:1px solid #E3ECF9;cursor:pointer;white-space:nowrap}
+.nmstep .n{width:19px;height:19px;border-radius:50%;background:#DCE6F5;color:#5E7496;font-size:11px;
+  font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nmstep.on{background:#E4EEFF;border-color:#2A7FFF;color:#1A5FD0;font-weight:700}
+.nmstep.on .n{background:#2A7FFF;color:#fff}
+.nmstep.done{background:#F2FBF6;border-color:#9BDCB8;color:#0E8A4C}
+.nmstep.done .n{background:#16A34A;color:#fff}
+.nmarr{color:#C4D4EC;font-size:13px}
+.nmgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.pf2 label{display:block;font-size:10.5px;color:#8AA0C8;font-weight:700;margin-bottom:3px}
+.nmord{display:flex;align-items:center;gap:9px;padding:9px 12px;border:1px solid #E3ECF9;border-radius:9px;
+  margin-bottom:7px;font-size:12.5px;background:#FAFCFF}
+.nmord .idx{width:20px;height:20px;border-radius:50%;background:#2A7FFF;color:#fff;font-size:11px;
+  font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nmord .ci{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:#fff;flex-shrink:0}
+.nmord .mut{margin-right:auto}
+.nmord button:disabled{opacity:.35;cursor:not-allowed}
+.nmopt{flex:1;min-width:250px;border:1px solid #E3ECF9;border-radius:10px;padding:11px 14px;
+  font-size:12.5px;cursor:pointer;background:#fff;color:#35507E;transition:.13s}
+.nmopt:hover{border-color:#9DBDF2}
+.nmopt.on{border-color:#2A7FFF;background:#F4F8FF;box-shadow:0 0 0 2px rgba(42,127,255,.12)}
+.inssel{width:100%;padding:5px 8px;border:1px solid #C4D4EC;border-radius:6px;font-size:12px;
+  font-family:inherit;background:#fff;color:#35507E}
+.tb tr.conf td{background:#FFF7F7}
+.tb tr.conf td:first-child{box-shadow:inset 3px 0 0 #E54040}
+.nmok{background:#F2FBF6;border:1px solid #9BDCB8;border-radius:10px;padding:11px 14px;
+  font-size:12.5px;color:#0E8A4C;line-height:1.85}
+.excat{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:11px;font-size:10.5px;
+  background:#EEF2F8;color:#5E7496;white-space:nowrap}
+.excat.d{background:#E4EEFF;color:#1A5FD0}.excat.s{background:#F1E9FD;color:#6E3FD4}
+.excat.p{background:#FEF0DC;color:#C25E00}.excat.r{background:#E3F7EC;color:#0E8A4C}
+.excat.q{background:#E0F4F3;color:#057174}
+.lvtag{display:inline-flex;padding:2px 9px;border-radius:11px;font-size:10.5px;white-space:nowrap}
+.lvtag.no{background:#FDE7E7;color:#D92D20}.lvtag.retry{background:#E4EEFF;color:#1A5FD0}
+.lvtag.man{background:#FEF0DC;color:#C25E00}
 </style>
 </head>
 <body>
-<div class="top">
-  <div class="logo"><span class="cube">⛓</span>MIIA-AI <span style="font-size:12px;font-weight:400;color:#8AA0C8">三方模型标准化接入 + 工作流编排</span></div>
-  <span class="tagline">输入侧兼容第三方 · 输出及运行侧标准化第三方</span>
-  <div class="sp"></div>
-  <div class="pill"><span class="dot"></span>标准 AI 能力池运行中</div>
-  <div class="user"><span class="av">VV</span>产品 · VV</div>
-</div>
-<div class="nav">
-  <div class="ni on" data-v="over">🎯 接入总览</div>
-  <div class="ni" data-v="prod">🤖 AI 产品库</div>
-  <div class="ni" data-v="lib">📚 标准能力字段库</div>
-  <div class="ni" data-v="run">🔄 统一运行规范</div>
-  <div class="ni" data-v="data">📥 数据需求与匹配</div>
-  <div class="ni" data-v="orch">🧩 工作流编排</div>
-  <div class="ni" data-v="wiz">🧭 新 AI 接入向导</div>
-  <div class="note">一套接入机制 · N 个第三方 AI</div>
-</div>
+<div class="shell">
+  <!-- 左侧栏（参照现有系统：竖向渐变 + 亮蓝选中条）-->
+  <aside class="side" id="side">
+    <div class="brand">
+      <span class="lg"><svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <defs><linearGradient id="lgd" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#6FD2FF"/><stop offset="1" stop-color="#2A7FFF"/></linearGradient></defs>
+        <path d="M5 7.5c0 8.4 4.6 12.6 11 12.6s11-4.2 11-12.6" fill="none"
+              stroke="url(#lgd)" stroke-width="2.7" stroke-linecap="round"/>
+        <path d="M16 20.1v6.6" fill="none" stroke="url(#lgd)" stroke-width="2.7" stroke-linecap="round"/>
+        <path d="M5 7.5h22" fill="none" stroke="#6FD2FF" stroke-width="2.7" stroke-linecap="round"/>
+      </svg></span>
+      <span class="nm">MIIA-AI</span>
+    </div>
+    <nav class="menu" id="menu"></nav>
+  </aside>
+
+  <div class="main">
+    <!-- 顶栏（白底 56px + 1px 分隔线）-->
+    <header class="topbar">
+      <div class="fold" id="btnFold" title="收起 / 展开侧边栏">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6.5h18M3 17.5h18"/><path d="M11.5 12H21"/><path d="m8 9-3 3 3 3"/>
+        </svg>
+      </div>
+      <div class="crumb" id="crumb"></div>
+      <div class="sp"></div>
+      <div class="pill"><span class="dot"></span>标准 AI 能力池运行中</div>
+      <button class="tbtn gray" onclick="goView('wiz')">🧭 接入向导</button>
+      <button class="tbtn pri" onclick="goView('newmodel')">＋ 创建模型</button>
+      <div class="usr"><span class="av">VV</span>VV</div>
+    </header>
+
+    <div class="content" id="content">
 
 <!-- ============ 1 接入总览 ============ -->
 <div class="page on" id="pg-over">
@@ -377,6 +476,20 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
   </div>
 </div>
 
+<!-- ============ 8 创建模型（模型中心） ============ -->
+<div class="page" id="pg-newmodel">
+  <div class="wrap" id="nmWrap"></div>
+</div>
+
+<!-- ============ 9 标准异常体系库（模型中心） ============ -->
+<div class="page" id="pg-exlib">
+  <div class="wrap" id="exWrap"></div>
+</div>
+
+    </div><!-- /.content -->
+  </div><!-- /.main -->
+</div><!-- /.shell -->
+
 <div class="toast" id="toast"></div>
 <div class="modal-mask" id="mask"><div class="modal">
   <div class="mh">➕ 新增标准能力</div>
@@ -453,11 +566,67 @@ const PRODUCTS=[
 ];
 const VENDOR_COLORS={'联影':'#2A7FFF','推想':'#0E8A4C','影禾自研':'#6E3FD4','质控服务':'#F59E0B'};
 
+/* ================== 左侧菜单（对照现有系统：图标 + ▼ 可展开分组） ================== */
+const IC={
+  target:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="4.3"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>',
+  cube:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 2.9 20.4 7.3v9.4L12 21.1 3.6 16.7V7.3z"/><path d="M12 12 20.4 7.3M12 12v9.1M12 12 3.6 7.3"/></svg>',
+  cycle:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 11.2A8.2 8.2 0 0 0 6.4 5.4L3.8 7.7"/><path d="M3.8 3.9v3.8h3.8"/><path d="M3.8 12.8a8.2 8.2 0 0 0 13.8 5.8l2.6-2.3"/><path d="M20.2 20.1v-3.8h-3.8"/></svg>',
+  grid:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.6" y="3.6" width="7.2" height="7.2" rx="1.6"/><rect x="13.2" y="3.6" width="7.2" height="7.2" rx="1.6"/><rect x="3.6" y="13.2" width="7.2" height="7.2" rx="1.6"/><rect x="13.2" y="13.2" width="7.2" height="7.2" rx="1.6"/></svg>',
+  compass:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="m15.7 8.3-2.1 5.3-5.3 2.1 2.1-5.3z"/></svg>'
+};
+const MENU=[
+  {v:'over', t:'接入总览', ic:'target'},
+  {t:'模型中心', ic:'cube', sub:[
+    {v:'newmodel', t:'创建模型'},
+    {v:'prod',     t:'AI 产品库'},
+    {v:'lib',      t:'标准能力字段库'},
+    {v:'data',     t:'数据需求与匹配'},
+    {v:'exlib',    t:'标准异常体系库'}
+  ]},
+  {v:'run',  t:'统一运行规范', ic:'cycle'},
+  {v:'orch', t:'工作流编排', ic:'grid'},
+  {v:'wiz',  t:'新 AI 接入向导', ic:'compass'}
+];
+let openGroups=['模型中心'];
+function renderMenu(){
+  $('#menu').innerHTML=MENU.map(m=>{
+    if(m.sub){
+      const op=openGroups.indexOf(m.t)>=0;
+      return `<div class="mi ${op?'open':''}" data-grp="${m.t}">
+          <span class="icp">${IC[m.ic]}</span><span class="tx">${m.t}</span><span class="arw">▶</span></div>
+        <div class="sub ${op?'open':''}" data-subwrap="${m.t}">
+          ${m.sub.map(s=>`<div class="si" data-v="${s.v}">${s.t}</div>`).join('')}</div>`;
+    }
+    return `<div class="mi" data-v="${m.v}"><span class="icp">${IC[m.ic]}</span><span class="tx">${m.t}</span></div>`;
+  }).join('');
+  $$('#menu .mi[data-v]').forEach(n=>n.addEventListener('click',()=>goView(n.dataset.v)));
+  $$('#menu .si').forEach(n=>n.addEventListener('click',()=>goView(n.dataset.v)));
+  $$('#menu .mi[data-grp]').forEach(n=>n.addEventListener('click',()=>{
+    const g=n.dataset.grp, i=openGroups.indexOf(g);
+    if(i>=0) openGroups.splice(i,1); else openGroups.push(g);
+    const collapsed=$('#side').classList.contains('collapsed');
+    if(collapsed){ $('#side').classList.remove('collapsed'); }
+    renderMenu();
+  }));
+}
+function crumbOf(v){
+  const sub=MENU.find(m=>m.sub&&m.sub.some(s=>s.v===v));
+  if(sub) return `<b>${sub.t}</b> <span style="color:#C3CBD8">/</span> ${sub.sub.find(s=>s.v===v).t}`;
+  const top=MENU.find(m=>m.v===v);
+  return `<b>${top?top.t:''}</b>`;
+}
+
 /* ================== 页面路由 ================== */
 function goView(v){
   $$('.page').forEach(p=>p.classList.remove('on'));
-  $('#pg-'+v).classList.add('on');
-  $$('.nav .ni').forEach(n=>n.classList.toggle('on',n.dataset.v===v));
+  const pg=$('#pg-'+v); if(pg) pg.classList.add('on');
+  /* 目标页在某分组下 → 自动展开该分组 */
+  const grp=MENU.find(m=>m.sub&&m.sub.some(s=>s.v===v));
+  if(grp && openGroups.indexOf(grp.t)<0){ openGroups.push(grp.t); renderMenu(); }
+  $$('#menu .mi[data-v]').forEach(n=>n.classList.toggle('on',n.dataset.v===v));
+  $$('#menu .si').forEach(n=>n.classList.toggle('on',n.dataset.v===v));
+  $('#crumb').innerHTML=crumbOf(v);
+  $('#content').scrollTop=0;
   if(v==='over') renderOver();
   if(v==='prod') renderProd();
   if(v==='lib')  renderLib();
@@ -465,8 +634,10 @@ function goView(v){
   if(v==='data') renderData();
   if(v==='orch') renderOrch();
   if(v==='wiz')  renderWiz();
+  if(v==='newmodel') renderNewModel();
+  if(v==='exlib')    renderExLib();
 }
-$$('.nav .ni').forEach(n=>n.addEventListener('click',()=>goView(n.dataset.v)));
+$('#btnFold').addEventListener('click',()=>$('#side').classList.toggle('collapsed'));
 
 /* ================== 1 总览 ================== */
 function renderOver(){
@@ -878,9 +1049,333 @@ function wizGo(i){wizIdx=i;renderWiz();}
 function wizNext(){if(wizIdx<WIZ.length)wizIdx++;renderWiz();}
 function wizPrev(){if(wizIdx>0)wizIdx--;renderWiz();}
 
+/* ================== 8 创建模型（模型中心） ================== */
+const RULE_LABEL={pass:'直接透传',max:'取最大值',min:'取最小值',avg:'取平均值',
+                  mode:'取众数',merge:'合并为数组',pri:'指定产品优先',manual:'标记人工复核'};
+const RULE_ALL=['max','min','avg','mode','merge','pri','manual'];
+const RULE_ONE=['pass','manual'];
+const NM_STEPS=['基本信息','选择 AI 产品','结果拼接配置','输出定义','预览与发布'];
+let NM={step:0, name:'胸部多模联合评估模型', code:'MIIA_MODEL_CHEST_MULTI', ver:'V1.0',
+        exam:'胸部 CT', modal:'CT',
+        desc:'组合检出 / 量化 / 质控三类结果，输出一份可直接进报告的结构化结论',
+        sel:['P01','P02','P04'], rules:{}, mode:'fuse', published:[]};
+
+function nmSample(key,pid,type){
+  const seed=[...(key+pid)].reduce((a,c)=>a+c.charCodeAt(0),0);
+  if(type==='boolean') return seed%2===0;
+  if(type==='int')     return 1+(seed%6);
+  if(type==='number')  return +((seed%1700)/100).toFixed(2);
+  if(type==='enum')    return ['实性','磨玻璃','部分实性'][seed%3];
+  if(type==='text')    return '草稿文本（'+pid+'）';
+  return String(seed%90+10);
+}
+function nmFields(){
+  const acc={};
+  NM.sel.forEach(pid=>{ const p=PRODUCTS.find(x=>x.id===pid); if(!p) return;
+    p.caps.forEach(k=>{ acc[k]=acc[k]||[]; if(acc[k].indexOf(pid)<0) acc[k].push(pid); }); });
+  return Object.keys(acc).map(k=>{
+    const c=CAPS.find(x=>x.key===k)||{key:k,cn:k,type:'—',cat:'—',desc:''};
+    return {key:k, cn:c.cn, type:c.type, cat:c.cat, srcs:acc[k], conflict:acc[k].length>1};
+  }).sort((a,b)=>(a.cat===b.cat? (a.key>b.key?1:-1) : (a.cat>b.cat?1:-1)));
+}
+function nmRuleOf(f){ return NM.rules[f.key] || (f.srcs.length>1 ? '' : 'pass'); }
+function nmVal(f){
+  const r=nmRuleOf(f); if(!r) return '—';
+  const vals=f.srcs.map(pid=>nmSample(f.key,pid,f.type));
+  switch(r){
+    case 'max': return Math.max.apply(null,vals.map(Number));
+    case 'min': return Math.min.apply(null,vals.map(Number));
+    case 'avg': return +(vals.map(Number).reduce((a,b)=>a+b,0)/vals.length).toFixed(2);
+    case 'mode':{const c={};vals.forEach(v=>c[v]=(c[v]||0)+1);return Object.keys(c).sort((a,b)=>c[b]-c[a])[0];}
+    case 'merge': return vals;
+    case 'manual': return null;
+    default: return vals[0];
+  }
+}
+function nmJson(){
+  const fs=nmFields();
+  const out={
+    model:{ code:NM.code, name:NM.name, version:NM.ver, exam:NM.exam, modal:NM.modal,
+            output_mode: NM.mode==='fuse'?'融合输出（同字段按规则合成单一值）':'并列输出（各产品结果分列保留）' },
+    sources: NM.sel.map(id=>{const p=PRODUCTS.find(x=>x.id===id);
+      return {product_id:p.id, name:p.name, vendor:p.vendor, version:p.ver, capabilities:p.caps.length};}),
+    output_fields:{}
+  };
+  fs.forEach(f=>{
+    const r=nmRuleOf(f);
+    const o={ cn:f.cn, type:f.type, from:f.srcs, stitch: r?RULE_LABEL[r]:'待选择', value: nmVal(f) };
+    if(f.conflict) o.conflict=true;
+    out.output_fields[f.key]=o;
+  });
+  out.merge_policy = NM.mode==='fuse'
+    ? '同一标准字段被多个产品输出时，按该字段的「拼接方式」合成单一值；不同字段并列输出。未出现在 output_fields 的字段不进入本模型输出。'
+    : '各产品原始结果分别保留在 sources 中，不跨产品融合，仅统一字段名与类型。';
+  return out;
+}
+function nmGo(i){ NM.step=Math.max(0,Math.min(NM_STEPS.length-1,i)); renderNewModel(); }
+function nmToggle(id){
+  const i=NM.sel.indexOf(id);
+  if(i>=0) NM.sel.splice(i,1); else NM.sel.push(id);
+  renderNewModel();
+}
+function nmMove(id,d){
+  const i=NM.sel.indexOf(id), j=i+d;
+  if(i<0||j<0||j>=NM.sel.length) return;
+  const t=NM.sel[i]; NM.sel[i]=NM.sel[j]; NM.sel[j]=t; renderNewModel();
+}
+function nmSetRule(k,v){ NM.rules[k]=v; renderNewModel(); }
+function nmReset(){
+  NM=Object.assign(NM,{step:0, sel:['P01','P02','P04'], rules:{}, mode:'fuse'});
+  renderNewModel(); toast('已重置创建模型配置');
+}
+function nmPublish(){
+  const fs=nmFields();
+  const un=fs.filter(f=>f.conflict && !nmRuleOf(f));
+  if(!NM.name.trim()||!NM.code.trim()){ toast('请先填写模型名称与模型编码'); nmGo(0); return; }
+  if(NM.sel.length<2){ toast('至少选择 2 个已接入产品，结果拼接才有意义'); nmGo(1); return; }
+  if(unresolvedCheck(un)) return;
+  NM.published.push({name:NM.name, code:NM.code, ver:NM.ver, n:NM.sel.length, fields:fs.length,
+    rules:nmFields().filter(f=>f.conflict).length, at:'2026-09-19 14:0'+(NM.published.length+1)});
+  renderNewModel();
+  toast('模型已发布：'+NM.name+' '+NM.ver+' → 进入「标准 AI 能力池」，可在工作流编排中作为节点引用');
+}
+function unresolvedCheck(un){
+  if(un.length){ toast('还有 '+un.length+' 个冲突字段未选择拼接方式：'+un.map(f=>f.cn).join('、')); nmGo(2); return true; }
+  return false;
+}
+function nmRenderStep(){
+  const fs=nmFields();
+  if(NM.step===0){
+    const F=[['模型名称','name'],['模型编码','code'],['版本','ver'],['适用检查项目','exam'],['模态','modal'],['模型说明','desc']];
+    return `<div class="card"><div class="ch">① 模型基本信息</div><div class="cb">
+      <div class="nmgrid">${F.map(x=>`<div class="pf2"><label>${x[0]}</label>
+        <input class="inp" style="margin-top:0" value="${NM[x[1]]||''}" oninput="NM.${x[1]}=this.value"></div>`).join('')}</div>
+      <div class="nmsnote" style="margin-top:12px;font-size:12.5px;color:#62779E;line-height:1.9">
+        💡 <b>模型不是新算法</b> —— 它是把「AI 产品库」里已接入产品的输出结果，按规则<b>拼接</b>成一份新的标准结构结果。<br>
+        例：检出类产品给出病灶与长径、质控类产品给出图像质量评分 → 拼成一个「胸部联合评估」输出，直接进报告。
+      </div></div></div>`;
+  }
+  if(NM.step===1){
+    const cards=PRODUCTS.map(p=>{
+      const ok=p.status==='已接入', on=NM.sel.indexOf(p.id)>=0;
+      return `<div class="pcard2 ${on?'on':''}" style="${ok?'':'opacity:.5;cursor:not-allowed'}"
+          ${ok?`onclick="nmToggle('${p.id}')"`:''}>
+        <div class="hd"><span class="ci" style="background:${p.color}">${p.ic}</span>
+          <div style="flex:1"><b>${p.name}</b><span>${p.vendor} · ${p.ver} · ${p.type}</span></div>
+          <span class="tag ${on?'green':(ok?'gray':'orange')}">${on?'已选':(ok?'可选':p.status)}</span></div>
+        <div class="row"><span>输出能力</span><b>${p.caps.length} 个标准字段</b></div>
+        <div class="row"><span>数据需求</span><b>${p.need.part} / ${p.need.scan} / ${p.need.thick}</b></div>
+      </div>`;}).join('');
+    const ord=NM.sel.length? NM.sel.map((id,i)=>{
+      const p=PRODUCTS.find(x=>x.id===id);
+      return `<div class="nmord"><span class="idx">${i+1}</span>
+        <span class="ci" style="background:${p.color}">${p.ic}</span><b>${p.name}</b>
+        <span class="mut">${p.vendor} · ${p.caps.length} 项能力</span>
+        <button class="btn sm" onclick="nmMove('${id}',-1)" ${i===0?'disabled':''}>↑</button>
+        <button class="btn sm" onclick="nmMove('${id}',1)" ${i===NM.sel.length-1?'disabled':''}>↓</button>
+        <button class="btn sm" onclick="nmToggle('${id}')">移除</button></div>`;}).join('')
+      : '<div class="mut">尚未选择产品 —— 在上方产品库中点击即可加入（「测试中」的产品不可选，必须先完成接入）。</div>';
+    return `<div class="card"><div class="ch">② 从 AI 产品库选择产品
+        <span class="r"><span class="tag blue">已选 ${NM.sel.length} 个</span>
+        ${NM.sel.length>=2?'<span class="tag green">可做结果拼接</span>':'<span class="tag orange">至少选 2 个</span>'}</span></div>
+      <div class="cb"><div class="pgrid">${cards}</div></div></div>
+      <div class="card"><div class="ch">已选产品与顺序
+        <span class="r"><span class="mut" style="font-size:11px">顺序影响「指定产品优先」与并列输出的排列</span></span></div>
+      <div class="cb">${ord}</div></div>`;
+  }
+  if(NM.step===2){
+    const conf=fs.filter(f=>f.conflict);
+    const un=conf.filter(f=>!nmRuleOf(f));
+    const rows=fs.map(f=>{
+      const r=nmRuleOf(f);
+      const list=f.conflict?RULE_ALL:RULE_ONE;
+      const sel=`<select class="inssel" onchange="nmSetRule('${f.key}',this.value)">
+        ${f.conflict?'<option value=""'+(r===''?' selected':'')+'>— 请选择 —</option>':''}
+        ${list.map(k=>`<option value="${k}"${r===k?' selected':''}>${RULE_LABEL[k]}</option>`).join('')}</select>`;
+      const src=f.srcs.map(id=>{const p=PRODUCTS.find(x=>x.id===id);
+        return `<span class="tag ${p.color==='#2A7FFF'?'blue':'gray'}" style="margin-right:3px">${p.name}</span>`;}).join('');
+      const v=nmVal(f);
+      const vTxt=(v===null)?'<span style="color:#C25E00">待人工复核</span>':(Array.isArray(v)?JSON.stringify(v):String(v));
+      return `<tr class="${f.conflict?'conf':''}">
+        <td><b>${f.cn}</b><div class="mono" style="font-size:10px;color:#8AA0C8">${f.key}</div></td>
+        <td class="mono" style="font-size:11px">${f.type}</td>
+        <td>${src}</td>
+        <td>${f.conflict?'<span class="tag red">冲突 · '+f.srcs.length+' 个产品</span>':'<span class="tag gray">单一来源</span>'}</td>
+        <td>${sel}</td>
+        <td class="mono" style="font-size:11.5px">${vTxt}</td></tr>`;
+    }).join('');
+    return `<div class="card"><div class="ch">结果合并策略</div><div class="cb">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+        ${[['fuse','融合输出','同一标准字段被多个产品输出时，按该字段的拼接方式合成一个值（适合要一份结论进报告）'],
+           ['par','并列输出','各产品结果分列保留、只统一字段名（适合要保留多厂商原始判断）']]
+          .map(x=>`<div class="nmopt ${NM.mode===x[0]?'on':''}" onclick="NM.mode='${x[0]}';renderNewModel()">
+            <b>${x[1]}</b><div class="mut" style="margin-top:4px;line-height:1.7">${x[2]}</div></div>`).join('')}
+        </div></div></div>
+      <div class="card"><div class="ch">③ 结果拼接配置
+        <span class="r"><span class="tag blue">输出字段 ${fs.length} 个</span>
+        ${conf.length?(un.length?`<span class="tag red">字段冲突 ${conf.length} 个 · ${un.length} 个未定规则</span>`
+                              :`<span class="tag orange">字段冲突 ${conf.length} 个 · 规则已定</span>`)
+                     :'<span class="tag green">无字段冲突</span>'}</span></div>
+      <div class="cb" style="padding:4px 0 0"><table class="tb">
+        <tr><th>标准能力字段</th><th>类型</th><th>来源产品</th><th>冲突</th><th style="min-width:150px">拼接方式</th><th>合成示例值</th></tr>
+        <tbody>${rows}</tbody></table>
+        <div style="padding:12px 18px;font-size:12.5px;color:#62779E;line-height:1.9">
+          规则说明：<b>取最大值/最小值/平均值</b>用于数值型（如体积、长径取多产品最大值＝保守估计）；
+          <b>取众数</b>用于枚举型；<b>合并为数组</b>保留各家结论；<b>指定产品优先</b>取排序最前的产品值；
+          <b>标记人工复核</b>则该字段输出 null 并进入医生待确认队列。
+        </div>
+      </div></div>`;
+  }
+  if(NM.step===3){
+    const rows=fs.map(f=>`<tr><td class="mono" style="font-size:11.5px">${f.key}</td><td>${f.cn}</td>
+      <td class="mono" style="font-size:11px">${f.type}</td>
+      <td>${f.srcs.map(id=>PRODUCTS.find(x=>x.id===id).name).join(' + ')}</td>
+      <td>${RULE_LABEL[nmRuleOf(f)]||'<span style="color:#C25E00">待选择</span>'}</td></tr>`).join('');
+    return `<div class="card"><div class="ch">④ 输出定义（本模型对外输出的字段）</div>
+      <div class="cb" style="padding:4px 0 0"><table class="tb">
+        <tr><th>输出字段 Key</th><th>中文名</th><th>类型</th><th>来源产品</th><th>拼接方式</th></tr>
+        <tbody>${rows}</tbody></table></div></div>
+      <div class="card"><div class="ch">输出结构（在平台标准结果结构之上，新增一层 model 级汇总）</div><div class="cb">
+        <div class="tree">
+          <div class="l1">task 信息</div><div class="l2">↳ task_id / model_code / 状态 / 时间戳</div>
+          <div class="l1">sources（本模型引用的 AI 产品）</div>
+          <div class="l2">↳ ${NM.sel.map(id=>{const p=PRODUCTS.find(x=>x.id===id);return p.name;}).join(' · ')||'—'}</div>
+          <div class="l1">output_fields（拼接后的标准字段）</div>
+          <div class="l2">↳ ${fs.slice(0,6).map(f=>'<code>'+f.key+'</code>').join(' ')}${fs.length>6?' …共 '+fs.length+' 个':''}</div>
+          <div class="l1">raw_by_source（各产品原始结果，仅「并列输出」保留）</div>
+          <div class="l2">↳ 保留厂商原始结构，便于追溯与回溯</div>
+          <div class="l1">merge_policy</div><div class="l2">↳ ${NM.mode==='fuse'?'融合输出':'并列输出'}</div>
+        </div>
+        <div style="margin-top:12px;font-size:12.5px;color:#62779E;line-height:1.95">
+          拼接出来的字段<b>仍然是标准能力字段库里的 Key</b> —— 因此本模型发布后可被工作流编排直接引用，下游（报告 / 质控）无需关心它由几个产品拼成。
+        </div></div></div>`;
+  }
+  /* step 4 */
+  const un=fs.filter(f=>f.conflict && !nmRuleOf(f));
+  const j=JSON.stringify(nmJson(),null,2);
+  return `<div class="card"><div class="ch">⑤ 输出预览（实时按当前配置生成）</div>
+      <div class="cb"><div class="jsonbox">${j.replace(/</g,'&lt;')}</div></div></div>
+    <div class="card"><div class="ch">发布校验</div><div class="cb">
+      ${(NM.sel.length>=2 && !un.length)
+        ? `<div class="nmok">✔ 校验通过：模型名称 / 编码已填写 · 已选 ${NM.sel.length} 个已接入产品 · ${fs.filter(f=>f.conflict).length} 个冲突字段的拼接规则已全部确定 · 共输出 ${fs.length} 个标准字段。</div>`
+        : `<div style="font-size:12.5px;color:#D92D20;line-height:1.9">✗ 尚未通过：${[
+            (!NM.name.trim()||!NM.code.trim())?'模型名称 / 编码未填写':'',
+            NM.sel.length<2?'已选产品不足 2 个':'',
+            un.length?('还有 '+un.length+' 个冲突字段未选择拼接方式：'+un.map(f=>f.cn).join('、')):''
+          ].filter(Boolean).join(' ｜ ')}</div>`}
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="btn pri" onclick="nmPublish()">✔ 发布模型到标准 AI 能力池</button>
+        <button class="btn" onclick="nmGo(2)">← 回去改拼接规则</button>
+      </div></div></div>
+    ${NM.published.length?`<div class="card"><div class="ch">✔ 已创建的模型 <span class="r"><span class="tag green">${NM.published.length} 个</span></span></div>
+      <div class="cb" style="padding:4px 0 0"><table class="tb">
+        <tr><th>模型名称</th><th>编码</th><th>版本</th><th>引用产品</th><th>输出字段</th><th>发布状态</th><th>发布时间</th></tr>
+        ${NM.published.map(m=>`<tr><td><b>${m.name}</b></td><td class="mono" style="font-size:11px">${m.code}</td>
+          <td>${m.ver}</td><td>${m.n} 个</td><td>${m.fields} 个</td>
+          <td><span class="tag green">已进入能力池</span></td><td class="mut">${m.at}</td></tr>`).join('')}
+      </table></div></div>`:''}`;
+}
+function renderNewModel(){
+  const fs=nmFields();
+  const conf=fs.filter(f=>f.conflict);
+  const un=conf.filter(f=>!nmRuleOf(f));
+  let h=`<div class="ph"><h2>🧬 创建模型</h2>
+      <span class="crumb">选择已接入 AI 产品 → 配置返回结果的拼接规则 → 输出一个新模型的标准结构结果</span>
+      <div class="r"><button class="btn sm" onclick="nmReset()">↺ 重置</button>
+        <button class="btn sm pri" onclick="nmPublish()">✔ 发布模型</button></div></div>
+    <div class="card" style="margin-bottom:14px"><div class="cb" style="padding:12px 18px">
+      <div class="nmsteps">${NM_STEPS.map((s,i)=>
+        `<div class="nmstep ${i===NM.step?'on':''} ${i<NM.step?'done':''}" onclick="nmGo(${i})">
+           <span class="n">${i<NM.step?'✓':(i+1)}</span>${s}</div>`).join('<span class="nmarr">→</span>')}</div>
+      <div style="margin-top:10px;font-size:11.5px;color:#8AA0C8">
+        当前：${NM.sel.length} 个产品 · ${fs.length} 个输出字段 · ${conf.length} 个字段冲突${un.length?('（'+un.length+' 个未定规则）'):''} · ${NM.mode==='fuse'?'融合输出':'并列输出'}
+      </div></div></div>
+    ${nmRenderStep()}
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
+      ${NM.step>0?`<button class="btn" onclick="nmGo(${NM.step-1})">← 上一步</button>`:''}
+      ${NM.step<NM_STEPS.length-1?`<button class="btn pri" onclick="nmGo(${NM.step+1})">下一步 →</button>`:''}
+    </div>`;
+  $('#nmWrap').innerHTML=h;
+}
+
+/* ================== 9 标准异常体系库（模型中心） ================== */
+const EXLIB=[
+ {code:'ERR_INPUT_MISMATCH', n:'输入数据不满足要求', cat:'数据类', cc:'d', stage:'数据准备', lv:'no', lvTxt:'可拦截',
+  d:'平台准备的数据不符合该 AI 的数据需求（模态 / 部位 / 扫描方式 / 层厚 / 序列类型）。',
+  act:'不创建任务，直接返回不匹配原因 + 缺失项清单；界面提示「该检查缺少 XX 序列」。',
+  mp:'联影 ERR_DATA_NOT_MATCH · 推想 INVALID_INPUT · 通用 HTTP 400'},
+ {code:'ERR_RECV_FAILED', n:'数据接收失败', cat:'传输类', cc:'s', stage:'数据分发', lv:'retry', lvTxt:'可重试',
+  d:'第三方未成功接收平台分发的影像数据（网络、存储或权限问题）。',
+  act:'按配置重试 2 次；仍失败则转人工并保留已分发记录用于追溯。',
+  mp:'推想 RECV_TIMEOUT · 通用 传输层超时'},
+ {code:'ERR_SERVICE_DOWN', n:'AI 服务不可用', cat:'服务类', cc:'s', stage:'任务调用', lv:'retry', lvTxt:'可重试',
+  d:'第三方服务未就绪 / 健康检查不通过 / 授权过期。',
+  act:'不进入处理中；标记该产品为「临时不可用」，工作流可回退到备用节点或排队等待。',
+  mp:'联影 SERVICE_UNAVAILABLE · 通用 HTTP 503'},
+ {code:'ERR_INFERENCE_FAILED', n:'推理失败', cat:'算法类', cc:'q', stage:'推理计算', lv:'man', lvTxt:'需人工',
+  d:'第三方内部推理异常终止（模型报错、显存不足、输入超出适用范围）。',
+  act:'终止任务并返回失败原因；同检查结果不入下游，由运维按产品维度统计失败率。',
+  mp:'各厂商自定义（如 INFER_EXCEPTION），必须映射到本编码'},
+ {code:'ERR_TIMEOUT', n:'处理超时', cat:'性能类', cc:'p', stage:'推理计算', lv:'retry', lvTxt:'可重试',
+  d:'超过该 AI 配置的超时时限（不同产品阈值不同，由平台统一管理）。',
+  act:'终止并释放算力；工作流按配置决定「重试」或「跳过该节点继续」。',
+  mp:'通用 HTTP 504 / 厂商 POLL_TIMEOUT'},
+ {code:'ERR_RESULT_INVALID', n:'结果返回失败 / 结构不符', cat:'结果类', cc:'r', stage:'结果回传', lv:'man', lvTxt:'需人工',
+  d:'结果未返回，或返回结构、字段 Key 不符合平台标准（未使用标准能力字段库的 Key）。',
+  act:'拒绝入库并返回校验差异；保留原始报文供厂商修正，不污染下游报告。',
+  mp:'厂商自定义结构错误，必须映射到本编码'},
+ {code:'ERR_UNKNOWN', n:'未知异常', cat:'其他', cc:'q', stage:'任意阶段', lv:'man', lvTxt:'需人工',
+  d:'其他未归类异常，人工研判后归档。',
+  act:'进入人工队列；归档时若确认为新类型，则纳入标准异常体系库（与标准能力字段库同样的动态扩展机制）。',
+  mp:'未映射的任何错误码'}
+];
+function renderExLib(){
+  const cnt={no:0,retry:0,man:0}; EXLIB.forEach(e=>cnt[e.lv]++);
+  const cats={}; EXLIB.forEach(e=>cats[e.cat]=(cats[e.cat]||0)+1);
+  let h=`<div class="ph"><h2>📕 标准异常体系库</h2>
+      <span class="crumb">第三方 Error Code 可以不同，但必须映射到这里的标准异常类型 —— 平台才能统一做监控 / 告警 / 定位 / 统计</span>
+      <div class="r"><button class="btn sm" onclick="goView('run')">↗ 查看统一运行规范</button></div></div>
+    <div class="stats">
+      <div class="stat"><div class="k">标准异常类型</div><div class="v">${EXLIB.length}</div><div class="s">与「5 态任务状态」配套</div></div>
+      <div class="stat"><div class="k">覆盖类别</div><div class="v">${Object.keys(cats).length}</div><div class="s">${Object.keys(cats).join(' · ')}</div></div>
+      <div class="stat"><div class="k">可拦截 / 可重试</div><div class="v">${cnt.no} / ${cnt.retry}</div><div class="s">不进入处理中 / 自动重试</div></div>
+      <div class="stat"><div class="k">需人工介入</div><div class="v">${cnt.man}</div><div class="s">进入人工队列并归档</div></div>
+    </div>
+    <div class="card"><div class="ch">异常类型清单（点击卡片可高亮对应行）</div><div class="cb">
+      <div class="exgrid">${EXLIB.map((e,i)=>
+        `<div class="ex" onclick="document.getElementById('exr-${i}').scrollIntoView({block:'center'});
+            document.querySelectorAll('#exTable tr').forEach(r=>r.style.background='');
+            document.getElementById('exr-${i}').style.background='#FFF3F3'"
+          style="cursor:pointer"><b>${e.n}</b><div class="ds">${e.cat} · ${e.stage}</div>
+          <div class="mp">${e.code}</div></div>`).join('')}</div>
+    </div></div>
+    <div class="card"><div class="ch">异常定义明细（平台处理动作 + 第三方映射）</div>
+      <div class="cb" style="padding:4px 0 0"><table class="tb" id="exTable">
+        <tr><th>标准编码</th><th>名称</th><th>类别</th><th>发生阶段</th><th>处置级别</th><th style="min-width:230px">触发场景</th><th style="min-width:230px">平台处理动作</th><th>第三方映射示例</th></tr>
+        <tbody>${EXLIB.map((e,i)=>`<tr id="exr-${i}">
+          <td class="mono" style="font-size:11px">${e.code}</td>
+          <td><b>${e.n}</b></td>
+          <td><span class="excat ${e.cc}">${e.cat}</span></td>
+          <td>${e.stage}</td>
+          <td><span class="lvtag ${e.lv}">${e.lvTxt}</span></td>
+          <td style="font-size:12px;color:#5E7496;line-height:1.7">${e.d}</td>
+          <td style="font-size:12px;color:#35507E;line-height:1.7">${e.act}</td>
+          <td style="font-size:11px;color:#8AA0C8;line-height:1.7">${e.mp}</td></tr>`).join('')}
+        </tbody></table></div></div>
+    <div class="card"><div class="ch">与任务状态、动态扩展的关系</div>
+      <div class="cb" style="font-size:12.5px;color:#5E7496;line-height:2">
+        ▸ 任务进入 <b>失败</b> 态时，必须携带<b>本库中的一个标准异常编码</b> —— 不允许只返回「失败」。<br>
+        ▸ 异常体系同样是<b>可动态扩展</b>的：遇到无法归类的异常先归入 <code class="mono">ERR_UNKNOWN</code>，人工研判确认后新增标准类型，与标准能力字段库同一套扩展机制。<br>
+        ▸ 统一之后才能做跨厂商对比：同一类异常在各产品的发生率、平均恢复时长、重试成功率，才具备可比性。
+      </div></div>`;
+  $('#exWrap').innerHTML=h;
+}
+
 /* init */
+renderMenu();
 goView('over');
-console.log('MIIA-AI 三方模型标准化接入 + 工作流编排 原型 V2.1 已加载');
+console.log('MIIA-AI 三方模型标准化接入 + 工作流编排 原型 V3.0 已加载（新增：模型中心 / 创建模型 / 标准异常体系库）');
+
 </script>
 </body>
 </html>
