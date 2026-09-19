@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V2.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#E9F1FB;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#B9C6DC;border-radius:4px}
+/* 顶栏 */
+.top{height:52px;background:#101B31;display:flex;align-items:center;padding:0 18px;color:#fff;gap:12px;flex-shrink:0}
+.top .logo{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700}
+.top .logo .cube{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2A7FFF,#00C896);display:flex;align-items:center;justify-content:center;font-size:13px}
+.top .tagline{font-size:11.5px;color:#8AA0C8}
+.top .sp{flex:1}
+.top .pill{font-size:11px;color:#9FE3C4;background:rgba(0,200,150,.12);border:1px solid rgba(0,200,150,.3);padding:4px 13px;border-radius:20px;display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:#00C896}
+.top .user{display:flex;align-items:center;gap:8px;font-size:12px;color:#B7C6DE}
+.av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2A7FFF,#00C896);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+/* 导航 */
+.nav{height:44px;background:#1B2B4C;display:flex;align-items:center;padding:0 10px;flex-shrink:0;overflow-x:auto}
+.nav .ni{display:flex;align-items:center;gap:6px;padding:0 15px;height:100%;color:#9FB2D4;font-size:13px;border-bottom:3px solid transparent;cursor:pointer;user-select:none;white-space:nowrap}
+.nav .ni:hover{color:#fff}
+.nav .ni.on{color:#fff;border-bottom-color:#4DA3FF;font-weight:600}
+.nav .note{margin-left:auto;font-size:11px;color:#6E84AD;padding-right:8px;white-space:nowrap}
+.page{display:none;height:calc(100vh - 96px);overflow-y:auto}
+.page.on{display:block}
+.wrap{max-width:1520px;margin:0 auto;padding:16px 20px 34px}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.ph h2{font-size:19px;color:#16294D}
+.ph .crumb{font-size:12px;color:#7E93B8}
+.ph .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.card{background:#fff;border:1px solid #D8E4F5;border-radius:12px;margin-bottom:14px;box-shadow:0 1px 4px rgba(24,60,130,.05)}
+.card .ch{padding:12px 18px;border-bottom:1px solid #EBF1FA;display:flex;align-items:center;font-weight:700;font-size:14px;color:#16294D;gap:8px}
+.card .ch .r{margin-left:auto;display:flex;gap:8px;font-weight:400;align-items:center}
+.card .cb{padding:14px 18px}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:12px;font-size:11px;white-space:nowrap}
+.tag.gray{background:#EEF2F8;color:#5E7496}.tag.green{background:#E3F7EC;color:#0E8A4C}
+.tag.red{background:#FDE7E7;color:#D92D20}.tag.blue{background:#E4EEFF;color:#1A5FD0}
+.tag.orange{background:#FEF0DC;color:#C25E00}.tag.purple{background:#F1E9FD;color:#6E3FD4}
+.tag.teal{background:#E0F4F3;color:#057174}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:7px;font-size:12.5px;background:#fff;border:1px solid #C4D4EC;color:#35507E;transition:all .12s;white-space:nowrap}
+.btn:hover{border-color:#2A7FFF;color:#1A5FD0}
+.btn.pri{background:#2A7FFF;border-color:#2A7FFF;color:#fff}
+.btn.pri:hover{background:#1E6FEE;color:#fff}
+.btn.grn{background:#0E8A4C;border-color:#0E8A4C;color:#fff}
+.btn.grn:hover{background:#0B7A42;color:#fff}
+.btn.sm{padding:4px 11px;font-size:11.5px}
+.btn.gho{background:#F3F7FD;border-color:#DCE6F5}
+.mono{font-family:Consolas,monospace}
+.mut{color:#8AA0C8}
+table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
+.tb th{background:#F3F7FD;color:#62779E;font-weight:600;padding:9px 12px;text-align:left;border-bottom:1px solid #E3ECF9;white-space:nowrap}
+.tb td{padding:9px 12px;border-bottom:1px solid #EEF3FB;vertical-align:middle}
+.tb tr:hover td{background:#F8FBFE}
+/* 总览 */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.stat{background:#fff;border:1px solid #D8E4F5;border-radius:12px;padding:12px 16px}
+.stat .k{font-size:11.5px;color:#7E93B8}
+.stat .v{font-size:23px;font-weight:800;color:#16294D;margin-top:2px}
+.stat .s{font-size:11px;color:#8AA0C8;margin-top:2px}
+.principle{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.pcard{border-radius:12px;padding:14px 18px;border:1px solid}
+.pcard.in{background:#FFF9EC;border-color:#F2D9A8}
+.pcard.out{background:#EEF7FF;border-color:#BBD4F7}
+.pcard .pt{font-size:14px;font-weight:800;margin-bottom:6px}
+.pcard.in .pt{color:#B4740A}
+.pcard.out .pt{color:#1A5FD0}
+.pcard .pd{font-size:12px;color:#5E7496;line-height:1.85}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chnode{background:#F4F8FF;border:1px solid #C4D9F7;border-radius:9px;padding:9px 13px;font-size:12px;color:#1A5FD0;font-weight:600;display:flex;align-items:center;gap:7px}
+.chnode .no{width:18px;height:18px;border-radius:50%;background:#2A7FFF;color:#fff;font-size:10.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chnode.end{background:#E3F7EC;border-color:#9BDCB8;color:#0E8A4C}
+.chnode.end .no{background:#16A34A}
+.carr{color:#B8C6DE;font-size:14px;margin:0 2px}
+/* 产品库 */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.pcard2{border:1px solid #DCE6F5;border-radius:11px;padding:13px 15px;background:#fff;cursor:pointer;transition:.13s}
+.pcard2:hover{border-color:#9DBDF2;transform:translateY(-2px);box-shadow:0 6px 18px rgba(24,60,130,.09)}
+.pcard2.on{border-color:#2A7FFF;box-shadow:0 0 0 2px rgba(42,127,255,.14)}
+.pcard2 .hd{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.pcard2 .ci{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0}
+.pcard2 .hd b{font-size:13.5px;color:#16294D;display:block}
+.pcard2 .hd span{font-size:10.5px;color:#8AA0C8}
+.pcard2 .row{display:flex;justify-content:space-between;font-size:11.5px;padding:4px 0;border-bottom:1px dashed #EEF3FB;color:#5E7496}
+.pcard2 .row:last-of-type{border:none}
+.pcard2 .row b{color:#35507E}
+/* 能力勾选矩阵 */
+.capgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.capitem{display:flex;align-items:center;gap:9px;border:1px solid #E3ECF9;border-radius:9px;padding:8px 11px;cursor:pointer;transition:.12s;background:#fff}
+.capitem:hover{border-color:#BBD4F7;background:#FAFCFF}
+.capitem.on{border-color:#0E8A4C;background:#F2FBF6}
+.capitem .bx{width:17px;height:17px;border-radius:5px;border:1.5px solid #C4D4EC;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0}
+.capitem.on .bx{background:#0E8A4C;border-color:#0E8A4C}
+.capitem .cn{font-size:12px;color:#35507E;font-weight:600;display:block}
+.capitem .ck{font-size:9.5px;color:#8AA0C8;font-family:Consolas,monospace}
+.jsonbox{background:#0F1D38;color:#9FE3C4;border-radius:9px;padding:12px 14px;font-family:Consolas,monospace;font-size:11.5px;line-height:1.75;overflow-x:auto;white-space:pre}
+/* Tab */
+.tabs{display:flex;gap:2px;border-bottom:2px solid #DCE6F5;margin-bottom:14px;flex-wrap:wrap}
+.tabx{padding:8px 16px;font-size:13px;color:#5E7496;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabx.on{color:#1A5FD0;font-weight:700;border-bottom-color:#2A7FFF}
+/* 状态机 */
+.sml{display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+.smnode{border-radius:9px;padding:9px 15px;font-size:12.5px;font-weight:700;border:1.5px solid}
+.smnode .sub{display:block;font-size:10px;font-weight:400;margin-top:2px}
+/* 异常卡 */
+.exgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ex{border:1px solid #F4C4C4;background:#FEF6F6;border-radius:10px;padding:11px 13px}
+.ex b{font-size:12.5px;color:#D92D20;display:block}
+.ex .ds{font-size:11px;color:#7A5C5C;margin-top:4px;line-height:1.65}
+.ex .mp{font-size:10px;color:#9AA6B6;margin-top:5px;font-family:Consolas,monospace}
+/* 结果结构树 */
+.tree{background:#F8FBFE;border:1px solid #DCE6F5;border-radius:10px;padding:14px 18px;font-size:12.5px;line-height:2}
+.tree .l1{color:#16294D;font-weight:700}
+.tree .l2{padding-left:18px;color:#35507E}
+.tree .l3{padding-left:36px;color:#5E7496}
+.tree .l4{padding-left:54px;color:#8AA0C8}
+.tree code{background:#E4EEFF;color:#1A5FD0;padding:1px 6px;border-radius:4px;font-family:Consolas,monospace;font-size:11px}
+/* 匹配链路 */
+.matchrow{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid #E3ECF9;border-radius:9px;margin-bottom:7px;font-size:12px}
+.matchrow.ok{background:#F2FBF6;border-color:#9BDCB8}
+.matchrow.no{background:#F8F9FB;border-color:#DDE6F3;opacity:.75}
+.matchrow .nm{flex:1;color:#35507E;font-weight:600}
+.matchrow .rs{font-size:11px}
+/* 编排 */
+.editor{display:grid;grid-template-columns:222px 1fr 262px;gap:12px;align-items:start}
+.lib{border:1px solid #DCE6F5;border-radius:11px;background:#fff;overflow:hidden}
+.lib .lh{padding:10px 13px;background:#F3F7FD;font-weight:700;font-size:12.5px;color:#35507E;border-bottom:1px solid #E3ECF9}
+.lib .grp{padding:8px 10px 3px;font-size:10.5px;color:#8AA0C8;font-weight:700}
+.lib .li{display:flex;align-items:center;gap:8px;padding:7px 10px;margin:2px 6px;border-radius:8px;font-size:12px;color:#35507E;cursor:pointer;border:1px solid transparent}
+.lib .li:hover{background:#F4F8FF;border-color:#BBD4F7}
+.lib .li .ic{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;flex-shrink:0}
+.lib .li .vv{font-size:9.5px;color:#8AA0C8;margin-left:auto;white-space:nowrap}
+.canvas-wrap{border:1px solid #DCE6F5;border-radius:11px;background:#0F1D38;position:relative;overflow:hidden;min-height:470px}
+.canvas-wrap::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#233252 1px,transparent 1px);background-size:22px 22px}
+.cv-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.cnode{position:absolute;background:#fff;border-radius:10px;padding:8px 11px;box-shadow:0 4px 14px rgba(0,0,0,.28);z-index:2;display:flex;align-items:center;gap:9px;width:162px;cursor:grab;border:2px solid transparent;user-select:none}
+.cnode:hover{border-color:#4DA3FF}
+.cnode.sel{border-color:#4DA3FF;box-shadow:0 0 0 3px rgba(77,163,255,.3),0 4px 14px rgba(0,0,0,.3)}
+.cnode .ci{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0}
+.cnode .ct{min-width:0;flex:1}
+.cnode .ct b{font-size:11.5px;color:#16294D;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cnode .ct span{font-size:9.5px;color:#8AA0C8}
+.cv-io .ci{background:#0E8A4C}.cv-ai .ci{background:#2A7FFF}.cv-air .ci{background:#6E3FD4}
+.cv-qc .ci{background:#F59E0B}.cv-man .ci{background:#35507E}.cv-out .ci{background:#00A896}
+.prop{border:1px solid #DCE6F5;border-radius:11px;background:#fff;overflow:hidden}
+.prop .ph2{padding:10px 13px;background:#F3F7FD;font-weight:700;font-size:12.5px;color:#35507E;border-bottom:1px solid #E3ECF9}
+.prop .pbody{padding:12px 13px;font-size:12px}
+.pf{margin-bottom:10px}
+.pf label{display:block;font-size:10.5px;color:#8AA0C8;margin-bottom:4px;font-weight:600}
+.pf .ro{background:#F3F6FB;color:#5E7496;padding:6px 9px;border-radius:7px;font-size:11.5px;line-height:1.7;border:1px solid #E3EAF6}
+/* 轨迹 */
+.pipe{display:flex;align-items:flex-start;padding:6px 8px 2px;flex-wrap:wrap}
+.stage{flex:1;min-width:74px;display:flex;flex-direction:column;align-items:center}
+.stage .st-ico{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;background:#F0F4FB;border:2.5px solid #CBD9EF}
+.stage.done .st-ico{background:#16A34A;border-color:#16A34A;color:#fff}
+.stage.run .st-ico{background:#E4EEFF;border-color:#2A7FFF;box-shadow:0 0 0 5px rgba(42,127,255,.13)}
+.stage.recv .st-ico{background:#F1E9FD;border-color:#6E3FD4;color:#6E3FD4}
+.stage.block .st-ico{background:#E54040;border-color:#E54040;color:#fff;box-shadow:0 0 0 5px rgba(229,64,64,.13)}
+.stage .st-name{font-size:11.5px;font-weight:700;color:#35507E;margin-top:5px;text-align:center}
+.stage .st-sub{font-size:10px;color:#8AA0C8;margin-top:1px;text-align:center}
+.conn{flex:0 0 22px;height:2.5px;background:#CBD9EF;margin-top:19px}
+.conn.done{background:#16A34A}
+/* 向导 */
+.wiz{display:grid;grid-template-columns:250px 1fr;gap:14px;align-items:start}
+.wrail{border:1px solid #DCE6F5;border-radius:11px;background:#fff;overflow:hidden}
+.wstep{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-bottom:1px solid #EEF3FB;font-size:12px;color:#5E7496;cursor:pointer}
+.wstep:last-child{border:none}
+.wstep:hover{background:#F8FBFE}
+.wstep.on{background:#F0F6FF;color:#1A5FD0;font-weight:700}
+.wstep .wn{width:20px;height:20px;border-radius:50%;background:#E4EEFF;color:#1A5FD0;font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wstep.done .wn{background:#0E8A4C;color:#fff}
+.wstep.on .wn{background:#2A7FFF;color:#fff}
+.wstep .wt{font-size:11px;color:#8AA0C8;margin-top:2px}
+.wbox{border:1px solid #DCE6F5;border-radius:11px;background:#fff;padding:18px 20px}
+.wbox h3{font-size:16px;color:#16294D;margin-bottom:4px}
+.wbox .wsub{font-size:11.5px;color:#8AA0C8;margin-bottom:14px}
+.wgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.wf{border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF}
+.wf .k{font-size:10.5px;color:#8AA0C8;font-weight:700}
+.wf .v{font-size:12px;color:#35507E;margin-top:4px;line-height:1.7}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#16294D;color:#fff;padding:10px 22px;border-radius:9px;font-size:13px;z-index:99;display:none;box-shadow:0 8px 26px rgba(0,0,0,.3)}
+.toast.show{display:block;animation:pop .25s}
+@keyframes pop{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translateX(-50%)}}
+.modal-mask{position:fixed;inset:0;background:rgba(16,27,49,.5);display:none;align-items:center;justify-content:center;z-index:98}
+.modal-mask.show{display:flex}
+.modal{background:#fff;border-radius:13px;width:520px;box-shadow:0 20px 50px rgba(0,0,0,.3);overflow:hidden}
+.modal .mh{padding:15px 20px;font-size:15px;font-weight:700;color:#16294D;border-bottom:1px solid #EBF1FA}
+.modal .mb{padding:16px 20px;font-size:12.5px;color:#5E7496;line-height:1.9}
+.modal .mf{padding:12px 20px;border-top:1px solid #EBF1FA;display:flex;justify-content:flex-end;gap:8px}
+.inp{width:100%;padding:7px 10px;border:1px solid #D3DEFF;border-radius:7px;font-size:12.5px;font-family:inherit;color:#2A3040;background:#F8FAFF;margin-top:4px}
+.hl{animation:hlf 1.6s}
+@keyframes hlf{0%{background:#FFF6D6}100%{background:transparent}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="logo"><span class="cube">⛓</span>MIIA-AI <span style="font-size:12px;font-weight:400;color:#8AA0C8">三方模型标准化接入 + 工作流编排</span></div>
+  <span class="tagline">输入侧兼容第三方 · 输出及运行侧标准化第三方</span>
+  <div class="sp"></div>
+  <div class="pill"><span class="dot"></span>标准 AI 能力池运行中</div>
+  <div class="user"><span class="av">VV</span>产品 · VV</div>
+</div>
+<div class="nav">
+  <div class="ni on" data-v="over">🎯 接入总览</div>
+  <div class="ni" data-v="prod">🤖 AI 产品库</div>
+  <div class="ni" data-v="lib">📚 标准能力字段库</div>
+  <div class="ni" data-v="run">🔄 统一运行规范</div>
+  <div class="ni" data-v="data">📥 数据需求与匹配</div>
+  <div class="ni" data-v="orch">🧩 工作流编排</div>
+  <div class="ni" data-v="wiz">🧭 新 AI 接入向导</div>
+  <div class="note">一套接入机制 · N 个第三方 AI</div>
+</div>
+
+<!-- ============ 1 接入总览 ============ -->
+<div class="page on" id="pg-over">
+  <div class="wrap">
+    <div class="ph"><h2>🎯 第三方 AI 标准化接入</h2><span class="crumb">建设目标：新 AI 接入 = 能力注册 + 数据需求配置 + 标准接口适配</span></div>
+
+    <div class="principle">
+      <div class="pcard in"><div class="pt">🟡 输入侧 · 兼容第三方</div><div class="pd">不要求第三方适配 MIIA-AI 的统一影像输入。第三方只描述"什么数据才能让我正常运行"，由平台利用<b>检查部位识别 + 影像序列识别/整理</b>能力按需准备并分发数据。</div></div>
+      <div class="pcard out"><div class="pt">🔵 输出及运行侧 · 标准化第三方</div><div class="pd">统一调用方式、统一任务状态、统一异常体系、统一结果结构。第三方内部可以有自己的状态与错误码，进入 MIIA-AI 必须映射到平台标准。</div></div>
+    </div>
+
+    <div class="card"><div class="ch">🔗 总体接入架构（六步）</div><div class="cb">
+      <div class="chain">
+        <span class="chnode"><span class="no">1</span>AI 产品注册</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">2</span>AI 能力标准化配置</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">3</span>数据需求配置</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">4</span>统一任务调用</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">5</span>统一任务状态与异常</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">6</span>标准结构化结果返回</span><span class="carr">→</span>
+        <span class="chnode end"><span class="no">✓</span>完成标准化接入</span>
+      </div>
+    </div></div>
+
+    <div class="stats">
+      <div class="stat"><div class="k">已接入 AI 产品</div><div class="v" id="ovP">0</div><div class="s">含检出 / 报告 / 质控类</div></div>
+      <div class="stat"><div class="k">标准能力字段</div><div class="v" id="ovC">0</div><div class="s">全局统一 Key，可动态扩展</div></div>
+      <div class="stat"><div class="k">统一任务状态</div><div class="v">5</div><div class="s">待处理→已接收→处理中→成功/失败</div></div>
+      <div class="stat"><div class="k">标准异常类型</div><div class="v">7</div><div class="s">供监控 / 告警 / 定位 / 统计</div></div>
+    </div>
+
+    <div class="card"><div class="ch">❗ 为什么需要标准能力字段库</div><div class="cb" style="font-size:12.5px;color:#5E7496;line-height:2">
+      不同厂家对同一件事可能分别返回 <code class="mono" style="background:#FDE7E7;color:#D92D20;padding:1px 6px;border-radius:4px">malignantRate</code>
+      <code class="mono" style="background:#FDE7E7;color:#D92D20;padding:1px 6px;border-radius:4px">cancerRisk</code>
+      <code class="mono" style="background:#FDE7E7;color:#D92D20;padding:1px 6px;border-radius:4px">malignancy</code>
+      —— 平台无法判断它们是不是同一个东西。<br>
+      一旦平台注册 <b>恶性概率 = <code class="mono" style="background:#E4EEFF;color:#1A5FD0;padding:1px 6px;border-radius:4px">malignancy_probability</code></b>，第三方只要声明支持这个能力，就必须按这个 Key 返回。<br>
+      <span class="mut">目标不是让所有 AI 变得一样，而是：输入侧兼容、输出侧统一。</span>
+    </div></div>
+
+    <div class="card"><div class="cb" style="font-size:12.5px;color:#62779E;line-height:1.95">
+      💡 <b>标品逻辑</b>：以前每接一个 AI = 单独开发一套适配逻辑（数据准备、调用、状态、异常、结果解析各写一遍），接入与维护成本随 AI 数量持续上升；<br>
+      现在 = <b>1 套接入机制 + N 份接入配置</b>（能力注册 + 数据需求配置 + 标准接口适配）。新 AI 通过测试后自动进入<b>标准 AI 能力池</b>，可直接被工作流编排引用。
+    </div></div>
+  </div>
+</div>
+
+<!-- ============ 2 AI 产品库 ============ -->
+<div class="page" id="pg-prod">
+  <div class="wrap">
+    <div class="ph"><h2>🤖 AI 产品库</h2><span class="crumb">这一层只解决：MIIA-AI 现在有哪些 AI 产品（不在此写死能力字段）</span>
+      <div class="r"><button class="btn sm pri" onclick="goView('wiz')">＋ 注册新 AI 产品</button></div></div>
+    <div class="pgrid" id="prodGrid"></div>
+
+    <div class="card" id="prodDetail" style="display:none;margin-top:14px">
+      <div class="ch" id="pdHead"></div>
+      <div class="cb">
+        <div class="tabs" id="pdTabs">
+          <div class="tabx on" onclick="pdTab('info',this)">基本信息</div>
+          <div class="tabx" onclick="pdTab('caps',this)">能力配置（Capability Profile）</div>
+          <div class="tabx" onclick="pdTab('need',this)">数据需求</div>
+        </div>
+        <div id="pdBody"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 3 标准能力字段库 ============ -->
+<div class="page" id="pg-lib">
+  <div class="wrap">
+    <div class="ph"><h2>📚 标准能力字段库</h2><span class="crumb">全局统一：第三方声明支持某能力，就必须按该 Key 返回</span>
+      <div class="r"><button class="btn sm pri" onclick="openNewCap()">＋ 新增标准能力</button></div></div>
+    <div class="card"><div class="ch">标准字段库 <span class="r"><span class="tag blue" id="libCount"></span><span class="tag teal">可动态扩展</span></span></div>
+      <div class="cb" style="padding:4px 0 0"><table class="tb">
+        <tr><th>标准 Key</th><th>中文名</th><th>类型</th><th>语义说明</th><th>分类</th><th>被引用</th></tr>
+        <tbody id="libRows"></tbody></table></div>
+    </div>
+    <div class="card"><div class="ch">➕ 动态扩展机制（关键结论）</div><div class="cb" style="font-size:12.5px;color:#5E7496;line-height:2">
+      MIIA-AI 不可能提前知道未来所有 AI 产品会有什么能力，因此不做"所有医学 AI 输出字段大全"，采用 <b>标准字段库 + 动态扩展</b>：<br>
+      准备接入新 AI，厂商说支持「位置 / 大小 / 体积 / 恶性概率 / <b>某个以前没出现过的新指标 X</b>」时——<br>
+      ▸ 前四个已存在 → <b>直接选择标准能力</b><br>
+      ▸ 新指标 X 不存在 → <b>新增标准能力</b> → 分配唯一 Key → 定义字段语义 → 纳入标准能力库<br>
+      <span class="mut">能力库会随接入产品增多而不断丰富。（点右上「＋ 新增标准能力」可现场演示）</span>
+    </div></div>
+  </div>
+</div>
+
+<!-- ============ 4 统一运行规范 ============ -->
+<div class="page" id="pg-run">
+  <div class="wrap">
+    <div class="ph"><h2>🔄 统一运行规范</h2><span class="crumb">调用 · 状态 · 异常 · 结果 —— 四件套统一，第三方内部可不同</span></div>
+    <div class="tabs" id="runTabs">
+      <div class="tabx on" onclick="runTab('call',this)">统一任务调用</div>
+      <div class="tabx" onclick="runTab('state',this)">统一任务状态</div>
+      <div class="tabx" onclick="runTab('ex',this)">统一异常体系</div>
+      <div class="tabx" onclick="runTab('out',this)">标准结果输出</div>
+    </div>
+    <div id="runBody"></div>
+  </div>
+</div>
+
+<!-- ============ 5 数据需求与匹配 ============ -->
+<div class="page" id="pg-data">
+  <div class="wrap">
+    <div class="ph"><h2>📥 数据需求配置与匹配</h2><span class="crumb">第三方只描述"什么数据能让我跑"，数据准备与分发由平台负责</span></div>
+    <div class="card"><div class="ch">选择 AI 产品 <span class="r"><span class="mut" style="font-size:11px">切换产品，观察下方数据需求与匹配结果变化</span></span></div>
+      <div class="cb"><div style="display:flex;gap:8px;flex-wrap:wrap" id="dataSel"></div></div>
+    </div>
+    <div class="card"><div class="ch">📋 数据需求 <span class="r" id="dataFor"></span></div><div class="cb" id="dataForm"></div></div>
+    <div class="card"><div class="ch">🔀 平台自动匹配链路</div><div class="cb">
+      <div class="chain" style="margin-bottom:14px">
+        <span class="chnode"><span class="no">1</span>医院原始数据</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">2</span>检查部位识别</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">3</span>影像序列识别 / 整理</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">4</span>按 AI 数据需求匹配序列</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">5</span>分发至第三方 AI</span>
+      </div>
+      <div id="matchList"></div>
+      <div style="margin-top:10px;font-size:12px;color:#62779E;line-height:1.9">
+        ✅ 匹配结果：<b id="matchSum"></b> ｜ <span class="mut">新增第三方 AI 原则上只需配置数据需求，不需要重新开发一套数据分发逻辑。</span>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ============ 6 工作流编排 ============ -->
+<div class="page" id="pg-orch">
+  <div class="wrap">
+    <div class="ph"><h2>🧩 工作流编排</h2><span class="crumb" id="orchCrumb"></span>
+      <div class="r">
+        <select id="wfSel" style="padding:6px 10px;border:1px solid #C4D4EC;border-radius:7px;font-size:12.5px;font-family:inherit" onchange="switchWf(this.value)"></select>
+        <button class="btn sm pri" onclick="runWf()">▶ 运行工作流</button>
+      </div></div>
+    <div class="editor">
+      <div class="lib"><div class="lh">📦 节点库（标准 AI 能力池）</div><div id="libBody"></div></div>
+      <div>
+        <div class="canvas-wrap" id="cvWrap"><svg class="cv-svg" id="cvSvg" xmlns="http://www.w3.org/2000/svg"></svg><div id="cvNodes"></div></div>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn sm" onclick="delNode()">🗑 删除选中节点</button>
+          <span class="mut" style="font-size:11px">节点库来自已接入并通过测试的 AI 产品（能力池）· 拖拽可调整位置</span>
+        </div>
+      </div>
+      <div class="prop"><div class="ph2">⚙️ 节点属性 <span id="propHint" class="mut" style="font-weight:400;font-size:10.5px"></span></div><div class="pbody" id="propBody"></div></div>
+    </div>
+
+    <div class="card" style="margin-top:14px"><div class="ch">▶️ 单 Case 运行轨迹（状态与异常均来自平台标准）</div>
+      <div class="cb"><div class="pipe" id="pipe"></div>
+        <div id="runNote" style="margin-top:12px"></div>
+      </div></div>
+  </div>
+</div>
+
+<!-- ============ 7 新 AI 接入向导 ============ -->
+<div class="page" id="pg-wiz">
+  <div class="wrap">
+    <div class="ph"><h2>🧭 新 AI 完整接入流程</h2><span class="crumb">接一个完全陌生的 AI，流程固定为这 8 步</span>
+      <div class="r"><button class="btn sm" onclick="wizGo(0)">↺ 从头演示</button><button class="btn sm pri" onclick="wizNext()">下一步 →</button></div></div>
+    <div class="wiz">
+      <div class="wrail" id="wRail"></div>
+      <div class="wbox" id="wBox"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal-mask" id="mask"><div class="modal">
+  <div class="mh">➕ 新增标准能力</div>
+  <div class="mb">
+    <div>接入新 AI 时，若厂商能力在标准库中<b>不存在</b>，走这条路径：新增标准能力 → 分配唯一 Key → 定义字段语义 → 纳入标准能力库。</div>
+    <div style="margin-top:10px">
+      <label style="font-size:11px;color:#8AA0C8;font-weight:600">中文名</label>
+      <input class="inp" id="ncName" value="病灶生长率">
+      <label style="font-size:11px;color:#8AA0C8;font-weight:600;display:block;margin-top:8px">标准 Key（唯一）</label>
+      <input class="inp" id="ncKey" value="growth_rate">
+      <label style="font-size:11px;color:#8AA0C8;font-weight:600;display:block;margin-top:8px">语义说明</label>
+      <input class="inp" id="ncDesc" value="病灶体积年增长百分比，用于随访趋势判断">
+      <label style="font-size:11px;color:#8AA0C8;font-weight:600;display:block;margin-top:8px">分类</label>
+      <select class="inp" id="ncCat"><option>量化</option><option>检出</option><option>分类</option><option>定位</option><option>质控</option><option>扩展</option></select>
+    </div>
+  </div>
+  <div class="mf"><button class="btn" onclick="closeMask()">取消</button><button class="btn pri" onclick="doNewCap()">确认新增并纳入标准库</button></div>
+</div></div>
+
+<script>
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2800);}
+
+/* ================== 标准能力字段库 ================== */
+let CAPS=[
+ {key:'lesion_detected',        cn:'病灶检出',      type:'boolean', cat:'检出', desc:'是否检出病灶'},
+ {key:'nodule_count',           cn:'结节数量',      type:'int',     cat:'检出', desc:'检出的结节总数'},
+ {key:'lesion_location',        cn:'病灶位置',      type:'string',  cat:'定位', desc:'肺叶/肺段级解剖位置'},
+ {key:'lesion_localization',    cn:'病灶定位',      type:'boolean', cat:'定位', desc:'是否支持影像坐标定位（框/层号）'},
+ {key:'long_diameter',          cn:'长径',          type:'number',  cat:'量化', desc:'病灶最大径，单位 mm'},
+ {key:'short_diameter',         cn:'短径',          type:'number',  cat:'量化', desc:'病灶最短径，单位 mm'},
+ {key:'lesion_volume',          cn:'体积',          type:'number',  cat:'量化', desc:'病灶体积，单位 cm³'},
+ {key:'density_type',           cn:'密度类型',      type:'enum',    cat:'分类', desc:'实性 / 磨玻璃 / 部分实性'},
+ {key:'malignancy_probability', cn:'恶性概率',      type:'number',  cat:'分类', desc:'恶性概率 0–1（统一 Key，替代 malignantRate / cancerRisk）'},
+ {key:'lung_rads',              cn:'Lung-RADS',     type:'enum',    cat:'分类', desc:'Lung-RADS 分级 0–4X'},
+ {key:'calcification_type',     cn:'钙化类型',      type:'enum',    cat:'分类', desc:'无 / 点状 / 爆米花 / 弥漫'},
+ {key:'pleural_effusion',       cn:'胸腔积液',      type:'boolean', cat:'检出', desc:'是否检出胸腔积液'},
+ {key:'fracture_site',          cn:'骨折部位',      type:'string',  cat:'定位', desc:'骨折所在骨性结构'},
+ {key:'fracture_type',          cn:'骨折类型',      type:'enum',    cat:'分类', desc:'线性 / 粉碎 / 压缩'},
+ {key:'hemorrhage_volume',      cn:'出血量',        type:'number',  cat:'量化', desc:'颅内出血体积，单位 mL'},
+ {key:'midline_shift',          cn:'中线移位',      type:'number',  cat:'量化', desc:'中线结构移位，单位 mm'},
+ {key:'image_quality_score',    cn:'图像质量评分',  type:'number',  cat:'质控', desc:'影像质控综合评分'},
+ {key:'fragment_artifact',      cn:'伪影类型',      type:'enum',    cat:'质控', desc:'运动 / 硬化束 / 金属伪影'},
+ {key:'qc_issue_count',         cn:'质控问题数',    type:'int',     cat:'质控', desc:'影像质控检出问题数量'},
+ {key:'report_conclusion_score',cn:'报告质控得分',  type:'number',  cat:'质控', desc:'报告质控综合得分'},
+ {key:'contradiction_flag',     cn:'影像-报告矛盾', type:'boolean', cat:'质控', desc:'报告描述与影像所见是否存在矛盾'},
+ {key:'report_draft_text',      cn:'报告草稿文本',  type:'text',    cat:'扩展', desc:'AIR 生成的报告草稿（影像所见+诊断意见）'}
+];
+
+/* ================== AI 产品（含能力清单 + 数据需求） ================== */
+const PRODUCTS=[
+ {id:'P01',name:'XXX 肺结节 AI',vendor:'联影',ver:'V3.2',type:'辅助诊断',modal:'CT',exam:'胸部 CT',ic:'🫁',color:'#2A7FFF',status:'已接入',
+  caps:['lesion_detected','nodule_count','lesion_location','long_diameter','short_diameter','lesion_volume','density_type','malignancy_probability','lung_rads'],
+  need:{modal:'CT',part:'胸部',scan:'平扫',series:'薄层',thick:'≤1.5mm',extra:'需要完整肺野覆盖'}},
+ {id:'P02',name:'肋骨骨折检出 AI',vendor:'推想',ver:'V2.1',type:'辅助诊断',modal:'CT',exam:'胸部 CT',ic:'🦴',color:'#0E8A4C',status:'已接入',
+  caps:['lesion_detected','fracture_site','fracture_type','lesion_localization'],
+  need:{modal:'CT',part:'胸部',scan:'平扫',series:'骨窗或薄层',thick:'≤2mm',extra:'需包含完整胸廓'}},
+ {id:'P03',name:'颅脑出血 AI',vendor:'影禾自研',ver:'V1.0',type:'辅助诊断',modal:'CT',exam:'颅脑 CT',ic:'🧠',color:'#6E3FD4',status:'已接入',
+  caps:['lesion_detected','hemorrhage_volume','midline_shift','lesion_location'],
+  need:{modal:'CT',part:'颅脑',scan:'平扫',series:'常规轴位',thick:'≤5mm',extra:'无'}},
+ {id:'P04',name:'AIR 报告生成',vendor:'影禾自研',ver:'V2.0',type:'报告生成',modal:'CT/MR',exam:'通用',ic:'📄',color:'#6E3FD4',status:'已接入',
+  caps:['report_draft_text','lesion_location','contradiction_flag'],
+  need:{modal:'不限',part:'不限',scan:'不限',series:'检出结果 + 文本',thick:'—',extra:'需上游检出结构化结果'}},
+ {id:'P05',name:'影像质控',vendor:'质控服务',ver:'V1.0.0',type:'质量控制',modal:'CT/MR/DR',exam:'通用',ic:'🖼️',color:'#F59E0B',status:'已接入',
+  caps:['image_quality_score','qc_issue_count','fragment_artifact'],
+  need:{modal:'不限',part:'不限',scan:'不限',series:'全部序列',thick:'—',extra:'需原始序列，含定位像'}},
+ {id:'P06',name:'报告质控',vendor:'质控服务',ver:'V1.0.0',type:'质量控制',modal:'—',exam:'报告文本',ic:'🛡️',color:'#F59E0B',status:'已接入',
+  caps:['report_conclusion_score','contradiction_flag','qc_issue_count'],
+  need:{modal:'—',part:'—',scan:'—',series:'报告文本',thick:'—',extra:'需报告全文 + 影像检出结果'}},
+ {id:'P07',name:'肺炎检出 AI',vendor:'推想',ver:'V2.0',type:'辅助诊断',modal:'CT',exam:'胸部 CT',ic:'💠',color:'#00A896',status:'测试中',
+  caps:['lesion_detected','lesion_location','pleural_effusion'],
+  need:{modal:'CT',part:'胸部',scan:'平扫或增强',series:'薄层',thick:'≤1.5mm',extra:'正在接入测试'}}
+];
+const VENDOR_COLORS={'联影':'#2A7FFF','推想':'#0E8A4C','影禾自研':'#6E3FD4','质控服务':'#F59E0B'};
+
+/* ================== 页面路由 ================== */
+function goView(v){
+  $$('.page').forEach(p=>p.classList.remove('on'));
+  $('#pg-'+v).classList.add('on');
+  $$('.nav .ni').forEach(n=>n.classList.toggle('on',n.dataset.v===v));
+  if(v==='over') renderOver();
+  if(v==='prod') renderProd();
+  if(v==='lib')  renderLib();
+  if(v==='run')  renderRun();
+  if(v==='data') renderData();
+  if(v==='orch') renderOrch();
+  if(v==='wiz')  renderWiz();
+}
+$$('.nav .ni').forEach(n=>n.addEventListener('click',()=>goView(n.dataset.v)));
+
+/* ================== 1 总览 ================== */
+function renderOver(){
+  $('#ovP').textContent=PRODUCTS.length;
+  $('#ovC').textContent=CAPS.length;
+}
+
+/* ================== 2 产品库 ================== */
+let curProd='P01';
+function renderProd(){
+  $('#prodGrid').innerHTML=PRODUCTS.map(p=>{
+    const st=p.status==='已接入'?'<span class="tag green">已接入</span>':'<span class="tag orange">'+p.status+'</span>';
+    return `<div class="pcard2 ${curProd===p.id?'on':''}" onclick="pickProd('${p.id}')">
+      <div class="hd"><span class="ci" style="background:${p.color}">${p.ic}</span>
+        <div style="flex:1"><b>${p.name}</b><span>${p.vendor} · ${p.ver}</span></div>${st}</div>
+      <div class="row"><span>能力类型</span><b>${p.type}</b></div>
+      <div class="row"><span>模态 / 适用检查</span><b>${p.modal} · ${p.exam}</b></div>
+      <div class="row"><span>已配置标准能力</span><b>${p.caps.length} 项</b></div>
+    </div>`;
+  }).join('');
+  const p=PRODUCTS.find(x=>x.id===curProd);
+  $('#prodDetail').style.display='block';
+  $('#pdHead').innerHTML=`🤖 ${p.name} <span class="r"><span class="tag blue">${p.vendor} ${p.ver}</span><span class="tag ${p.status==='已接入'?'green':'orange'}">${p.status}</span></span>`;
+  pdTab('info',null,true);
+}
+function pickProd(id){curProd=id;renderProd();}
+function pdTab(t,el,keep){
+  if(el){$$('#pdTabs .tabx').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
+  else{$$('#pdTabs .tabx').forEach((x,i)=>x.classList.toggle('on',(t==='info'&&i===0)||(t==='caps'&&i===1)||(t==='need'&&i===2)));}
+  const p=PRODUCTS.find(x=>x.id===curProd);const b=$('#pdBody');
+  if(t==='info'){
+    b.innerHTML=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div class="fld" style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div class="k" style="font-size:10.5px;color:#8AA0C8;font-weight:700">产品名称</div><div style="margin-top:4px;color:#35507E">${p.name}</div></div>
+      <div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">厂商</div><div style="margin-top:4px;color:#35507E">${p.vendor}</div></div>
+      <div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">产品版本</div><div style="margin-top:4px;color:#35507E">${p.ver}</div></div>
+      <div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">能力类型</div><div style="margin-top:4px;color:#35507E">${p.type}</div></div>
+      <div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">模态</div><div style="margin-top:4px;color:#35507E">${p.modal}</div></div>
+      <div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">适用检查</div><div style="margin-top:4px;color:#35507E">${p.exam}</div></div>
+    </div><div style="margin-top:12px;font-size:12px;color:#8AA0C8">这一层只解决"平台现在有哪些 AI 产品"，不在此写死能力字段 —— 能力在「能力配置」中与标准字段库关联。</div>`;
+  }else if(t==='caps'){
+    b.innerHTML=`<div style="font-size:12px;color:#5E7496;margin-bottom:10px">配置"这个 AI 支持哪些<b>标准能力</b>"，形成该产品在平台内的 Capability Profile（点击可切换）：</div>
+      <div class="capgrid">${CAPS.map(c=>{const on=p.caps.includes(c.key);
+        return `<div class="capitem ${on?'on':''}" onclick="toggleCap('${p.id}','${c.key}')"><span class="bx">${on?'✓':''}</span><span><span class="cn">${c.cn}</span><span class="ck">${c.key}</span></span></div>`;}).join('')}</div>
+      <div style="margin-top:14px;font-size:12px;color:#5E7496"><b>能力清单预览</b>（实际返回结果的 Key 必须来自标准能力库）：</div>
+      <div class="jsonbox" style="margin-top:6px">${capJson(p)}</div>`;
+  }else{
+    const n=p.need;
+    b.innerHTML=`<div style="font-size:12px;color:#5E7496;margin-bottom:10px">与能力字段<b>完全分开</b>：第三方只描述"什么数据才能让我正常运行"，数据准备与分发由平台负责。</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        ${[['检查模态',n.modal],['检查部位',n.part],['扫描方式',n.scan],['序列要求',n.series],['层厚要求',n.thick],['其他条件',n.extra]].map(r=>
+        `<div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">${r[0]}</div><div style="margin-top:4px;color:#35507E;line-height:1.7">${r[1]}</div></div>`).join('')}
+      </div>
+      <div style="margin-top:12px"><button class="btn sm" onclick="goView('data');selectDataProd('${p.id}')">查看平台匹配链路 →</button></div>`;
+  }
+}
+function capJson(p){
+  const lines=p.caps.map(k=>'      "'+k+'": <值>');
+  return '{\n  "task_info": { "task_id": "T-2026-0914-001", "ai_product": "'+p.name+'", "version": "'+p.ver+'" },\n  "lesions": [\n    {\n'+lines.join(',\n')+'\n    }\n  ]\n}';
+}
+function toggleCap(pid,key){
+  const p=PRODUCTS.find(x=>x.id===pid);
+  const i=p.caps.indexOf(key);
+  if(i>=0){p.caps.splice(i,1);}else{p.caps.push(key);}
+  pdTab('caps',null,true);renderProd();
+}
+
+/* ================== 3 标准能力字段库 ================== */
+function renderLib(){
+  $('#libCount').textContent=CAPS.length+' 个标准字段';
+  $('#libRows').innerHTML=CAPS.map(c=>{
+    const refs=PRODUCTS.filter(p=>p.caps.includes(c.key)).length;
+    const newTag=c._new?' <span class="tag orange" style="font-size:9.5px">新增</span>':'';
+    return `<tr class="${c._new?'hl':''}"><td><code class="mono" style="background:#E4EEFF;color:#1A5FD0;padding:1px 6px;border-radius:4px">${c.key}</code>${newTag}</td>
+      <td><b>${c.cn}</b></td><td><span class="tag gray">${c.type}</span></td><td class="mut">${c.desc}</td>
+      <td><span class="tag teal">${c.cat}</span></td><td>${refs} 个产品</td></tr>`;
+  }).join('');
+}
+function openNewCap(){$('#mask').classList.add('show');}
+function closeMask(){$('#mask').classList.remove('show');}
+function doNewCap(){
+  const cn=$('#ncName').value.trim(), key=$('#ncKey').value.trim(), desc=$('#ncDesc').value.trim(), cat=$('#ncCat').value;
+  if(!cn||!key){toast('中文名与 Key 必填');return;}
+  if(CAPS.some(c=>c.key===key)){toast('该 Key 已存在，请检查唯一性');return;}
+  CAPS.forEach(c=>{delete c._new;});
+  CAPS.push({key:key,cn:cn,type:'number',cat:cat,desc:desc,_new:true});
+  closeMask();renderLib();renderOver();
+  toast('✓ 已新增标准能力「'+cn+'」· 分配唯一 Key：'+key+' · 已纳入标准能力库');
+}
+
+/* ================== 4 统一运行规范 ================== */
+const STATES=[
+ {n:'待处理',c:'#8AA0C8',d:'任务已创建，等待第三方接单'},
+ {n:'已接收',c:'#6E3FD4',d:'第三方确认接单，尚未开始推理'},
+ {n:'处理中',c:'#2A7FFF',d:'第三方正在推理'},
+ {n:'成功',c:'#16A34A',d:'返回结果并通过校验'},
+ {n:'失败',c:'#E54040',d:'按标准异常类型归档'}
+];
+const EXS=[
+ {n:'输入数据不满足要求',d:'平台准备的数据不符合该 AI 的数据需求（部位/序列/层厚）',mp:'ERR_INPUT_MISMATCH'},
+ {n:'数据接收失败',d:'第三方未成功接收分发的影像数据',mp:'ERR_RECV_FAILED'},
+ {n:'AI 服务不可用',d:'第三方服务未就绪 / 健康检查不通过',mp:'ERR_SERVICE_DOWN'},
+ {n:'推理失败',d:'第三方内部推理异常终止',mp:'ERR_INFERENCE_FAILED'},
+ {n:'处理超时',d:'超过该 AI 配置的超时时限',mp:'ERR_TIMEOUT'},
+ {n:'结果返回失败',d:'结果未返回或返回结构不符合标准',mp:'ERR_RESULT_INVALID'},
+ {n:'未知异常',d:'其他未归类异常，人工研判后归档',mp:'ERR_UNKNOWN'}
+];
+function renderRun(){
+  const tabs=$$('#runTabs .tabx');
+  tabs.forEach((x,i)=>x.classList.toggle('on',i===0));
+  runTab('call',null);
+}
+function runTab(t,el){
+  if(el){$$('#runTabs .tabx').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
+  const b=$('#runBody');
+  if(t==='call'){
+    b.innerHTML=`<div class="card"><div class="ch">统一任务生命周期（产品层定义，技术实现由《技术接入规范》规定）</div><div class="cb">
+      <div class="chain" style="margin-bottom:14px">
+        <span class="chnode"><span class="no">1</span>创建任务</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">2</span>AI 接收任务</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">3</span>开始处理</span><span class="carr">→</span>
+        <span class="chnode"><span class="no">4</span>处理完成</span><span class="carr">→</span>
+        <span class="chnode end"><span class="no">5</span>返回结果</span>
+      </div>
+      <div style="font-size:12.5px;color:#5E7496;line-height:1.95">
+        所有第三方 AI <b>必须适配 MIIA-AI 的统一调用方式</b>。<br>
+        产品经理不需要规定 HTTP、gRPC、Kafka Topic 等具体技术实现（由研发制定技术接入规范），需要定义的是：<b>第三方 AI 在业务上必须支持怎样的调用过程</b>。
+      </div>
+    </div></div>`;
+  }else if(t==='state'){
+    b.innerHTML=`<div class="card"><div class="ch">统一任务状态（5 态）</div><div class="cb">
+      <div class="sml">${STATES.map((s,i)=>`<span class="smnode" style="background:${s.c}14;border-color:${s.c}55;color:${s.c}">${s.n}<span class="sub">${s.d}</span></span>${i<STATES.length-1?'<span class="carr" style="font-size:15px">→</span>':''}`).join('')}</div>
+      <div style="margin-top:14px;font-size:12.5px;color:#5E7496;line-height:1.95">
+        第三方内部<b>可以有自己的任务状态</b>，但进入 MIIA-AI 后必须统一为以上 5 态 —— 平台不需要理解每一家厂商自己的状态体系。<br>
+        <span class="mut">编排界面里看到的轨迹状态、监控看板里的进度统计，都来自这一套状态。</span>
+      </div>
+    </div></div>`;
+  }else if(t==='ex'){
+    b.innerHTML=`<div class="card"><div class="ch">标准异常体系（7 类）</div><div class="cb">
+      <div class="exgrid">${EXS.map(e=>`<div class="ex"><b>${e.n}</b><div class="ds">${e.d}</div><div class="mp">${e.mp}</div></div>`).join('')}</div>
+      <div style="margin-top:14px;font-size:12.5px;color:#5E7496;line-height:1.95">
+        第三方自己的 Error Code 可以不同，但<b>必须映射到 MIIA-AI 的标准异常类型</b>。<br>
+        这样平台未来才能统一做：<b>监控 · 告警 · 问题定位 · 统计分析</b>；否则每增加一个 AI，都要重新理解一套异常体系。
+      </div>
+    </div></div>`;
+  }else{
+    b.innerHTML=`<div class="card"><div class="ch">标准结果结构（统一结构 ≠ 所有 AI 输出相同字段）</div><div class="cb">
+      <div class="tree">
+        <div class="l1">任务信息</div>
+        <div class="l2">↳ task_id / ai_product / version / 状态 / 时间戳</div>
+        <div class="l1">检查级结果</div>
+        <div class="l2">↳ 检查标识 · 部位 · 模态 · 整体结论</div>
+        <div class="l1">病灶列表</div>
+        <div class="l3">↳ 病灶 01</div>
+        <div class="l4">位置 → <code>lesion_location</code></div>
+        <div class="l4">长径 → <code>long_diameter</code></div>
+        <div class="l4">短径 → <code>short_diameter</code></div>
+        <div class="l4">体积 → <code>lesion_volume</code></div>
+        <div class="l4">恶性概率 → <code>malignancy_probability</code></div>
+        <div class="l3">↳ 病灶 02 …</div>
+        <div class="l1">影像定位 / 关键影像</div>
+        <div class="l2">↳ 层号 / 坐标框 / 关键图像引用</div>
+        <div class="l1">扩展结果</div>
+        <div class="l2">↳ 厂商特有信息（不影响标准字段解析）</div>
+      </div>
+      <div style="margin-top:12px;font-size:12.5px;color:#5E7496;line-height:1.95">
+        第三方返回的 Key <b>必须来自 MIIA-AI 标准能力字段库</b> —— 这样"能力注册"和"实际结果"才真正串起来。<br>
+        未声明支持的能力可以不返回；<b>扩展结果</b>留出空间，不强迫所有 AI 输出相同字段。
+      </div>
+    </div></div>`;
+  }
+}
+
+/* ================== 5 数据需求与匹配 ================== */
+const HOSP_SERIES=[
+ {id:'h1',name:'胸部 CT 平扫 · 薄层（肺窗）',modal:'CT',part:'胸部',scan:'平扫',thick:1.25,kind:'薄层'},
+ {id:'h2',name:'胸部 CT 平扫 · 薄层（纵隔窗）',modal:'CT',part:'胸部',scan:'平扫',thick:1.25,kind:'薄层'},
+ {id:'h3',name:'胸部 CT 增强 · 动脉期',modal:'CT',part:'胸部',scan:'增强',thick:1.25,kind:'增强'},
+ {id:'h4',name:'胸部 CT 增强 · 静脉期',modal:'CT',part:'胸部',scan:'增强',thick:1.25,kind:'增强'},
+ {id:'h5',name:'胸部 CT 定位像',modal:'CT',part:'胸部',scan:'平扫',thick:5,kind:'定位像'},
+ {id:'h6',name:'颅脑 CT 平扫 · 轴位',modal:'CT',part:'颅脑',scan:'平扫',thick:5,kind:'常规'}
+];
+let curData='P01';
+function selectDataProd(id){curData=id;renderData();}
+function renderData(){
+  $('#dataSel').innerHTML=PRODUCTS.map(p=>`<button class="btn sm ${curData===p.id?'pri':''}" onclick="selectDataProd('${p.id}')">${p.ic} ${p.name}</button>`).join('');
+  const p=PRODUCTS.find(x=>x.id===curData);
+  $('#dataFor').innerHTML=`<span class="tag blue">${p.name} · ${p.vendor} ${p.ver}</span>`;
+  const n=p.need;
+  $('#dataForm').innerHTML=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    ${[['检查模态',n.modal],['检查部位',n.part],['扫描方式',n.scan],['序列要求',n.series],['层厚',n.thick],['其他条件',n.extra]].map(r=>
+    `<div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">${r[0]}</div><div style="margin-top:4px;color:#35507E;line-height:1.7">${r[1]}</div></div>`).join('')}
+  </div>`;
+  // 匹配
+  const rows=HOSP_SERIES.map(s=>{
+    let ok=true,why='';
+    if(n.modal!=='不限'&&n.modal!=='—'&&!n.modal.includes(s.modal)){ok=false;why='模态不符（需 '+n.modal+'，实际 '+s.modal+'）';}
+    else if(n.part!=='不限'&&n.part!=='—'&&n.part!==s.part){ok=false;why='部位不符（需 '+n.part+'，实际 '+s.part+'）';}
+    else if(n.scan!=='不限'&&n.scan!=='—'&&n.scan.indexOf(s.scan)<0){ok=false;why='扫描方式不符（需 '+n.scan+'，实际 '+s.scan+'）';}
+    else{
+      const m=n.thick.match(/[\d.]+/);
+      if(m&&s.thick>parseFloat(m[0])){ok=false;why='层厚超限（需 '+n.thick+'，实际 '+s.thick+'mm）';}
+      else if(n.series.indexOf('薄层')>=0&&s.kind!=='薄层'){ok=false;why='非薄层序列';}
+      else if(n.series.indexOf('全部序列')>=0&&s.kind==='定位像'){ok=false;why='定位像不作为质控输入';}
+      else if(n.series.indexOf('常规轴位')>=0&&s.part!=='颅脑'){ok=false;why='非颅脑常规轴位';}
+    }
+    return {s:s,ok:ok,why:why};
+  });
+  const okN=rows.filter(r=>r.ok).length;
+  $('#matchList').innerHTML=rows.map(r=>`<div class="matchrow ${r.ok?'ok':'no'}">
+    <span class="nm">${r.s.name}</span>
+    <span class="mut" style="font-size:11px">${r.s.modal} · ${r.s.part} · ${r.s.scan} · ${r.s.thick}mm</span>
+    <span class="rs">${r.ok?'<span class="tag green">✓ 匹配 → 分发</span>':'<span class="tag gray">过滤 · '+r.why+'</span>'}</span>
+  </div>`).join('');
+  $('#matchSum').textContent=okN+' / '+rows.length+' 条序列满足「'+p.name+'」的数据需求';
+}
+
+/* ================== 6 工作流编排 ================== */
+function poolNodes(){
+  return PRODUCTS.filter(p=>p.status==='已接入').map(p=>({t:'ai_'+p.id,ic:p.ic,cls:clsOf(p.type),name:p.name,sub:p.vendor+' '+p.ver,prod:p.id}));
+}
+function clsOf(type){
+  if(type==='报告生成') return 'air';
+  if(type==='质量控制') return 'qc';
+  return 'ai';
+}
+const PLATFORM_NODES=[
+  {t:'dicom',ic:'🖼',cls:'io',name:'DICOM 数据接入',sub:'平台'},
+  {t:'part',ic:'🧭',cls:'io',name:'检查部位识别',sub:'平台'},
+  {t:'series',ic:'🗂',cls:'io',name:'序列识别 / 整理',sub:'平台'},
+  {t:'doc',ic:'✍️',cls:'man',name:'医生审核',sub:'人工'},
+  {t:'qcman',ic:'👁️',cls:'man',name:'质控员终审',sub:'人工'},
+  {t:'pub',ic:'📦',cls:'out',name:'报告发布归档',sub:'平台'}
+];
+function nodeDef(t){
+  const pn=PLATFORM_NODES.find(n=>n.t===t);
+  if(pn) return pn;
+  if(t.indexOf('ai_')===0){ const p=PRODUCTS.find(x=>x.id===t.slice(3)); if(p) return {t:t,ic:p.ic,cls:clsOf(p.type),name:p.name,sub:p.vendor+' '+p.ver,prod:p.id}; }
+  return null;
+}
+function mkNode(t,x,y){
+  const d=nodeDef(t);
+  return {id:t+'_'+Math.random().toString(36).slice(2,7),t:t,ic:d?d.ic:'⚙',cls:d?d.cls:'io',name:d?d.name:'节点',sub:d?d.sub:'',x:x,y:y,timeout:120,retry:1,fail:'转人工',status:'待处理'};
+}
+function snakePos(i){
+  const row=Math.floor(i/5), col=(row%2===0)?(i%5):(4-(i%5));
+  return {x:36+col*196, y:38+row*128};
+}
+function layout(list){
+  const nodes=list.map(function(t,i){const p=snakePos(i);return mkNode(t,p.x,p.y);});
+  const edges=[];for(let i=0;i<nodes.length-1;i++)edges.push({f:nodes[i].id,t:nodes[i+1].id});
+  return {nodes:nodes,edges:edges};
+}
+const WFS=[
+  Object.assign({id:'A',name:'胸部 CT · AIR + 质控全流程',modal:'CT',status:'运行中'},layout(['dicom','part','series','ai_P01','ai_P02','ai_P05','ai_P04','ai_P06','doc','pub'])),
+  Object.assign({id:'B',name:'颅脑 CT · AIR + 质控',modal:'CT',status:'运行中'},layout(['dicom','part','series','ai_P03','ai_P05','ai_P04','ai_P06','doc','qcman','pub'])),
+  Object.assign({id:'C',name:'DR 胸片 · 仅质控',modal:'DR',status:'已发布'},layout(['dicom','part','ai_P05','ai_P06','doc','pub']))
+];
+let curWf=0,selNode=null;
+function renderOrch(){
+  const w=WFS[curWf];
+  $('#orchCrumb').textContent='WF-'+w.id+' · '+w.modal+' · '+w.nodes.length+' 节点（节点来自标准 AI 能力池）';
+  $('#wfSel').innerHTML=WFS.map((x,i)=>`<option value="${i}" ${i===curWf?'selected':''}>WF-${x.id} ${x.name}</option>`).join('');
+  $('#libBody').innerHTML=
+    `<div class="grp">① 平台数据节点</div>`+PLATFORM_NODES.filter(n=>n.cls==='io').map(n=>libItem(n)).join('')+
+    `<div class="grp">② 标准 AI 能力池（已接入产品）</div>`+poolNodes().map(n=>libItem(n)).join('')+
+    `<div class="grp">③ 人工与输出</div>`+PLATFORM_NODES.filter(n=>n.cls!=='io').map(n=>libItem(n)).join('');
+  $('#cvNodes').innerHTML=w.nodes.map(n=>`<div class="cnode cv-${n.cls} ${selNode===n.id?'sel':''}" data-id="${n.id}" style="left:${n.x}px;top:${n.y}px">
+    <span class="ci">${n.ic}</span><span class="ct"><b>${n.name}</b><span>${n.sub}</span></span></div>`).join('');
+  drawEdges();bindDrag();renderProp();
+}
+function libItem(n){
+  const c={io:'#0E8A4C',ai:'#2A7FFF',air:'#6E3FD4',qc:'#F59E0B',man:'#35507E',out:'#00A896'}[n.cls]||'#2A7FFF';
+  const v=n.sub&&n.sub.indexOf('平台')<0&&n.sub.indexOf('人工')<0?n.sub:'';
+  return `<div class="li" onclick="addNodeType('${n.t}')"><span class="ic" style="background:${c}">${n.ic}</span>${n.name}<span class="vv">${v}</span></div>`;
+}
+function wfById(id){return WFS[curWf].nodes.find(n=>n.id===id);}
+function drawEdges(){
+  const w=WFS[curWf];let svg='';
+  const NW=162,NH=50;
+  w.edges.forEach(function(e){
+    const a=wfById(e.f),b=wfById(e.t);if(!a||!b)return;
+    if(Math.abs(b.x-a.x)<10){
+      const cx=a.x+NW/2, y1=a.y+NH, y2=b.y;
+      svg+='<path d="M '+cx+' '+y1+' C '+cx+' '+(y1+26)+', '+cx+' '+(y2-26)+', '+cx+' '+y2+'" stroke="#4DA3FF" stroke-width="2" fill="none" opacity=".85"/><circle cx="'+cx+'" cy="'+y2+'" r="3.5" fill="#4DA3FF"/>';
+      return;
+    }
+    const right=(b.x>a.x);
+    const x1=right?(a.x+NW):a.x;
+    const x2=right?b.x:(b.x+NW);
+    const y1=a.y+NH/2, y2=b.y+NH/2;
+    const off=Math.max(12,Math.min(70,Math.abs(x2-x1)*0.5))*(right?1:-1);
+    svg+='<path d="M '+x1+' '+y1+' C '+(x1+off)+' '+y1+', '+(x2-off)+' '+y2+', '+x2+' '+y2+'" stroke="#4DA3FF" stroke-width="2" fill="none" opacity=".85"/><circle cx="'+x2+'" cy="'+y2+'" r="3.5" fill="#4DA3FF"/>';
+  });
+  $('#cvSvg').innerHTML=svg;
+}
+function bindDrag(){
+  $$('#cvNodes .cnode').forEach(el=>{
+    el.addEventListener('mousedown',ev=>{
+      ev.preventDefault();const n=wfById(el.dataset.id);if(!n)return;selectNode(n.id);
+      const sx=ev.clientX,sy=ev.clientY,ox=n.x,oy=n.y;
+      const mv=e2=>{n.x=Math.max(4,ox+e2.clientX-sx);n.y=Math.max(4,oy+e2.clientY-sy);el.style.left=n.x+'px';el.style.top=n.y+'px';drawEdges();};
+      const up=()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);};
+      document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
+    });
+    el.addEventListener('click',()=>selectNode(el.dataset.id));
+  });
+}
+function selectNode(id){selNode=id;$$('#cvNodes .cnode').forEach(el=>el.classList.toggle('sel',el.dataset.id===id));renderProp();}
+function renderProp(){
+  const n=selNode?wfById(selNode):null;const pb=$('#propBody');
+  if(!n){$('#propHint').textContent='(未选中)';
+    pb.innerHTML='<div style="color:#8AA0C8;font-size:12px;line-height:1.9;padding:6px 0">点击画布中的节点查看：<br>· 节点来源（平台 / 标准 AI 能力池）<br>· 统一任务状态<br>· 超时与重试（标准异常处理）</div>';return;}
+  $('#propHint').textContent='· '+n.name;
+  const prod=n.t.indexOf('ai_')===0?PRODUCTS.find(x=>x.id===n.t.slice(3)):null;
+  pb.innerHTML=`
+    <div class="pf"><label>节点名称</label><div class="ro">${n.name}</div></div>
+    <div class="pf"><label>节点来源</label><div class="ro">${prod?('标准 AI 能力池 · '+prod.vendor+' '+prod.ver):'平台内置能力'}</div></div>
+    ${prod?`<div class="pf"><label>该 AI 标准能力（${prod.caps.length} 项）</label><div class="ro" style="font-family:Consolas,monospace;font-size:10.5px">${prod.caps.join('<br>')}</div></div>`:''}
+    <div class="pf"><label>统一任务状态</label><div class="ro">待处理 → 已接收 → 处理中 → 成功 / 失败</div></div>
+    <div class="pf"><label>超时（秒）</label><div class="ro">${n.timeout}</div></div>
+    <div class="pf"><label>失败重试</label><div class="ro">${n.retry} 次后按标准异常处理</div></div>
+    <div class="pf"><label>失败动作</label><div class="ro">${n.fail}</div></div>`;
+}
+function addNodeType(t){
+  const w=WFS[curWf];
+  const p=snakePos(w.nodes.length);
+  const n=mkNode(t,p.x,p.y);
+  w.nodes.push(n);
+  w.edges.push({f:w.nodes[w.nodes.length-2].id,t:n.id});
+  selNode=n.id;renderOrch();toast('已添加节点：'+n.name);
+}
+function delNode(){
+  if(!selNode){toast('请先选中一个节点');return;}
+  const w=WFS[curWf];const n=wfById(selNode);
+  w.nodes=w.nodes.filter(x=>x.id!==selNode);
+  w.edges=w.edges.filter(e=>e.f!==selNode&&e.t!==selNode);
+  selNode=null;renderOrch();toast('已删除节点：'+(n?n.name:''));
+}
+function switchWf(i){curWf=+i;selNode=null;renderOrch();}
+const RUNSTATE=[
+  ['done','done','done','done','done','run','','','',''],
+  ['done','done','done','done','block','','','','',''],
+  ['done','done','done','done','done','done']
+];
+const RUNNOTE=[
+ '第 6 个节点（影像质控）处理中 —— 状态由第三方状态映射为平台标准"处理中"，进度与预计剩余时间按标准状态统计。',
+ '第 5 个节点（报告质控）命中 P0 影像-报告矛盾 → 平台标准异常「结果返回失败」的前置拦截：状态置为失败并挂起流转，等待医生处理。',
+ '该工作流未编排 AIR 与检出类节点（能力按需组合），全部节点成功，已发布归档。'
+];
+function runWf(){
+  const w=WFS[curWf];
+  $('#pipe').innerHTML=w.nodes.map((n,i)=>{
+    const st=(RUNSTATE[curWf]||[])[i]||'';
+    const lbl={done:'成功',run:'处理中',recv:'已接收',block:'失败',pending:'待处理'}[st]||'待处理';
+    return `${i>0?'<div class="conn '+(st==='done'?'done':'')+'"></div>':''}
+      <div class="stage ${st}"><div class="st-ico">${n.ic}</div><div class="st-name">${n.name}</div><div class="st-sub">${lbl}</div></div>`;
+  }).join('');
+  $('#runNote').innerHTML='<div style="font-size:12px;color:#62779E;line-height:1.95;background:#F8FBFE;border:1px solid #E3ECF9;border-radius:9px;padding:11px 14px">'+RUNNOTE[curWf]+'</div>';
+  toast('▶ 已按「'+w.name+'」创建任务 · 统一调用 → 统一状态 → 标准结果返回');
+}
+
+/* ================== 7 接入向导 ================== */
+const WIZ=[
+ {t:'了解产品',   d:'厂商提供产品说明和能力清单：这个 AI 能做什么、需要什么数据。', inp:'产品说明书 · 能力清单', out:'能力需求梳理', who:'产品经理 + 厂商'},
+ {t:'创建 AI 产品',d:'在 MIIA-AI 注册产品：产品名称 / 厂商 / 版本 / 能力类型 / 模态 / 适用检查。', inp:'产品基础信息', out:'平台内 AI 产品记录', who:'产品经理'},
+ {t:'确认能力',   d:'把第三方能力与标准能力字段库匹配：已存在的直接引用；不存在的先新增标准能力并分配唯一 Key。', inp:'厂商能力清单', out:'能力 ↔ 标准字段映射表', who:'产品经理'},
+ {t:'配置 AI 能力',d:'建立「AI 产品 ↔ 标准能力」关系，形成该产品的 Capability Profile。', inp:'映射表', out:'Capability Profile', who:'产品经理'},
+ {t:'配置数据需求',d:'说明什么检查、什么部位、什么序列、什么条件的数据可以发送给它。', inp:'厂商运行要求', out:'数据需求配置', who:'产品经理'},
+ {t:'厂商完成技术适配',d:'厂商按 MIIA-AI 规范完成：统一调用 + 统一状态 + 统一异常 + 统一结果返回。', inp:'《技术接入规范》', out:'可联调的第三方服务', who:'厂商研发'},
+ {t:'接入测试',   d:'平台准备 Case → 自动准备正确数据 → 调用第三方 → 检查任务状态 → 检查异常处理 → 校验返回结果 → 校验标准 Key。', inp:'测试 Case', out:'接入测试报告', who:'产品经理 + 研发'}
+];
+let wizIdx=1;
+function renderWiz(){
+  $('#wRail').innerHTML=WIZ.map((s,i)=>{const n=i+1;
+    const cls=i<wizIdx?'done':(i===wizIdx?'on':'');
+    return `<div class="wstep ${cls}" onclick="wizGo(${i})"><span class="wn">${i<wizIdx?'✓':n}</span><span><b>Step ${n}｜${s.t}</b><div class="wt">${s.out}</div></span></div>`;}).join('')
+    +`<div class="wstep ${wizIdx>=WIZ.length?'done':''}" onclick="wizGo(${WIZ.length})"><span class="wn">${wizIdx>=WIZ.length?'✓':'8'}</span><span><b>Step 8｜接入完成</b><div class="wt">进入标准 AI 能力池</div></span></div>`;
+  if(wizIdx>=WIZ.length){
+    $('#wBox').innerHTML=`<h3>Step 8｜接入完成</h3><div class="wsub">这个 AI 正式进入 MIIA-AI 的标准 AI 能力池</div>
+      <div class="wgrid">
+        <div class="wf"><div class="k">产物</div><div class="v">标准 AI 能力池成员<br>可被工作流编排直接引用</div></div>
+        <div class="wf"><div class="k">能力</div><div class="v">${PRODUCTS.length} 个已接入产品<br>${CAPS.length} 个标准能力字段</div></div>
+        <div class="wf"><div class="k">后续</div><div class="v">医院数据 → 自动匹配 → 按标准调用<br>状态与异常统一纳管</div></div>
+      </div>
+      <div style="font-size:12.5px;color:#5E7496;line-height:1.95">同一套接入流程对任何新 AI 都固定适用 —— 不再为每个 AI 重新设计一套平台集成逻辑。
+      <br>下一步：到「🧩 工作流编排」把该 AI 节点编排进业务工作流。</div>
+      <div style="margin-top:14px"><button class="btn pri" onclick="goView('orch')">前往工作流编排 →</button></div>`;
+    return;
+  }
+  const s=WIZ[wizIdx];
+  $('#wBox').innerHTML=`<h3>Step ${wizIdx+1}｜${s.t}</h3><div class="wsub">${s.d}</div>
+    <div class="wgrid">
+      <div class="wf"><div class="k">输入</div><div class="v">${s.inp}</div></div>
+      <div class="wf"><div class="k">产出</div><div class="v">${s.out}</div></div>
+      <div class="wf"><div class="k">责任方</div><div class="v">${s.who}</div></div>
+    </div>
+    ${wizExtra(wizIdx+1)}
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button class="btn" onclick="wizPrev()" ${wizIdx===0?'disabled':''}>← 上一步</button>
+      <button class="btn pri" onclick="wizNext()">下一步 →</button>
+    </div>`;
+}
+function wizExtra(n){
+  if(n===3||n===4) return '<div style="font-size:12px;color:#62779E;line-height:1.9;background:#F8FBFE;border:1px solid #E3ECF9;border-radius:9px;padding:11px 14px;margin-bottom:12px">示例：厂商能力清单含「位置 / 大小 / 体积 / 恶性概率 / 新指标 X」→ 前四项命中标准库直接引用，<b>新指标 X 走「新增标准能力 → 分配唯一 Key → 定义语义 → 纳入库」</b>。<br><span class="mut">可到「📚 标准能力字段库」点「＋ 新增标准能力」现场演示。</span></div>';
+  if(n===7) return '<div style="font-size:12px;color:#62779E;line-height:1.9;background:#F8FBFE;border:1px solid #E3ECF9;border-radius:9px;padding:11px 14px;margin-bottom:12px">校验清单：<b>任务状态</b>是否与平台一致 · <b>异常</b>是否映射到 7 类标准类型 · <b>返回结构</b>是否符合「任务信息→检查级→病灶列表→病灶属性→影像定位→扩展」 · <b>Key</b> 是否全部来自标准能力字段库。</div>';
+  return '';
+}
+function wizGo(i){wizIdx=i;renderWiz();}
+function wizNext(){if(wizIdx<WIZ.length)wizIdx++;renderWiz();}
+function wizPrev(){if(wizIdx>0)wizIdx--;renderWiz();}
+
+/* init */
+goView('over');
+console.log('MIIA-AI 三方模型标准化接入 + 工作流编排 原型 V2.1 已加载');
+</script>
+</body>
+</html>
