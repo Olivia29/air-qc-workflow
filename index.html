@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.6</title>
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.7</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#F0F2F5;height:100vh;overflow:hidden}
@@ -1197,7 +1197,7 @@ function wizPrev(){if(wizIdx>0)wizIdx--;renderWiz();}
 /* ---- 自研 AIR 产品（基底）---- */
 const AIRS=[
  {id:'AIR01', name:'胸部 AIR 报告生成', ver:'V2.0', exam:'胸部 CT', modal:'CT', ic:'🫁',
-  status:'已上线', status2:'green', note:'主力产品线 · 已在院内生产环境出报告',
+  status:'已上线', status2:'green',
   need:{modal:'CT', part:'胸部', scan:'平扫', series:'薄层', thick:'≤1.5mm'},
   findings:[
     {id:'f1', txt:'双肺纹理清晰。'},
@@ -1211,7 +1211,7 @@ const AIRS=[
     {id:'i2', txt:'建议结合临床及病理。'}
   ]},
  {id:'AIR02', name:'颅脑 CT AIR 报告生成', ver:'V0.9', exam:'颅脑 CT', modal:'CT', ic:'🧠',
-  status:'待验证', status2:'orange', note:'由胸部模板克隆派生 · v0.9 待验证',
+  status:'待验证', status2:'orange',
   need:{modal:'CT', part:'颅脑', scan:'平扫', series:'常规轴位', thick:'≤5mm'},
   findings:[
     {id:'f1', txt:'脑实质密度均匀。'},
@@ -2058,13 +2058,12 @@ function nmStepBody(){
           <span class="tag ${x.status2}">${x.status}</span></div>
         <div class="row"><span>数据需求</span><b>${x.need.part} / ${x.need.scan} / ${x.need.thick}</b></div>
         <div class="row"><span>报告结构</span><b>影像所见 ${x.findings.length} 句 · 诊断意见 ${x.impression.length} 句</b></div>
-        <div class="mut" style="font-size:11px;margin-top:6px">${x.note}</div>
-        ${onSel?'<div class="airpick">✓ 当前基底</div>':''}
+        ${onSel?'<div class="airpick">✓ 基础air模型</div>':''}
       </div>`;}).join('');
     return `<div class="card"><div class="ch">② 选择基础 AIR（本公司自研）
         <span class="r"><span class="mut" style="font-size:11px">拼接以 AIR 的报告结构为底，第三方小模型结果只是"素材句"</span></span></div>
       <div class="cb"><div class="airgrid">${cards}</div></div></div>
-      ${a?`<div class="card"><div class="ch">该 AIR 的报告输出结构（分开展示）
+      ${a?`<div class="card"><div class="ch">该 AIR 的报告输出结构
           <span class="r"><span class="tag blue">影像所见</span><span class="tag purple">诊断意见</span></span></div>
         <div class="cb"><div class="rgrid">
           ${nmSecBlock('findings', nmNatural(false).findings, false)}
@@ -2403,7 +2402,7 @@ function renderExLib(){
 /* init */
 renderMenu();
 goView('newmodel');
-console.log('MIIA-AI 原型 V3.6 已加载（基本信息：适用检查项目/模态 改多选下拉，模型说明独立整行）');
+console.log('MIIA-AI 原型 V3.7 已加载（选择基础 AIR：角标改「基础air模型」、去掉卡片描述小字与标题括号）');
 
 </script>
 </body>
