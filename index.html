@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.10</title>
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.11</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#F0F2F5;height:100vh;overflow:hidden}
@@ -530,13 +530,6 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
         <tr><th>标准 Key</th><th>中文名</th><th>类型</th><th>语义说明</th><th>分类</th><th>被引用</th></tr>
         <tbody id="libRows"></tbody></table></div>
     </div>
-    <div class="card"><div class="ch">➕ 动态扩展机制（关键结论）</div><div class="cb" style="font-size:12.5px;color:#5E7496;line-height:2">
-      MIIA-AI 不可能提前知道未来所有 AI 产品会有什么能力，因此不做"所有医学 AI 输出字段大全"，采用 <b>标准字段库 + 动态扩展</b>：<br>
-      准备接入新 AI，厂商说支持「位置 / 大小 / 体积 / 恶性概率 / <b>某个以前没出现过的新指标 X</b>」时——<br>
-      ▸ 前四个已存在 → <b>直接选择标准能力</b><br>
-      ▸ 新指标 X 不存在 → <b>新增标准能力</b> → 分配唯一 Key → 定义字段语义 → 纳入标准能力库<br>
-      <span class="mut">能力库会随接入产品增多而不断丰富。（点右上「＋ 新增标准能力」可现场演示）</span>
-    </div></div>
   </div>
 </div>
 
@@ -2411,7 +2404,7 @@ function renderExLib(){
 /* init */
 renderMenu();
 goView('newmodel');
-console.log('MIIA-AI 原型 V3.10 已加载（AI 产品库去掉两句自述性说明）');
+console.log('MIIA-AI 原型 V3.11 已加载（标准能力字段库精简：删除底部说明卡片）');
 
 </script>
 </body>
