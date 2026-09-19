@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.9</title>
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.10</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#F0F2F5;height:100vh;overflow:hidden}
@@ -822,7 +822,7 @@ function pdTab(t,el,keep){
       <div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">能力类型</div><div style="margin-top:4px;color:#35507E">${p.type}</div></div>
       <div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">模态</div><div style="margin-top:4px;color:#35507E">${p.modal}</div></div>
       <div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">适用检查</div><div style="margin-top:4px;color:#35507E">${p.exam}</div></div>
-    </div><div style="margin-top:12px;font-size:12px;color:#8AA0C8">这一层只解决"平台现在有哪些 AI 产品"，不在此写死能力字段 —— 能力在「能力配置」中与标准字段库关联。</div>`;
+    </div>`;
   }else if(t==='caps'){
     b.innerHTML=`<div style="font-size:12px;color:#5E7496;margin-bottom:10px">配置"这个 AI 支持哪些<b>标准能力</b>"，形成该产品在平台内的 Capability Profile（点击可切换）：</div>
       <div class="capgrid">${CAPS.map(c=>{const on=p.caps.includes(c.key);
@@ -831,8 +831,7 @@ function pdTab(t,el,keep){
       <div class="jsonbox" style="margin-top:6px">${capJson(p)}</div>`;
   }else{
     const n=p.need;
-    b.innerHTML=`<div style="font-size:12px;color:#5E7496;margin-bottom:10px">与能力字段<b>完全分开</b>：第三方只描述"什么数据才能让我正常运行"，数据准备与分发由平台负责。</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    b.innerHTML=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
         ${[['检查模态',n.modal],['检查部位',n.part],['扫描方式',n.scan],['序列要求',n.series],['层厚要求',n.thick],['其他条件',n.extra]].map(r=>
         `<div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">${r[0]}</div><div style="margin-top:4px;color:#35507E;line-height:1.7">${r[1]}</div></div>`).join('')}
       </div>
@@ -2412,7 +2411,7 @@ function renderExLib(){
 /* init */
 renderMenu();
 goView('newmodel');
-console.log('MIIA-AI 原型 V3.9 已加载（修复：整段自由改写因未闭合注释吞掉 nmRefSources/nmRefFields 而点击无反应）');
+console.log('MIIA-AI 原型 V3.10 已加载（AI 产品库去掉两句自述性说明）');
 
 </script>
 </body>
