@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.0（新增模型中心 / 创建模型 / 标准异常体系库）</title>
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.1（创建模型：以 AIR 为基底拼接第三方小模型结果）</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#F0F2F5;height:100vh;overflow:hidden}
@@ -274,6 +274,42 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .lvtag{display:inline-flex;padding:2px 9px;border-radius:11px;font-size:10.5px;white-space:nowrap}
 .lvtag.no{background:#FDE7E7;color:#D92D20}.lvtag.retry{background:#E4EEFF;color:#1A5FD0}
 .lvtag.man{background:#FEF0DC;color:#C25E00}
+/* ===== 创建模型（AIR 基底 + 报告拼接 + 测试输出）===== */
+.airgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.aircard{border:1px solid #DCE6F5;border-radius:11px;padding:14px 16px;background:#fff;
+  cursor:pointer;transition:.13s;position:relative}
+.aircard:hover{border-color:#9DBDF2;transform:translateY(-2px);box-shadow:0 6px 18px rgba(24,60,130,.09)}
+.aircard.on{border-color:#2A7FFF;box-shadow:0 0 0 2px rgba(42,127,255,.14)}
+.aircard .hd{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.aircard .hd .ci{width:36px;height:36px;border-radius:9px;background:#E4EEFF;
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.aircard .hd b{font-size:14px;color:#16294D;display:block}
+.aircard .hd span{font-size:11px;color:#8AA0C8}
+.aircard .row{display:flex;justify-content:space-between;font-size:11.5px;padding:4px 0;
+  border-bottom:1px dashed #EEF3FB;color:#5E7496}
+.aircard .row b{color:#35507E}
+.airpick{position:absolute;top:-9px;right:12px;background:#2A7FFF;color:#fff;font-size:10.5px;
+  padding:2px 9px;border-radius:10px}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.rcolh{font-size:12px;font-weight:700;color:#5E7496;margin-bottom:7px}
+.rcolh.ok{color:#0E8A4C}
+.rsec{border:1px solid #DCE6F5;border-radius:10px;padding:11px 14px;background:#FBFDFF;margin-bottom:11px}
+.rsec-h{font-size:12.5px;font-weight:800;color:#16294D;margin-bottom:7px;padding-bottom:6px;
+  border-bottom:1px solid #EBF1FA}
+.rsent{font-size:12.5px;color:#35507E;line-height:2.05}
+.rsent.ph{color:#9AA6B6;font-style:italic}
+.rsent.nw{color:#0E8A4C;font-weight:600;background:#F1FBF5;border-radius:5px;padding:1px 7px;margin:2px 0}
+.rsent .src{font-size:10px;color:#8AA0C8;font-weight:400;margin-left:7px}
+.caserow{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid #E3ECF9;
+  border-radius:9px;margin-bottom:7px;font-size:12.5px;background:#FAFCFF;cursor:pointer}
+.caserow:hover{border-color:#9DBDF2}
+.caserow.on{border-color:#2A7FFF;background:#F4F8FF;box-shadow:0 0 0 2px rgba(42,127,255,.1)}
+.caserow.bad{background:#FFFBF7}
+.caserow .idx{color:#2A7FFF;font-size:12px;flex-shrink:0}
+.caserow b{color:#16294D}
+.confbox{border:1px solid #F4C4C4;background:#FEF6F6;border-radius:9px;padding:10px 13px;
+  margin-bottom:9px;font-size:12.5px}
+.tb tr.offrow td{opacity:.45}
 </style>
 </head>
 <body>
@@ -1049,238 +1085,523 @@ function wizGo(i){wizIdx=i;renderWiz();}
 function wizNext(){if(wizIdx<WIZ.length)wizIdx++;renderWiz();}
 function wizPrev(){if(wizIdx>0)wizIdx--;renderWiz();}
 
-/* ================== 8 创建模型（模型中心） ================== */
-const RULE_LABEL={pass:'直接透传',max:'取最大值',min:'取最小值',avg:'取平均值',
-                  mode:'取众数',merge:'合并为数组',pri:'指定产品优先',manual:'标记人工复核'};
-const RULE_ALL=['max','min','avg','mode','merge','pri','manual'];
-const RULE_ONE=['pass','manual'];
-const NM_STEPS=['基本信息','选择 AI 产品','结果拼接配置','输出定义','预览与发布'];
-let NM={step:0, name:'胸部多模联合评估模型', code:'MIIA_MODEL_CHEST_MULTI', ver:'V1.0',
-        exam:'胸部 CT', modal:'CT',
-        desc:'组合检出 / 量化 / 质控三类结果，输出一份可直接进报告的结构化结论',
-        sel:['P01','P02','P04'], rules:{}, mode:'fuse', published:[]};
+/* ================== 8 创建模型（模型中心） ==================
+   定位（2026-09-19 需求修正）：以「本公司 AIR」为基底，把「第三方小模型」的返回结果
+   拼接到 AIR 报告的两个段落里 —— 影像所见 / 诊断意见；拼完可选真实影像跑一遍看输出。 */
 
+/* ---- 自研 AIR 产品（基底）---- */
+const AIRS=[
+ {id:'AIR01', name:'胸部 AIR 报告生成', ver:'V2.0', exam:'胸部 CT', modal:'CT', ic:'🫁',
+  status:'已上线', status2:'green', note:'主力产品线 · 已在院内生产环境出报告',
+  need:{modal:'CT', part:'胸部', scan:'平扫', series:'薄层', thick:'≤1.5mm'},
+  findings:[
+    {id:'f1', txt:'双肺纹理清晰。'},
+    {id:'f2', ph:'lung_lesion_sentence', label:'肺内病灶描述'},
+    {id:'f3', txt:'纵隔及肺门未见明确肿大淋巴结。'},
+    {id:'f4', ph:'pleural_sentence', label:'胸膜 / 胸腔描述'},
+    {id:'f5', txt:'胸廓骨质未见明确异常。'}
+  ],
+  impression:[
+    {id:'i1', ph:'diagnosis_primary', label:'主要诊断'},
+    {id:'i2', txt:'建议结合临床及病理。'}
+  ]},
+ {id:'AIR02', name:'颅脑 CT AIR 报告生成', ver:'V0.9', exam:'颅脑 CT', modal:'CT', ic:'🧠',
+  status:'待验证', status2:'orange', note:'由胸部模板克隆派生 · v0.9 待验证',
+  need:{modal:'CT', part:'颅脑', scan:'平扫', series:'常规轴位', thick:'≤5mm'},
+  findings:[
+    {id:'f1', txt:'脑实质密度均匀。'},
+    {id:'f2', ph:'brain_lesion_sentence', label:'颅内病灶描述'},
+    {id:'f3', txt:'脑室系统大小形态正常。'},
+    {id:'f4', txt:'中线结构居中。'}
+  ],
+  impression:[
+    {id:'i1', ph:'diagnosis_primary', label:'主要诊断'},
+    {id:'i2', txt:'建议随诊复查。'}
+  ]}
+];
+/* ---- 第三方小模型（结果为"素材"，拼进 AIR 报告）---- */
+function nmSmalls(){ return PRODUCTS.filter(p=>p.vendor!=='影禾自研' && p.type!=='报告生成'); }
+
+/* 各标准能力字段 → 报告句子模板（{n} 数值 / {d} 枚举 / {loc} 位置） */
+const SENT={
+ lesion_detected:{f:'肺内检出结节样病变。', i:'肺内结节，建议结合临床。'},
+ nodule_count:{f:'共检出结节 {n} 枚。'},
+ lesion_location:{f:'病灶位于{loc}。'},
+ long_diameter:{f:'病灶最大径约 {n} mm。'},
+ short_diameter:{f:'短径约 {n} mm。'},
+ lesion_volume:{f:'体积约 {n} cm³。'},
+ density_type:{f:'密度呈{d}。'},
+ malignancy_probability:{f:'AI 评估恶性概率约 {n}（0–1）。', i:'AI 提示恶性可能性 {n}，建议结合临床及病理。'},
+ lung_rads:{f:'Lung-RADS 分级 {d}。', i:'Lung-RADS 分级 {d}。'},
+ calcification_type:{f:'钙化呈{d}。'},
+ pleural_effusion:{f:'双侧胸腔未见明确积液。', i:'未见胸腔积液。'},
+ fracture_site:{f:'{d} 见骨折线。', i:'{d} 骨折。'},
+ fracture_type:{f:'骨折类型为{d}。'},
+ lesion_localization:{f:'（已获取影像坐标定位）'},
+ hemorrhage_volume:{f:'颅内出血量约 {n} mL。', i:'颅内出血约 {n} mL，建议密切观察。'},
+ midline_shift:{f:'中线结构移位约 {n} mm。', i:'中线移位 {n} mm。'},
+ image_quality_score:{f:'图像质量评分 {n} 分。'},
+ fragment_artifact:{f:'存在{d}伪影。'},
+ qc_issue_count:{f:'影像质控检出问题 {n} 处。'},
+ report_conclusion_score:{f:'报告质控得分 {n}。'},
+ contradiction_flag:{i:'报告描述与影像所见存在不一致，建议复核。'},
+ report_draft_text:{f:'（草案文本）'}
+};
+
+/* 测试用影像（可从中选择一条真实检查跑拼接） */
+const CASES=[
+ {id:'C1', pid:'P2784', name:'何婷',   sex:'女', age:31, exam:'胸部 CT 平扫+增强', date:'2026-09-02',
+  modal:'CT', part:'胸部', scan:'平扫+增强', series:4, thick:'1.25mm', note:'4 序列 · 平扫/增强 · 1.25mm · 64 层'},
+ {id:'C2', pid:'P1102', name:'张伟明', sex:'男', age:45, exam:'胸部 CT 平扫',      date:'2026-05-12',
+  modal:'CT', part:'胸部', scan:'平扫',      series:2, thick:'1.25mm', note:'2 序列 · 平扫 · 1.25mm · 72 层'},
+ {id:'C3', pid:'P3018', name:'王平磊', sex:'男', age:53, exam:'胸部 CT 平扫',      date:'2026-06-03',
+  modal:'CT', part:'胸部', scan:'平扫',      series:2, thick:'5mm',    note:'2 序列 · 平扫 · 5mm（层厚偏厚）'},
+ {id:'C4', pid:'P2963', name:'高平玲', sex:'女', age:27, exam:'颅脑 CT 平扫',      date:'2026-04-23',
+  modal:'CT', part:'颅脑', scan:'平扫',      series:2, thick:'5mm',    note:'2 序列 · 平扫 · 5mm · 轴位'}
+];
+
+/* ---- 运行时状态 ---- */
+let NM={step:0, name:'胸部 AIR 增强版（联合第三方小模型）', code:'MIIA_MODEL_AIR_CHEST_PLUS', ver:'V1.0',
+        exam:'胸部 CT', modal:'CT',
+        desc:'以胸部 AIR 报告为基底，把第三方小模型的检出 / 量化结果拼进「影像所见」与「诊断意见」',
+        airId:'AIR01', sel:['P01','P02'],
+        pick:{}, slot:{}, prio:{}, caseId:null, ran:false, running:false, published:[]};
+const NM_STEPS=['基本信息','选择基础 AIR','第三方小模型','字段拼接','测试输出','预览与发布'];
+
+function nmAir(){ return AIRS.find(a=>a.id===NM.airId) || null; }
+function nmSmall(id){ return PRODUCTS.find(p=>p.id===id); }
+/* 各字段的取值域（按字段语义给，避免出现 "Lung-RADS 分级 部分实性" 这类讲不通的值） */
+const ENUMV={
+  density_type:['实性','磨玻璃','部分实性'],
+  lung_rads:['2','3','4A','4B'],
+  calcification_type:['无','点状','爆米花','弥漫'],
+  fracture_site:['第 5 肋骨腋段','第 7 肋骨后段','第 3 肋骨前段'],
+  fracture_type:['线性','粉碎','压缩'],
+  fragment_artifact:['运动','硬化束','金属'],
+  lesion_location:['左肺上叶尖后段','右肺中叶内侧段','右肺下叶背段']
+};
 function nmSample(key,pid,type){
   const seed=[...(key+pid)].reduce((a,c)=>a+c.charCodeAt(0),0);
+  if(ENUMV[key]) return ENUMV[key][seed%ENUMV[key].length];
   if(type==='boolean') return seed%2===0;
   if(type==='int')     return 1+(seed%6);
-  if(type==='number')  return +((seed%1700)/100).toFixed(2);
-  if(type==='enum')    return ['实性','磨玻璃','部分实性'][seed%3];
-  if(type==='text')    return '草稿文本（'+pid+'）';
+  if(type==='number'){
+    switch(key){
+      case 'malignancy_probability': return +((seed%880+10)/1000).toFixed(2);   // 0.01–0.89
+      case 'image_quality_score':
+      case 'report_conclusion_score': return 80+(seed%19);                       // 80–98
+      case 'midline_shift':          return +((seed%120)/10).toFixed(1);         // 0–11.9 mm
+      case 'lesion_volume':          return +((seed%500)/100).toFixed(2);        // 0–4.99 cm³
+      case 'long_diameter':
+      case 'short_diameter':         return +((seed%300)/10).toFixed(1);         // 0–29.9 mm
+      default:                       return +((seed%1700)/100).toFixed(2);
+    }
+  }
   return String(seed%90+10);
 }
-function nmFields(){
-  const acc={};
-  NM.sel.forEach(pid=>{ const p=PRODUCTS.find(x=>x.id===pid); if(!p) return;
-    p.caps.forEach(k=>{ acc[k]=acc[k]||[]; if(acc[k].indexOf(pid)<0) acc[k].push(pid); }); });
-  return Object.keys(acc).map(k=>{
-    const c=CAPS.find(x=>x.key===k)||{key:k,cn:k,type:'—',cat:'—',desc:''};
-    return {key:k, cn:c.cn, type:c.type, cat:c.cat, srcs:acc[k], conflict:acc[k].length>1};
-  }).sort((a,b)=>(a.cat===b.cat? (a.key>b.key?1:-1) : (a.cat>b.cat?1:-1)));
-}
-function nmRuleOf(f){ return NM.rules[f.key] || (f.srcs.length>1 ? '' : 'pass'); }
-function nmVal(f){
-  const r=nmRuleOf(f); if(!r) return '—';
-  const vals=f.srcs.map(pid=>nmSample(f.key,pid,f.type));
-  switch(r){
-    case 'max': return Math.max.apply(null,vals.map(Number));
-    case 'min': return Math.min.apply(null,vals.map(Number));
-    case 'avg': return +(vals.map(Number).reduce((a,b)=>a+b,0)/vals.length).toFixed(2);
-    case 'mode':{const c={};vals.forEach(v=>c[v]=(c[v]||0)+1);return Object.keys(c).sort((a,b)=>c[b]-c[a])[0];}
-    case 'merge': return vals;
-    case 'manual': return null;
-    default: return vals[0];
-  }
-}
-function nmJson(){
-  const fs=nmFields();
-  const out={
-    model:{ code:NM.code, name:NM.name, version:NM.ver, exam:NM.exam, modal:NM.modal,
-            output_mode: NM.mode==='fuse'?'融合输出（同字段按规则合成单一值）':'并列输出（各产品结果分列保留）' },
-    sources: NM.sel.map(id=>{const p=PRODUCTS.find(x=>x.id===id);
-      return {product_id:p.id, name:p.name, vendor:p.vendor, version:p.ver, capabilities:p.caps.length};}),
-    output_fields:{}
-  };
-  fs.forEach(f=>{
-    const r=nmRuleOf(f);
-    const o={ cn:f.cn, type:f.type, from:f.srcs, stitch: r?RULE_LABEL[r]:'待选择', value: nmVal(f) };
-    if(f.conflict) o.conflict=true;
-    out.output_fields[f.key]=o;
-  });
-  out.merge_policy = NM.mode==='fuse'
-    ? '同一标准字段被多个产品输出时，按该字段的「拼接方式」合成单一值；不同字段并列输出。未出现在 output_fields 的字段不进入本模型输出。'
-    : '各产品原始结果分别保留在 sources 中，不跨产品融合，仅统一字段名与类型。';
+/* AIR 两段落里可被"拼进去"的位置 */
+function nmTargets(){
+  const a=nmAir(); if(!a) return [];
+  const out=[];
+  a.findings.forEach(s=>{ if(s.ph) out.push({v:'findings|'+s.ph, t:'影像所见 · '+s.label, sec:'findings', ph:s.ph, label:s.label}); });
+  out.push({v:'findings|__append__', t:'影像所见 · 段落末尾追加', sec:'findings', ph:'__append__', label:'段落末尾'});
+  a.impression.forEach(s=>{ if(s.ph) out.push({v:'impression|'+s.ph, t:'诊断意见 · '+s.label, sec:'impression', ph:s.ph, label:s.label}); });
+  out.push({v:'impression|__append__', t:'诊断意见 · 段落末尾追加', sec:'impression', ph:'__append__', label:'段落末尾'});
   return out;
 }
+function nmTarget(v){ return nmTargets().find(t=>t.v===v) || null; }
+/* 所有候选字段行 */
+function nmRows(){
+  const rows=[];
+  NM.sel.forEach(pid=>{
+    const p=nmSmall(pid); if(!p) return;
+    p.caps.forEach(k=>{
+      const c=CAPS.find(x=>x.key===k)||{key:k,cn:k,type:'—'};
+      const id=pid+'|'+k;
+      rows.push({id:id, pid:pid, key:k, cn:c.cn, type:c.type, pname:p.name, pcolor:p.color,
+                 val:nmSample(k,pid,c.type), on:!!NM.pick[id], target:NM.slot[id]||''});
+    });
+  });
+  return rows;
+}
+/* 占位符 → 候选写入者（用于冲突检测） */
+function nmPhWriters(){
+  const m={};
+  nmRows().forEach(r=>{
+    if(!r.on||!r.target) return;
+    const t=nmTarget(r.target); if(!t||t.ph==='__append__') return;
+    (m[t.ph]=m[t.ph]||[]).push(r);
+  });
+  return m;
+}
+function nmConflicts(){
+  const m=nmPhWriters(), out=[];
+  Object.keys(m).forEach(ph=>{ if(m[ph].length>1) out.push({ph:ph, rows:m[ph]}); });
+  return out;
+}
+function nmSentence(r){
+  const s=SENT[r.key]; if(!s) return r.cn+' 为 '+r.val+'。';
+  const t0=nmTarget(r.target);
+  const useI = t0 && t0.sec==='impression';
+  let t=(useI? (s.i||s.f||'') : (s.f||s.i||''));
+  if(!t) t=s.f||s.i||'';
+  return t.replace('{n}', r.val).replace('{d}', r.val).replace('{loc}', r.val);
+}
+/* 生成报告：spliced=false → AIR 原始（占位符未填） */
+function nmReport(spliced){
+  const a=nmAir(); if(!a) return {findings:[], impression:[], fills:{}, append:{findings:[],impression:[]}};
+  const fills={}, append={findings:[], impression:[]}, who={};
+  if(spliced){
+    const m=nmPhWriters();
+    Object.keys(m).forEach(ph=>{
+      const arr=m[ph], mode=NM.prio[ph]||'merge';
+      const chosen = (arr.length===1||mode==='merge') ? arr : [arr.find(x=>x.pid===mode)||arr[0]];
+      fills[ph]=chosen.map(nmSentence).join('');
+      who[ph]=chosen.map(x=>x.pname+' · '+x.cn);
+    });
+    nmRows().forEach(r=>{
+      if(!r.on||!r.target) return;
+      const t=nmTarget(r.target);
+      if(t && t.ph==='__append__'){ append[t.sec].push(nmSentence(r)); who['__append__'+t.sec]=(who['__append__'+t.sec]||[]).concat([r.pname+' · '+r.cn]); }
+    });
+  }
+  const build=sec=>{
+    const segs=a[sec].map(s=>{
+      if(s.txt) return {t:s.txt, isNew:false};
+      const v=fills[s.ph];
+      return v? {t:v, isNew:true, src:(who[s.ph]||[]).join(' + ')}
+              : {t:'{'+s.ph+'}', isNew:false, ph:true};
+    });
+    append[sec].forEach(t=>segs.push({t:t, isNew:true, src:(who['__append__'+sec]||[]).join(' + ')}));
+    return segs;
+  };
+  return {findings:build('findings'), impression:build('impression'), fills:fills, append:append};
+}
+function nmJson(){
+  const a=nmAir(), rows=nmRows().filter(r=>r.on);
+  const o={ model:{code:NM.code, name:NM.name, version:NM.ver, exam:NM.exam, modal:NM.modal},
+    base_air: a? {product_id:a.id, name:a.name, version:a.ver, vendor:'影禾自研'} : null,
+    air_sections:{ findings:{name:'影像所见', slots:a?a.findings.filter(s=>s.ph).map(s=>s.ph):[]},
+                   impression:{name:'诊断意见', slots:a?a.impression.filter(s=>s.ph).map(s=>s.ph):[]} },
+    splice:{} };
+  rows.forEach(r=>{
+    const t=nmTarget(r.target);
+    o.splice[r.pid+'::'+r.key]={ from_model:r.pname, field:r.key, cn:r.cn,
+      into_section: t? (t.sec==='findings'?'影像所见':'诊断意见') : null,
+      into_target: t? t.label : null, sentence: nmSentence(r) };
+  });
+  o.conflict_policy=nmConflicts().map(c=>({slot:c.ph, writers:c.rows.map(x=>x.pname),
+    policy: NM.prio[c.ph]==='merge' ? '合并为一句（按模型顺序）'
+          : (NM.prio[c.ph] ? (((nmSmall(NM.prio[c.ph])||{}).name||NM.prio[c.ph])+' 优先') : '未指定') }));
+  o.note='AIR 为基底并保留其报告结构；第三方小模型结果仅作为句子拼入影像所见 / 诊断意见，不改变 AIR 的诊断逻辑。';
+  return o;
+}
+
+/* ---- 交互 ---- */
 function nmGo(i){ NM.step=Math.max(0,Math.min(NM_STEPS.length-1,i)); renderNewModel(); }
+function nmSetAir(id){
+  if(NM.airId===id) return;
+  NM.airId=id; NM.pick={}; NM.slot={}; NM.prio={}; NM.ran=false; NM.caseId=null;
+  const a=nmAir(); if(a){ NM.exam=a.exam; NM.modal=a.modal; }
+  /* 按新 AIR 的占位符重置默认拼接位置 */
+  nmDefaultSplice();
+  renderNewModel(); toast('已选择基础 AIR：'+a.name+' '+a.ver+' · 已重置拼接配置');
+}
 function nmToggle(id){
   const i=NM.sel.indexOf(id);
-  if(i>=0) NM.sel.splice(i,1); else NM.sel.push(id);
-  renderNewModel();
+  if(i>=0){ NM.sel.splice(i,1);
+    Object.keys(NM.pick).forEach(k=>{ if(k.indexOf(id+'|')===0) delete NM.pick[k]; });
+    Object.keys(NM.slot).forEach(k=>{ if(k.indexOf(id+'|')===0) delete NM.slot[k]; });
+  } else NM.sel.push(id);
+  NM.ran=false;
+  nmDefaultSplice(); renderNewModel();
 }
 function nmMove(id,d){
   const i=NM.sel.indexOf(id), j=i+d;
   if(i<0||j<0||j>=NM.sel.length) return;
   const t=NM.sel[i]; NM.sel[i]=NM.sel[j]; NM.sel[j]=t; renderNewModel();
 }
-function nmSetRule(k,v){ NM.rules[k]=v; renderNewModel(); }
+function nmToggleField(id){ NM.pick[id]=!NM.pick[id]; if(!NM.pick[id]) delete NM.slot[id]; NM.ran=false; renderNewModel(); }
+function nmSetSlot(id,v){ NM.slot[id]=v; NM.ran=false;
+  const t=nmTarget(v); const ph=t?t.ph:null;
+  if(ph && ph!=='__append__'){
+    const w=nmPhWriters(); if(w[ph] && w[ph].length>1 && !NM.prio[ph]) NM.prio[ph]='merge';
+  }
+  renderNewModel();
+}
+function nmSetPrio(ph,v){ NM.prio[ph]=v; renderNewModel(); }
+function nmPickCase(id){ NM.caseId=id; NM.ran=false; renderNewModel(); }
+function nmRun(){ if(!NM.caseId){ toast('请先选择一条影像'); return; }
+  NM.running=true; renderNewModel();
+  setTimeout(()=>{ NM.running=false; NM.ran=true; renderNewModel();
+    toast('拼接完成：AIR 报告已按配置拼入 '+nmRows().filter(r=>r.on).length+' 个字段，可在下方对照查看'); },900); }
+/* 默认拼入：挑几个有代表性的字段，并制造 2 处占位符冲突以便演示 */
+function nmDefaultSplice(){
+  const a=nmAir(); if(!a) return;
+  const phF=(a.findings.find(s=>s.ph)||{}).ph, phI=(a.impression.find(s=>s.ph)||{}).ph;
+  const rows=nmRows();
+  const want=['long_diameter','density_type','malignancy_probability','lung_rads','fracture_site','pleural_effusion','image_quality_score','hemorrhage_volume','midline_shift'];
+  rows.forEach(r=>{
+    if(want.indexOf(r.key)<0) return;
+    NM.pick[r.id]=true;
+    if(r.key==='long_diameter'||r.key==='density_type') NM.slot[r.id]='findings|'+phF;
+    else if(r.key==='malignancy_probability'||r.key==='lung_rads') NM.slot[r.id]='impression|'+phI;
+    else if(r.key==='hemorrhage_volume'||r.key==='midline_shift') NM.slot[r.id]='findings|'+phF;
+    else NM.slot[r.id]='findings|__append__';
+  });
+  /* 默认把冲突位置标为「合并」，保证开箱即用的配置就是合法的（否则必然卡在校验） */
+  nmConflicts().forEach(c=>{ if(!NM.prio[c.ph]) NM.prio[c.ph]='merge'; });
+}
 function nmReset(){
-  NM=Object.assign(NM,{step:0, sel:['P01','P02','P04'], rules:{}, mode:'fuse'});
-  renderNewModel(); toast('已重置创建模型配置');
+  NM=Object.assign(NM,{step:0, airId:'AIR01', sel:['P01','P02'], pick:{}, slot:{}, prio:{},
+    caseId:null, ran:false, running:false});
+  nmDefaultSplice(); renderNewModel(); toast('已重置创建模型配置');
 }
 function nmPublish(){
-  const fs=nmFields();
-  const un=fs.filter(f=>f.conflict && !nmRuleOf(f));
+  const rows=nmRows().filter(r=>r.on);
+  const conf=nmConflicts().filter(c=>!NM.prio[c.ph]);
   if(!NM.name.trim()||!NM.code.trim()){ toast('请先填写模型名称与模型编码'); nmGo(0); return; }
-  if(NM.sel.length<2){ toast('至少选择 2 个已接入产品，结果拼接才有意义'); nmGo(1); return; }
-  if(unresolvedCheck(un)) return;
-  NM.published.push({name:NM.name, code:NM.code, ver:NM.ver, n:NM.sel.length, fields:fs.length,
-    rules:nmFields().filter(f=>f.conflict).length, at:'2026-09-19 14:0'+(NM.published.length+1)});
+  if(!nmAir()){ toast('请先选择基础 AIR'); nmGo(1); return; }
+  if(!NM.sel.length){ toast('请至少选择 1 个第三方小模型'); nmGo(2); return; }
+  if(!rows.length){ toast('请至少勾选 1 个要拼入报告的字段'); nmGo(3); return; }
+  const noTarget=rows.filter(r=>!r.target);
+  if(noTarget.length){ toast('还有 '+noTarget.length+' 个字段未指定拼入位置：'+noTarget.map(r=>r.cn).join('、')); nmGo(3); return; }
+  if(conf.length){ toast('有 '+conf.length+' 个位置存在多个模型写入，请指定合并或优先：'+conf.map(c=>c.ph).join('、')); nmGo(3); return; }
+  if(!NM.ran){ toast('请先在「测试输出」里选一条影像跑一遍拼接结果'); nmGo(4); return; }
+  NM.published.push({name:NM.name, code:NM.code, ver:NM.ver, air:nmAir().name,
+    n:NM.sel.length, fields:rows.length, at:'2026-09-19 15:0'+(NM.published.length+1)});
   renderNewModel();
-  toast('模型已发布：'+NM.name+' '+NM.ver+' → 进入「标准 AI 能力池」，可在工作流编排中作为节点引用');
+  toast('模型已发布：'+NM.name+' '+NM.ver+' → 以「'+nmAir().name+'」为基底，已进入标准 AI 能力池');
 }
-function unresolvedCheck(un){
-  if(un.length){ toast('还有 '+un.length+' 个冲突字段未选择拼接方式：'+un.map(f=>f.cn).join('、')); nmGo(2); return true; }
-  return false;
+
+/* ---- 各步骤渲染 ---- */
+function nmSecBlock(sec, rep, spliced){
+  const nm = sec==='findings' ? '影像所见' : '诊断意见';
+  const segs = rep[sec]||[];
+  return `<div class="rsec"><div class="rsec-h">${nm}</div>`+
+    segs.map(s=>{
+      if(s.isNew) return `<div class="rsent nw">${s.t}<span class="src">← ${s.src||'第三方小模型'}</span></div>`;
+      if(s.ph)    return `<div class="rsent ph">${s.t} <span class="mut" style="font-size:10.5px">（AIR 占位符，等待第三方模型拼入）</span></div>`;
+      return `<div class="rsent">${s.t}</div>`;
+    }).join('')+`</div>`;
 }
-function nmRenderStep(){
-  const fs=nmFields();
+function nmAirOutput(){
+  const a=nmAir();
+  return `<div class="rgrid">
+    ${nmSecBlock('findings', nmReport(false), false)}
+    ${nmSecBlock('impression', nmReport(false), false)}
+  </div>`;
+}
+function nmStepBody(){
+  const a=nmAir(), sm=nmSmalls(), rows=nmRows(), on=rows.filter(r=>r.on), conf=nmConflicts();
+
   if(NM.step===0){
     const F=[['模型名称','name'],['模型编码','code'],['版本','ver'],['适用检查项目','exam'],['模态','modal'],['模型说明','desc']];
     return `<div class="card"><div class="ch">① 模型基本信息</div><div class="cb">
       <div class="nmgrid">${F.map(x=>`<div class="pf2"><label>${x[0]}</label>
         <input class="inp" style="margin-top:0" value="${NM[x[1]]||''}" oninput="NM.${x[1]}=this.value"></div>`).join('')}</div>
-      <div class="nmsnote" style="margin-top:12px;font-size:12.5px;color:#62779E;line-height:1.9">
-        💡 <b>模型不是新算法</b> —— 它是把「AI 产品库」里已接入产品的输出结果，按规则<b>拼接</b>成一份新的标准结构结果。<br>
-        例：检出类产品给出病灶与长径、质控类产品给出图像质量评分 → 拼成一个「胸部联合评估」输出，直接进报告。
+      <div style="margin-top:12px;font-size:12.5px;color:#62779E;line-height:1.95">
+        💡 <b>这个模块不是训练新算法</b> —— 它<b>以本公司 AIR 报告为基底</b>，把第三方小模型的返回结果
+        <b>拼进 AIR 报告的「影像所见」与「诊断意见」</b>，形成一份更完整的报告输出。<br>
+        <span class="mut">第三方小模型只提供素材句，报告结构与诊断结论仍以 AIR 为准。</span>
       </div></div></div>`;
   }
+
   if(NM.step===1){
-    const cards=PRODUCTS.map(p=>{
-      const ok=p.status==='已接入', on=NM.sel.indexOf(p.id)>=0;
-      return `<div class="pcard2 ${on?'on':''}" style="${ok?'':'opacity:.5;cursor:not-allowed'}"
-          ${ok?`onclick="nmToggle('${p.id}')"`:''}>
+    const cards=AIRS.map(x=>{
+      const onSel=NM.airId===x.id;
+      return `<div class="aircard ${onSel?'on':''}" onclick="nmSetAir('${x.id}')">
+        <div class="hd"><span class="ci">${x.ic}</span>
+          <div style="flex:1"><b>${x.name}</b><span>影禾自研 · ${x.ver} · ${x.exam}</span></div>
+          <span class="tag ${x.status2}">${x.status}</span></div>
+        <div class="row"><span>数据需求</span><b>${x.need.part} / ${x.need.scan} / ${x.need.thick}</b></div>
+        <div class="row"><span>报告结构</span><b>影像所见 ${x.findings.length} 句 · 诊断意见 ${x.impression.length} 句</b></div>
+        <div class="mut" style="font-size:11px;margin-top:6px">${x.note}</div>
+        ${onSel?'<div class="airpick">✓ 当前基底</div>':''}
+      </div>`;
+    }).join('');
+    return `<div class="card"><div class="ch">② 选择基础 AIR（本公司自研）
+        <span class="r"><span class="mut" style="font-size:11px">拼接以 AIR 的报告结构为底，第三方小模型结果只是"素材句"</span></span></div>
+      <div class="cb"><div class="airgrid">${cards}</div></div></div>
+      ${a?`<div class="card"><div class="ch">该 AIR 的报告输出结构（分开展示）
+          <span class="r"><span class="tag blue">影像所见</span><span class="tag purple">诊断意见</span></span></div>
+        <div class="cb">
+          <div class="rgrid">
+            ${nmSecBlock('findings', nmReport(false), false)}
+            ${nmSecBlock('impression', nmReport(false), false)}
+          </div>
+          <div style="margin-top:12px;font-size:12.5px;color:#62779E;line-height:1.9">
+            「{}」标记的是 AIR 报告里的<b>可拼入位置（占位符）</b>：${a.findings.concat(a.impression).filter(s=>s.ph).map(s=>'<code class="mono">'+s.ph+'</code>（'+s.label+'）').join('　')}
+          </div>
+        </div></div>`:''}`;
+  }
+
+  if(NM.step===2){
+    const cards=sm.map(p=>{
+      const ok=p.status==='已接入', onSel=NM.sel.indexOf(p.id)>=0;
+      return `<div class="pcard2 ${onSel?'on':''}" style="${ok?'':'opacity:.5;cursor:not-allowed'}" ${ok?`onclick="nmToggle('${p.id}')"`:''}>
         <div class="hd"><span class="ci" style="background:${p.color}">${p.ic}</span>
           <div style="flex:1"><b>${p.name}</b><span>${p.vendor} · ${p.ver} · ${p.type}</span></div>
-          <span class="tag ${on?'green':(ok?'gray':'orange')}">${on?'已选':(ok?'可选':p.status)}</span></div>
-        <div class="row"><span>输出能力</span><b>${p.caps.length} 个标准字段</b></div>
+          <span class="tag ${onSel?'green':(ok?'gray':'orange')}">${onSel?'已选':(ok?'可选':p.status)}</span></div>
+        <div class="row"><span>可提供字段</span><b>${p.caps.length} 个</b></div>
         <div class="row"><span>数据需求</span><b>${p.need.part} / ${p.need.scan} / ${p.need.thick}</b></div>
       </div>`;}).join('');
-    const ord=NM.sel.length? NM.sel.map((id,i)=>{
-      const p=PRODUCTS.find(x=>x.id===id);
+    const ord=NM.sel.length? NM.sel.map((id,i)=>{const p=nmSmall(id);
       return `<div class="nmord"><span class="idx">${i+1}</span>
         <span class="ci" style="background:${p.color}">${p.ic}</span><b>${p.name}</b>
-        <span class="mut">${p.vendor} · ${p.caps.length} 项能力</span>
+        <span class="mut">${p.vendor} · ${p.caps.length} 个字段</span>
         <button class="btn sm" onclick="nmMove('${id}',-1)" ${i===0?'disabled':''}>↑</button>
         <button class="btn sm" onclick="nmMove('${id}',1)" ${i===NM.sel.length-1?'disabled':''}>↓</button>
         <button class="btn sm" onclick="nmToggle('${id}')">移除</button></div>`;}).join('')
-      : '<div class="mut">尚未选择产品 —— 在上方产品库中点击即可加入（「测试中」的产品不可选，必须先完成接入）。</div>';
-    return `<div class="card"><div class="ch">② 从 AI 产品库选择产品
-        <span class="r"><span class="tag blue">已选 ${NM.sel.length} 个</span>
-        ${NM.sel.length>=2?'<span class="tag green">可做结果拼接</span>':'<span class="tag orange">至少选 2 个</span>'}</span></div>
+      : '<div class="mut">尚未选择第三方小模型 —— 在上方点击即可加入（「测试中」的产品必须先完成接入）。</div>';
+    return `<div class="card"><div class="ch">③ 选择第三方小模型（结果将继续拼入 AIR 报告）
+        <span class="r"><span class="tag blue">已选 ${NM.sel.length} 个</span></span></div>
       <div class="cb"><div class="pgrid">${cards}</div></div></div>
-      <div class="card"><div class="ch">已选产品与顺序
-        <span class="r"><span class="mut" style="font-size:11px">顺序影响「指定产品优先」与并列输出的排列</span></span></div>
+      <div class="card"><div class="ch">已选小模型与顺序
+        <span class="r"><span class="mut" style="font-size:11px">顺序影响同一位置冲突时的排列</span></span></div>
       <div class="cb">${ord}</div></div>`;
   }
-  if(NM.step===2){
-    const conf=fs.filter(f=>f.conflict);
-    const un=conf.filter(f=>!nmRuleOf(f));
-    const rows=fs.map(f=>{
-      const r=nmRuleOf(f);
-      const list=f.conflict?RULE_ALL:RULE_ONE;
-      const sel=`<select class="inssel" onchange="nmSetRule('${f.key}',this.value)">
-        ${f.conflict?'<option value=""'+(r===''?' selected':'')+'>— 请选择 —</option>':''}
-        ${list.map(k=>`<option value="${k}"${r===k?' selected':''}>${RULE_LABEL[k]}</option>`).join('')}</select>`;
-      const src=f.srcs.map(id=>{const p=PRODUCTS.find(x=>x.id===id);
-        return `<span class="tag ${p.color==='#2A7FFF'?'blue':'gray'}" style="margin-right:3px">${p.name}</span>`;}).join('');
-      const v=nmVal(f);
-      const vTxt=(v===null)?'<span style="color:#C25E00">待人工复核</span>':(Array.isArray(v)?JSON.stringify(v):String(v));
-      return `<tr class="${f.conflict?'conf':''}">
-        <td><b>${f.cn}</b><div class="mono" style="font-size:10px;color:#8AA0C8">${f.key}</div></td>
-        <td class="mono" style="font-size:11px">${f.type}</td>
-        <td>${src}</td>
-        <td>${f.conflict?'<span class="tag red">冲突 · '+f.srcs.length+' 个产品</span>':'<span class="tag gray">单一来源</span>'}</td>
-        <td>${sel}</td>
-        <td class="mono" style="font-size:11.5px">${vTxt}</td></tr>`;
+
+  if(NM.step===3){
+    if(!a) return '<div class="card"><div class="cb">请先选择基础 AIR。</div></div>';
+    const tg=nmTargets();
+    const trs=rows.map(r=>{
+      const t=nmTarget(r.target);
+      const isConf = r.on && t && t.ph!=='__append__' && (nmPhWriters()[t.ph]||[]).length>1;
+      const sel=`<select class="inssel" onchange="nmSetSlot('${r.id}',this.value)">
+        <option value="">— 选择拼入位置 —</option>
+        ${tg.map(x=>`<option value="${x.v}"${r.target===x.v?' selected':''}>${x.t}</option>`).join('')}</select>`;
+      return `<tr class="${isConf?'conf':''} ${r.on?'':'offrow'}">
+        <td style="text-align:center"><input type="checkbox" ${r.on?'checked':''} onchange="nmToggleField('${r.id}')"></td>
+        <td><b>${r.cn}</b><div class="mono" style="font-size:10px;color:#8AA0C8">${r.key}</div></td>
+        <td><span class="tag gray">${r.pname}</span></td>
+        <td class="mono" style="font-size:11.5px">${r.val}</td>
+        <td>${r.on? sel : '<span class="mut">不拼入</span>'}</td>
+        <td style="font-size:11.5px;color:#5E7496">${r.on&&r.target? nmSentence(r):'—'}</td></tr>`;
     }).join('');
-    return `<div class="card"><div class="ch">结果合并策略</div><div class="cb">
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-        ${[['fuse','融合输出','同一标准字段被多个产品输出时，按该字段的拼接方式合成一个值（适合要一份结论进报告）'],
-           ['par','并列输出','各产品结果分列保留、只统一字段名（适合要保留多厂商原始判断）']]
-          .map(x=>`<div class="nmopt ${NM.mode===x[0]?'on':''}" onclick="NM.mode='${x[0]}';renderNewModel()">
-            <b>${x[1]}</b><div class="mut" style="margin-top:4px;line-height:1.7">${x[2]}</div></div>`).join('')}
-        </div></div></div>
-      <div class="card"><div class="ch">③ 结果拼接配置
-        <span class="r"><span class="tag blue">输出字段 ${fs.length} 个</span>
-        ${conf.length?(un.length?`<span class="tag red">字段冲突 ${conf.length} 个 · ${un.length} 个未定规则</span>`
-                              :`<span class="tag orange">字段冲突 ${conf.length} 个 · 规则已定</span>`)
-                     :'<span class="tag green">无字段冲突</span>'}</span></div>
-      <div class="cb" style="padding:4px 0 0"><table class="tb">
-        <tr><th>标准能力字段</th><th>类型</th><th>来源产品</th><th>冲突</th><th style="min-width:150px">拼接方式</th><th>合成示例值</th></tr>
-        <tbody>${rows}</tbody></table>
-        <div style="padding:12px 18px;font-size:12.5px;color:#62779E;line-height:1.9">
-          规则说明：<b>取最大值/最小值/平均值</b>用于数值型（如体积、长径取多产品最大值＝保守估计）；
-          <b>取众数</b>用于枚举型；<b>合并为数组</b>保留各家结论；<b>指定产品优先</b>取排序最前的产品值；
-          <b>标记人工复核</b>则该字段输出 null 并进入医生待确认队列。
+    const confBox = conf.length? `<div class="card"><div class="ch">⚠ 同一位置有多个模型写入 —— 需指定合并或优先</div><div class="cb">
+        ${conf.map(c=>`<div class="confbox"><b class="mono">${c.ph}</b>
+          <span class="mut" style="margin-left:8px">${c.rows.map(x=>x.pname+' · '+x.cn).join(' ＋ ')}</span>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn sm ${(!NM.prio[c.ph]||NM.prio[c.ph]==='merge')?'pri':''}" onclick="nmSetPrio('${c.ph}','merge')">合并为一句（按顺序）</button>
+            ${c.rows.map(x=>`<button class="btn sm ${NM.prio[c.ph]===x.pid?'pri':''}" onclick="nmSetPrio('${c.ph}','${x.pid}')">${x.pname} 优先</button>`).join('')}
+          </div></div>`).join('')}
+      </div></div>`:'';
+    return `${confBox}
+      <div class="card"><div class="ch">④ 字段拼接：把第三方小模型的结果拼进 AIR 报告
+          <span class="r"><span class="tag blue">已勾选 ${on.length} 个字段</span>
+          ${conf.length?`<span class="tag ${conf.filter(c=>!NM.prio[c.ph]).length?'red':'orange'}">位置冲突 ${conf.length} 处</span>`:'<span class="tag green">无位置冲突</span>'}</span></div>
+        <div class="cb" style="padding:4px 0 0"><table class="tb">
+          <tr><th style="width:44px">拼入</th><th>第三方字段</th><th>来源模型</th><th>示例值</th>
+              <th style="min-width:210px">拼入 AIR 的哪个位置</th><th style="min-width:190px">拼入后的句子</th></tr>
+          <tbody>${trs}</tbody></table>
+          <div style="padding:12px 18px;font-size:12.5px;color:#62779E;line-height:1.9">
+            勾选的字段会按「拼入位置」写进 AIR 报告：<b>占位符位置</b>会替换掉该占位符，
+            <b>段落末尾</b>则作为一种新句子追加到该段落最后。AIR 自身原来的句子不受影响。
+          </div>
+        </div></div>
+      <div class="card"><div class="ch">拼接后的报告预览（实时）</div><div class="cb">
+        <div class="rgrid">
+          ${nmSecBlock('findings', nmReport(true), true)}
+          ${nmSecBlock('impression', nmReport(true), true)}
         </div>
       </div></div>`;
   }
-  if(NM.step===3){
-    const rows=fs.map(f=>`<tr><td class="mono" style="font-size:11.5px">${f.key}</td><td>${f.cn}</td>
-      <td class="mono" style="font-size:11px">${f.type}</td>
-      <td>${f.srcs.map(id=>PRODUCTS.find(x=>x.id===id).name).join(' + ')}</td>
-      <td>${RULE_LABEL[nmRuleOf(f)]||'<span style="color:#C25E00">待选择</span>'}</td></tr>`).join('');
-    return `<div class="card"><div class="ch">④ 输出定义（本模型对外输出的字段）</div>
-      <div class="cb" style="padding:4px 0 0"><table class="tb">
-        <tr><th>输出字段 Key</th><th>中文名</th><th>类型</th><th>来源产品</th><th>拼接方式</th></tr>
-        <tbody>${rows}</tbody></table></div></div>
-      <div class="card"><div class="ch">输出结构（在平台标准结果结构之上，新增一层 model 级汇总）</div><div class="cb">
-        <div class="tree">
-          <div class="l1">task 信息</div><div class="l2">↳ task_id / model_code / 状态 / 时间戳</div>
-          <div class="l1">sources（本模型引用的 AI 产品）</div>
-          <div class="l2">↳ ${NM.sel.map(id=>{const p=PRODUCTS.find(x=>x.id===id);return p.name;}).join(' · ')||'—'}</div>
-          <div class="l1">output_fields（拼接后的标准字段）</div>
-          <div class="l2">↳ ${fs.slice(0,6).map(f=>'<code>'+f.key+'</code>').join(' ')}${fs.length>6?' …共 '+fs.length+' 个':''}</div>
-          <div class="l1">raw_by_source（各产品原始结果，仅「并列输出」保留）</div>
-          <div class="l2">↳ 保留厂商原始结构，便于追溯与回溯</div>
-          <div class="l1">merge_policy</div><div class="l2">↳ ${NM.mode==='fuse'?'融合输出':'并列输出'}</div>
+
+  if(NM.step===4){
+    if(!a) return '<div class="card"><div class="cb">请先选择基础 AIR。</div></div>';
+    const rep=nmReport(true);
+    const match=c=>{
+      const bad=[];
+      if(c.modal!==a.need.modal) bad.push('模态不符（需 '+a.need.modal+'）');
+      if(c.part!==a.need.part) bad.push('检查部位不符（需 '+a.need.part+'）');
+      if(parseFloat(c.thick)>parseFloat(a.need.thick.replace('≤',''))) bad.push('层厚超限（需 '+a.need.thick+'）');
+      return bad;
+    };
+    const cases=CASES.map(c=>{
+      const bad=match(c), ok=bad.length===0, onSel=NM.caseId===c.id;
+      return `<div class="caserow ${onSel?'on':''} ${ok?'':'bad'}" onclick="nmPickCase('${c.id}')">
+        <span class="idx">${onSel?'●':'○'}</span>
+        <div style="flex:1;min-width:0">
+          <b>${c.name}</b> <span class="mut">${c.pid} · ${c.age}岁 · ${c.sex}</span>
+          <div class="mut" style="font-size:11.5px;margin-top:2px">${c.exam} · ${c.date} · ${c.note}</div>
         </div>
-        <div style="margin-top:12px;font-size:12.5px;color:#62779E;line-height:1.95">
-          拼接出来的字段<b>仍然是标准能力字段库里的 Key</b> —— 因此本模型发布后可被工作流编排直接引用，下游（报告 / 质控）无需关心它由几个产品拼成。
-        </div></div></div>`;
+        ${ok?'<span class="tag green">满足数据需求</span>'
+            :'<span class="tag orange" title="'+bad.join('；')+'">'+bad[0]+'</span>'}
+      </div>`;
+    }).join('');
+    /* 运行轨迹 */
+    const trace = !NM.ran ? '' : `<div class="pipe">${
+      [{n:'AIR 报告生成',s:'done'},{n:'数据匹配分发',s:'done'}]
+      .concat(NM.sel.map(id=>({n:nmSmall(id).name,s:'done'})))
+      .concat([{n:'结果拼接（'+nmRows().filter(r=>r.on).length+' 字段）',s:'done'},{n:'输出报告',s:'run'}])
+      .map((x,i,arr)=>`<div class="stage ${x.s}"><div class="st-ico">${x.s==='done'?'✓':'⇄'}</div>
+          <div class="st-name">${x.n}</div><div class="st-sub">${x.s==='done'?'完成':'待确认'}</div></div>`
+        + (i<arr.length-1?'<div class="conn done"></div>':'')).join('')
+    }</div>`;
+    return `<div class="card"><div class="ch">⑤ 选择一条影像，测试拼接输出
+        <span class="r"><button class="btn sm pri" onclick="nmRun()" ${NM.running?'disabled':''}>${NM.running?'⏳ 拼接中…':'▶ 运行拼接'}</button></span></div>
+      <div class="cb" style="padding:8px 18px 4px">${cases}
+        <div class="mut" style="font-size:11.5px;margin-top:8px">影像需同时满足基础 AIR 的数据需求（模态 / 部位 / 层厚），否则不参与拼接。</div>
+      </div></div>
+      ${NM.ran?`
+      <div class="card"><div class="ch">运行轨迹（状态与异常均来自平台标准）</div><div class="cb">${trace}
+        <div style="margin-top:12px;font-size:12.5px;color:#5E7496;line-height:1.9">
+          本次运行：AIR 生成报告基底 → 平台按各模型数据需求分发影像 → ${NM.sel.length} 个第三方小模型返回结果 →
+          按「字段拼接」配置写进 AIR 的影像所见 / 诊断意见 → 输出拼接后报告。
+        </div></div></div>
+      <div class="card"><div class="ch">拼接输出对照 <span class="r">
+          <span class="tag gray">← AIR 原始</span><span class="tag green">拼接后 →</span></span></div>
+        <div class="cb"><div class="rgrid">
+          <div>
+            <div class="rcolh">AIR 原始输出</div>
+            ${nmSecBlock('findings', nmReport(false), false)}
+            ${nmSecBlock('impression', nmReport(false), false)}
+          </div>
+          <div>
+            <div class="rcolh ok">拼接后输出（高亮 = 第三方拼入）</div>
+            ${nmSecBlock('findings', rep, true)}
+            ${nmSecBlock('impression', rep, true)}
+          </div>
+        </div></div></div>`:''}`;
   }
-  /* step 4 */
-  const un=fs.filter(f=>f.conflict && !nmRuleOf(f));
-  const j=JSON.stringify(nmJson(),null,2);
-  return `<div class="card"><div class="ch">⑤ 输出预览（实时按当前配置生成）</div>
-      <div class="cb"><div class="jsonbox">${j.replace(/</g,'&lt;')}</div></div></div>
+
+  /* step 5 */
+  const rowsOn=rows.filter(r=>r.on);
+  const un=rowsOn.filter(r=>!r.target);
+  const confU=nmConflicts().filter(c=>!NM.prio[c.ph]);
+  const ready=(NM.name.trim()&&NM.code.trim()&&a&&NM.sel.length&&rowsOn.length&&!un.length&&!confU.length&&NM.ran);
+  const rep=nmReport(true);
+  return `<div class="card"><div class="ch">模型定义 JSON（实时）</div>
+      <div class="cb"><div class="jsonbox">${JSON.stringify(nmJson(),null,2).replace(/</g,'&lt;')}</div></div></div>
     <div class="card"><div class="ch">发布校验</div><div class="cb">
-      ${(NM.sel.length>=2 && !un.length)
-        ? `<div class="nmok">✔ 校验通过：模型名称 / 编码已填写 · 已选 ${NM.sel.length} 个已接入产品 · ${fs.filter(f=>f.conflict).length} 个冲突字段的拼接规则已全部确定 · 共输出 ${fs.length} 个标准字段。</div>`
-        : `<div style="font-size:12.5px;color:#D92D20;line-height:1.9">✗ 尚未通过：${[
-            (!NM.name.trim()||!NM.code.trim())?'模型名称 / 编码未填写':'',
-            NM.sel.length<2?'已选产品不足 2 个':'',
-            un.length?('还有 '+un.length+' 个冲突字段未选择拼接方式：'+un.map(f=>f.cn).join('、')):''
-          ].filter(Boolean).join(' ｜ ')}</div>`}
+      ${ready?`<div class="nmok">✔ 校验通过：以「${a.name}」为基底 · ${NM.sel.length} 个第三方小模型 · 拼入 ${rowsOn.length} 个字段 ·
+        占位符冲突已处理 · 已在「${(CASES.find(c=>c.id===NM.caseId)||{}).name||''}」上跑通拼接输出。</div>`
+      :`<div style="font-size:12.5px;color:#D92D20;line-height:1.95">✗ 尚未通过：${[
+          (!NM.name.trim()||!NM.code.trim())?'模型名称 / 编码未填写':'',
+          !a?'未选择基础 AIR':'',
+          !NM.sel.length?'未选择第三方小模型':'',
+          !rowsOn.length?'未勾选任何要拼入的字段':'',
+          un.length?('有 '+un.length+' 个字段未指定拼入位置'):'',
+          confU.length?('有 '+confU.length+' 处位置冲突未处理'):'',
+          !NM.ran?'尚未在「测试输出」里跑过影像':''
+        ].filter(Boolean).join(' ｜ ')}</div>`}
       <div style="margin-top:12px;display:flex;gap:8px">
         <button class="btn pri" onclick="nmPublish()">✔ 发布模型到标准 AI 能力池</button>
-        <button class="btn" onclick="nmGo(2)">← 回去改拼接规则</button>
+        <button class="btn" onclick="nmGo(4)">← 回去测试输出</button>
       </div></div></div>
     ${NM.published.length?`<div class="card"><div class="ch">✔ 已创建的模型 <span class="r"><span class="tag green">${NM.published.length} 个</span></span></div>
       <div class="cb" style="padding:4px 0 0"><table class="tb">
-        <tr><th>模型名称</th><th>编码</th><th>版本</th><th>引用产品</th><th>输出字段</th><th>发布状态</th><th>发布时间</th></tr>
+        <tr><th>模型名称</th><th>编码</th><th>版本</th><th>基础 AIR</th><th>第三方小模型</th><th>拼入字段</th><th>状态</th><th>发布时间</th></tr>
         ${NM.published.map(m=>`<tr><td><b>${m.name}</b></td><td class="mono" style="font-size:11px">${m.code}</td>
-          <td>${m.ver}</td><td>${m.n} 个</td><td>${m.fields} 个</td>
+          <td>${m.ver}</td><td>${m.air}</td><td>${m.n} 个</td><td>${m.fields} 个</td>
           <td><span class="tag green">已进入能力池</span></td><td class="mut">${m.at}</td></tr>`).join('')}
       </table></div></div>`:''}`;
 }
 function renderNewModel(){
-  const fs=nmFields();
-  const conf=fs.filter(f=>f.conflict);
-  const un=conf.filter(f=>!nmRuleOf(f));
+  const a=nmAir(), rows=nmRows(), on=rows.filter(r=>r.on), conf=nmConflicts();
   let h=`<div class="ph"><h2>🧬 创建模型</h2>
-      <span class="crumb">选择已接入 AI 产品 → 配置返回结果的拼接规则 → 输出一个新模型的标准结构结果</span>
+      <span class="crumb">以本公司 AIR 报告为基底 → 选择第三方小模型 → 把结果拼进「影像所见 / 诊断意见」→ 选影像测试输出</span>
       <div class="r"><button class="btn sm" onclick="nmReset()">↺ 重置</button>
         <button class="btn sm pri" onclick="nmPublish()">✔ 发布模型</button></div></div>
     <div class="card" style="margin-bottom:14px"><div class="cb" style="padding:12px 18px">
@@ -1288,15 +1609,18 @@ function renderNewModel(){
         `<div class="nmstep ${i===NM.step?'on':''} ${i<NM.step?'done':''}" onclick="nmGo(${i})">
            <span class="n">${i<NM.step?'✓':(i+1)}</span>${s}</div>`).join('<span class="nmarr">→</span>')}</div>
       <div style="margin-top:10px;font-size:11.5px;color:#8AA0C8">
-        当前：${NM.sel.length} 个产品 · ${fs.length} 个输出字段 · ${conf.length} 个字段冲突${un.length?('（'+un.length+' 个未定规则）'):''} · ${NM.mode==='fuse'?'融合输出':'并列输出'}
+        基底：${a?a.name+' '+a.ver:'未选择'} ｜ 第三方小模型：${NM.sel.length} 个 ｜ 已勾选拼入字段：${on.length} 个
+        ${conf.length?('｜ 位置冲突：'+conf.length+' 处'+(conf.filter(c=>!NM.prio[c.ph]).length?('（'+conf.filter(c=>!NM.prio[c.ph]).length+' 处未处理）'):'（已处理）')):''}
+        ｜ 测试影像：${NM.ran?((CASES.find(c=>c.id===NM.caseId)||{}).name||'—')+' 已跑通':'未测试'}
       </div></div></div>
-    ${nmRenderStep()}
+    ${nmStepBody()}
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
       ${NM.step>0?`<button class="btn" onclick="nmGo(${NM.step-1})">← 上一步</button>`:''}
       ${NM.step<NM_STEPS.length-1?`<button class="btn pri" onclick="nmGo(${NM.step+1})">下一步 →</button>`:''}
     </div>`;
   $('#nmWrap').innerHTML=h;
 }
+nmDefaultSplice();
 
 /* ================== 9 标准异常体系库（模型中心） ================== */
 const EXLIB=[
@@ -1374,7 +1698,7 @@ function renderExLib(){
 /* init */
 renderMenu();
 goView('over');
-console.log('MIIA-AI 三方模型标准化接入 + 工作流编排 原型 V3.0 已加载（新增：模型中心 / 创建模型 / 标准异常体系库）');
+console.log('MIIA-AI 三方模型标准化接入 + 工作流编排 原型 V3.1 已加载（创建模型 = 以 AIR 报告为基底，拼接第三方小模型结果）');
 
 </script>
 </body>
