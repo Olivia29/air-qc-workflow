@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.2（拼接后报告可编辑/增描述 + 测试输出支持本地上传影像）</title>
+<title>MIIA-AI · 三方模型标准化接入 + 工作流编排 · 原型 V3.3（侧栏聚焦模型中心）</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:13px;color:#2A3040;background:#F0F2F5;height:100vh;overflow:hidden}
@@ -62,6 +62,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .topbar .tbtn.pri:hover{background:#4A8FF5}
 .topbar .tbtn.gray{background:#F5F7FA;color:#666}
 .topbar .tbtn.gray:hover{background:#EDF0F4}
+.note-g{font-size:11.5px;color:#9AA6B6}
 .topbar .usr{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#333;cursor:pointer;white-space:nowrap}
 .topbar .av{width:30px;height:30px;border-radius:6px;background:#5C9DFF;color:#fff;
   display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
@@ -382,7 +383,6 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
       <div class="crumb" id="crumb"></div>
       <div class="sp"></div>
       <div class="pill"><span class="dot"></span>标准 AI 能力池运行中</div>
-      <button class="tbtn gray" onclick="goView('wiz')">🧭 接入向导</button>
       <button class="tbtn pri" onclick="goView('newmodel')">＋ 创建模型</button>
       <div class="usr"><span class="av">VV</span>VV</div>
     </header>
@@ -390,7 +390,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
     <div class="content" id="content">
 
 <!-- ============ 1 接入总览 ============ -->
-<div class="page on" id="pg-over">
+<div class="page" id="pg-over">
   <div class="wrap">
     <div class="ph"><h2>🎯 第三方 AI 标准化接入</h2><span class="crumb">建设目标：新 AI 接入 = 能力注册 + 数据需求配置 + 标准接口适配</span></div>
 
@@ -438,7 +438,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 <div class="page" id="pg-prod">
   <div class="wrap">
     <div class="ph"><h2>🤖 AI 产品库</h2><span class="crumb">这一层只解决：MIIA-AI 现在有哪些 AI 产品（不在此写死能力字段）</span>
-      <div class="r"><button class="btn sm pri" onclick="goView('wiz')">＋ 注册新 AI 产品</button></div></div>
+      <div class="r"><span class="note-g">新增 AI 产品由平台接入流程统一承接 —— 本页只管理已完成接入的产品</span></div></div>
     <div class="pgrid" id="prodGrid"></div>
 
     <div class="card" id="prodDetail" style="display:none;margin-top:14px">
@@ -553,7 +553,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 </div>
 
 <!-- ============ 8 创建模型（模型中心） ============ -->
-<div class="page" id="pg-newmodel">
+<div class="page on" id="pg-newmodel">
   <div class="wrap" id="nmWrap"></div>
 </div>
 
@@ -650,18 +650,23 @@ const IC={
   grid:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.6" y="3.6" width="7.2" height="7.2" rx="1.6"/><rect x="13.2" y="3.6" width="7.2" height="7.2" rx="1.6"/><rect x="3.6" y="13.2" width="7.2" height="7.2" rx="1.6"/><rect x="13.2" y="13.2" width="7.2" height="7.2" rx="1.6"/></svg>',
   compass:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="m15.7 8.3-2.1 5.3-5.3 2.1 2.1-5.3z"/></svg>'
 };
+/* 说明：接入总览(over)、统一运行规范(run)、工作流编排(orch)、新 AI 接入向导(wiz)
+   四页按需求隐藏入口。页面容器 #pg-* 与 render* 函数均保留在文件中，
+   需要恢复时把下方注释掉的 4 行加回 MENU 即可。 */
 const MENU=[
-  {v:'over', t:'接入总览', ic:'target'},
   {t:'模型中心', ic:'cube', sub:[
     {v:'newmodel', t:'创建模型'},
     {v:'prod',     t:'AI 产品库'},
     {v:'lib',      t:'标准能力字段库'},
     {v:'data',     t:'数据需求与匹配'},
     {v:'exlib',    t:'标准异常体系库'}
-  ]},
-  {v:'run',  t:'统一运行规范', ic:'cycle'},
-  {v:'orch', t:'工作流编排', ic:'grid'},
-  {v:'wiz',  t:'新 AI 接入向导', ic:'compass'}
+  ]}
+  /* 暂时隐藏：
+  ,{v:'over', t:'接入总览', ic:'target'}
+  ,{v:'run',  t:'统一运行规范', ic:'cycle'}
+  ,{v:'orch', t:'工作流编排', ic:'grid'}
+  ,{v:'wiz',  t:'新 AI 接入向导', ic:'compass'}
+  */
 ];
 let openGroups=['模型中心'];
 function renderMenu(){
@@ -1912,7 +1917,7 @@ function renderExLib(){
   const cats={}; EXLIB.forEach(e=>cats[e.cat]=(cats[e.cat]||0)+1);
   let h=`<div class="ph"><h2>📕 标准异常体系库</h2>
       <span class="crumb">第三方 Error Code 可以不同，但必须映射到这里的标准异常类型 —— 平台才能统一做监控 / 告警 / 定位 / 统计</span>
-      <div class="r"><button class="btn sm" onclick="goView('run')">↗ 查看统一运行规范</button></div></div>
+      <div class="r"><span class="note-g">异常编码在任务状态流转与结果输出时被平台统一消费</span></div></div>
     <div class="stats">
       <div class="stat"><div class="k">标准异常类型</div><div class="v">${EXLIB.length}</div><div class="s">与「5 态任务状态」配套</div></div>
       <div class="stat"><div class="k">覆盖类别</div><div class="v">${Object.keys(cats).length}</div><div class="s">${Object.keys(cats).join(' · ')}</div></div>
@@ -1951,8 +1956,8 @@ function renderExLib(){
 
 /* init */
 renderMenu();
-goView('over');
-console.log('MIIA-AI 三方模型标准化接入 + 工作流编排 原型 V3.2 已加载（拼接后报告可编辑 + 测试输出支持本地上传影像）');
+goView('newmodel');
+console.log('MIIA-AI 原型 V3.3 已加载（侧栏聚焦模型中心 · 已隐藏 接入总览/统一运行规范/工作流编排/新 AI 接入向导 入口）');
 
 </script>
 </body>
