@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.13（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出 -->
+<!-- 原型版本 V3.14（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -2094,16 +2094,7 @@ if(NM.step===1){
       </div>`;}).join('');
     return `<div class="card"><div class="ch">② 选择基础 AIR（本公司自研）
         <span class="r"><span class="mut" style="font-size:11px">拼接以 AIR 的报告结构为底，第三方小模型结果只是"素材句"</span></span></div>
-      <div class="cb"><div class="airgrid">${cards}</div></div></div>
-      ${a?`<div class="card"><div class="ch">该 AIR 的报告输出结构
-          <span class="r"><span class="tag blue">影像所见</span><span class="tag purple">诊断意见</span></span></div>
-        <div class="cb"><div class="rgrid">
-          ${nmSecBlock('findings', nmNatural(false).findings, false)}
-          ${nmSecBlock('impression', nmNatural(false).impression, false)}
-        </div>
-        <div style="margin-top:12px;font-size:12.5px;color:#62779E;line-height:1.9">
-          「{}」标记的是 AIR 报告里的<b>可拼入位置（占位符）</b>：${a.findings.concat(a.impression).filter(s=>s.ph).map(s=>'<code class="mono">'+s.ph+'</code>（'+s.label+'）').join('　')}
-        </div></div></div>`:''}`;
+      <div class="cb"><div class="airgrid">${cards}</div></div></div>`;
   }
   if(NM.step===2){
     const cards=sm.map(p=>{
