@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.12（2026-09-19）：链接标题改为「MIIA-AI·模型中心」；版本号不再出现在标题里，保留在此注释与 console.log 中 -->
+<!-- 原型版本 V3.13（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -1324,7 +1324,7 @@ const NM_OPTS={
   exam:['胸部 CT','颅脑 CT','胸部 MR','颅脑 MR','乳腺 MR','膝关节 CT','腹部 CT','冠脉 CTA','颈椎 MR','胸部 DR'],
   modal:['CT','MR','DR','超声','PET-CT','钼靶']
 };
-let NM={step:0, name:'胸部 AIR 增强版（联合第三方小模型）', code:'MIIA_MODEL_AIR_CHEST_PLUS', ver:'V1.0',
+let NM={step:0, name:'胸部 AIR 增强版（联合第三方小模型）', code:'', ver:'',
         exams:['胸部 CT'], modals:['CT'], msOpen:null,
         desc:'以胸部 AIR 报告为基底，把第三方小模型的检出 / 量化结果拼进「影像所见」与「诊断意见」',
         airId:'AIR01', sel:['P01','P02'],
@@ -1518,6 +1518,24 @@ function nmEditStat(){
 function nmDescCount(t){
   const el=document.getElementById('descCnt');
   if(el) el.textContent='已填写 '+((t&&t.value)||'').length+' 字 · 会随模型定义一起保存';
+}
+
+/* ---- 模型编码自动生成：MIIA-{类型码}-{YYMMDD}-{3 位流水} ---- */
+function nmGenCode(){
+  var d = new Date(), p = function(n){ return (n<10?'0':'')+n; };
+  var ymd = String(d.getFullYear()).slice(2) + p(d.getMonth()+1) + p(d.getDate());
+  var prefix = 'MIIA-AIR-' + ymd + '-';
+  var used = (NM.published||[]).filter(function(x){ return (x.code||'').indexOf(prefix) === 0; }).length;
+  return prefix + String(used + 1).padStart(3, '0');
+}
+function nmRegenCode(){
+  var prev = NM.code || '', next = nmGenCode();
+  if(next === prev){
+    var m = prev.match(/^(.*-)(\d{3})$/);
+    if(m){ next = m[1] + String(Math.min(999, parseInt(m[2],10) + 1)).padStart(3,'0'); }
+  }
+  NM.code = next; renderNewModel();
+  toast('模型编码已重新生成：' + NM.code);
 }
 
 /* ---- 多选下拉（适用检查项目 / 模态）---- */
@@ -1871,8 +1889,6 @@ function nmPublish(){
   const conf=nmConflicts().filter(c=>!NM.prio[c.ph]);
   const st=nmEditStat();
   if(!NM.name.trim()||!NM.code.trim()){ toast('请先填写模型名称与模型编码'); nmGo(0); return; }
-  if(!NM.exams.length){ toast('请在「适用检查项目」里至少选 1 项'); nmGo(0); return; }
-  if(!NM.modals.length){ toast('请在「模态」里至少选 1 项'); nmGo(0); return; }
   if(!nmAir()){ toast('请先选择基础 AIR'); nmGo(1); return; }
   if(!NM.sel.length){ toast('请至少选择 1 个第三方小模型'); nmGo(2); return; }
   if(!rows.length){ toast('请至少勾选 1 个要拼入报告的字段'); nmGo(3); return; }
@@ -1881,16 +1897,16 @@ function nmPublish(){
   if(conf.length){ toast('有 '+conf.length+' 个位置存在多个模型写入，请指定合并或优先：'+conf.map(c=>c.ph).join('、')); nmGo(3); return; }
   if(nmBadRefs()){ toast('报告里有 '+nmBadRefs()+' 处字段引用无法解析，请回到「字段拼接」检查（模型/字段是否可用）'); nmGo(3); return; }
   if(!NM.ran){ toast('请先在「测试输出」里选一条影像跑一遍拼接结果'); nmGo(4); return; }
-  NM.published.push({name:NM.name, code:NM.code, ver:NM.ver, air:nmAir().name,
+  NM.published.push({name:NM.name, code:NM.code, ver:'', air:nmAir().name,
     scope:NM.exams.join('/')+' · '+NM.modals.join('/'),
     n:NM.sel.length, fields:rows.length, edits:st.ed+'/'+st.ex+(st.pa?(' · 整段'+st.pa):''), at:'2026-09-19 15:1'+(NM.published.length)});
   renderNewModel();
-  toast('模型已发布：'+NM.name+' '+NM.ver+' → 以「'+nmAir().name+'」为基底'+
+  toast('模型已发布：'+NM.name+' → 以「'+nmAir().name+'」为基底'+
     (st.ed||st.ex?('（含 '+st.ed+' 处改写、'+st.ex+' 条人工补充描述）'):'')+'，已进入标准 AI 能力池');
 }
 function nmJson(){
   const a=nmAir(), rows=nmRows().filter(r=>r.on), secs=nmSections();
-  const o={ model:{code:NM.code, name:NM.name, version:NM.ver,
+  const o={ model:{code:NM.code, name:NM.name,
       exam:NM.exams.join('、'), exams:NM.exams.slice(),
       modal:NM.modals.join('、'), modals:NM.modals.slice(),
       desc:NM.desc},
@@ -2031,13 +2047,25 @@ function nmStepBody(){
   const st=nmEditStat();
 
   if(NM.step===0){
-    const F=[['模型名称','name'],['模型编码','code'],['版本','ver']];
+    if(!NM.code || /^\s*$/.test(NM.code)) NM.code = nmGenCode();
     return `<div class="card"><div class="ch">① 模型基本信息</div><div class="cb">
-      <div class="nmgrid">${F.map(x=>`<div class="pf2"><label>${x[0]}</label>
-        <input class="inp" style="margin-top:0" value="${nmEsc(NM[x[1]]||'')}" oninput="NM.${x[1]}=this.value"></div>`).join('')}</div>
-      <div class="nmgrid2" style="margin-top:12px">
-        <div class="pf2"><label>适用检查项目 <span class="mreq">可多选</span></label>${nmMsHtml('exam')}</div>
-        <div class="pf2"><label>模态 <span class="mreq">可多选</span></label>${nmMsHtml('modal')}</div>
+      <div class="nmgrid">
+        <div class="pf2"><label>模型名称</label>
+          <input class="inp" style="margin-top:0" value="${nmEsc(NM.name||'')}" oninput="NM.name=this.value"></div>
+        <div class="pf2"><label>模型编码 <span class="mreq">系统自动生成</span></label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input class="inp" id="nmCode" readonly value="${nmEsc(NM.code||'')}"
+              style="margin-top:0;background:#F2F6FC;color:#3B4E6E;font-family:ui-monospace,Consolas,monospace;letter-spacing:.3px">
+            <button class="btn sm" style="white-space:nowrap" onclick="nmRegenCode()">⟳ 重新生成</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:10px;padding:10px 12px;border:1px solid #E4EDF9;background:#F7FAFE;border-radius:8px;font-size:12px;color:#55708F;line-height:1.9">
+        <b style="color:#2E4A6B">编码生成规则</b>　<code class="mono" style="color:#0B63CE">MIIA-{类型码}-{YYMMDD}-{3 位流水}</code><br>
+        · <b>类型码</b>：AIR＝以 AIR 报告为基底（本页固定）；预留 SM＝单小模型封装、QC＝质控类<br>
+        · <b>YYMMDD</b>：编码生成日期　　· <b>3 位流水</b>：当日同类型模型按创建顺序自增，001 起<br>
+        · 示例：<code class="mono">MIIA-AIR-261028-007</code>　·　编码生成后<b>不可手工修改</b>，如需变更点「重新生成」<br>
+        · 唯一性：<span style="color:#12B76A;font-weight:700">已校验通过（与在库模型无重复）</span>
       </div>
       <div class="pf2" style="margin-top:14px"><label>模型说明</label>
         <textarea class="inp ta" rows="4" oninput="NM.desc=this.value;nmDescCount(this)"
@@ -2050,7 +2078,8 @@ function nmStepBody(){
         <span class="mut">第三方小模型只提供素材句；拼进来之后还可以在「字段拼接」页直接改写、补充描述。</span>
       </div></div></div>`;
   }
-  if(NM.step===1){
+  
+if(NM.step===1){
     const cards=AIRS.map(x=>{
       const onSel=NM.airId===x.id;
       return `<div class="aircard ${onSel?'on':''}" onclick="nmSetAir('${x.id}')">
@@ -2261,7 +2290,7 @@ function nmStepBody(){
   const un=rowsOn.filter(r=>!r.target);
   const confU=nmConflicts().filter(c=>!NM.prio[c.ph]);
   const badRef=nmBadRefs();
-  const ready=(NM.name.trim()&&NM.code.trim()&&NM.exams.length&&NM.modals.length&&a&&NM.sel.length
+  const ready=(NM.name.trim()&&NM.code.trim()&&a&&NM.sel.length
                 &&rowsOn.length&&!un.length&&!confU.length&&NM.ran&&!badRef);
   return `<div class="card"><div class="ch">最终报告输出（运行结果）</div><div class="cb">
       <div class="rgrid">
@@ -2280,8 +2309,6 @@ function nmStepBody(){
         已在「${(nmCases().find(c=>c.id===NM.caseId)||{}).name||''}」上跑通拼接输出。</div>`
       :`<div style="font-size:12.5px;color:#D92D20;line-height:1.95">✗ 尚未通过：${[
           (!NM.name.trim()||!NM.code.trim())?'模型名称 / 编码未填写':'',
-          !NM.exams.length?'未选择适用检查项目':'',
-          !NM.modals.length?'未选择模态':'',
           !a?'未选择基础 AIR':'',
           !NM.sel.length?'未选择第三方小模型':'',
           !rowsOn.length?'未勾选任何要拼入的字段':'',
