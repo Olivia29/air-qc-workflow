@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.19（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.20（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.19 工程规则代码输入 ===== */
+/* ===== V3.20 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.19 结构化语料输入（入参）===== */
+/* ===== V3.20 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,13 +456,13 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.19 规则执行结果 ===== */
+/* ===== V3.20 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
-/* ===== V3.19 入参代码输入 ===== */
+/* ===== V3.20 入参代码输入 ===== */
 .ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
 .ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
 .ymtab:hover{background:#F2F7FE}
@@ -471,6 +471,16 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymjson-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#EEF4FD;
   border-bottom:1px solid #E3ECF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .ym-ok{color:#12805C}
+/* ===== V3.20 报告输出列 & 入参单栏 ===== */
+.rpcol{border:1px solid #E3ECF9;border-radius:9px;background:#fff;overflow:hidden}
+.rpcol-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F3F7FD;
+  border-bottom:1px solid #E3ECF9;font-size:13px;font-weight:700;color:#2E4A6B}
+.rpcol-h .mut{font-weight:400;font-size:11px;color:#8AA0C8}
+.rpcol-b{padding:8px 12px}
+.rp-line{display:flex;gap:8px;padding:3px 0;font-size:13px;line-height:1.85;color:#2E4A6B}
+.rp-n{flex:0 0 16px;color:#A9BBD6;font-family:ui-monospace,Consolas,monospace;font-size:11px;padding-top:2px}
+.rp-t{flex:1;min-width:0}
+.ymgrid.one{grid-template-columns:1fr}
 </style>
 
 </head>
@@ -2207,7 +2217,7 @@ function nmRulePreviewHTML(){
 </div></div>`;
 }
 
-/* ===== 结构化语料输入（入参）· 支持代码输入 · 与当前输出语料对比 ===== */
+/* ===== 结构化语料输入（入参）· 支持代码输入（输出语料见上方「最终报告输出」） ===== */
 function nmCaseNow(){
   const c = nmCases().find(x => x.id === NM.caseId) || null;
   if(c) return c;
@@ -2368,7 +2378,6 @@ function nmCorpusCard(){
       ${(g.subs||[]).map(s => `<div class="ym-sub"><div class="ym-sub-t">${nmEsc(s.t)}</div>
           ${s.items.map(it => `<div class="ym-row"><span class="ym-k mono">${nmEsc(it[0])}</span><span class="ym-v">${nmEsc(it[1])}</span></div>`).join('')}</div>`).join('')}
     </div>`).join('');
-  const secRows = sec => (st.secs[sec]||[]).map((x,i) => `<div class="ym-o"><span class="ym-n">${i+1}</span>${nmEsc(x.txt||'')}</div>`).join('') || '<div class="ym-o mut">（无）</div>';
   const diff = (compiled ? '<b class="ym-ok">入参已编译</b>（' + Object.keys(compiled).length + ' 个顶层字段）　｜　' : '') +
     `字段 ${st.onN} 项 → 进入输出 ${st.usedN} 项` +
     (st.unused.length ? `；<b class="ym-warn">未进入 ${st.unused.length} 项</b>（${st.unused.join('、')}）` : '；全部字段均进入输出') +
@@ -2403,12 +2412,8 @@ function nmCorpusCard(){
     <div class="cb">
 
       ${tab==='code' ? codeBox : ''}
-      <div class="ymgrid">
+      <div class="ymgrid one">
         <div class="ymcol"><div class="ymcol-t">入参 · 结构化语料${compiled?'（代码编译）':''}</div>${left}</div>
-        <div class="ymcol"><div class="ymcol-t">当前输出语料</div>
-          <div class="ymsec">影像所见</div>${secRows('findings')}
-          <div class="ymsec">诊断意见</div>${secRows('impression')}
-        </div>
       </div>
       <div class="ymdiff">${diff}</div>
     </div></div>`;
@@ -2432,6 +2437,16 @@ function nmCorpusCopy(){
   catch(e){ toast('复制失败，请手动选择文本'); }
 }
 
+/* ===== V3.20 最终报告输出：与输出语料同源（nmSections） ===== */
+function nmReportCol(sec){
+  const t = sec === 'findings' ? '影像所见' : '诊断意见';
+  const arr = (nmSections()[sec] || []).map(x => x.txt || '');
+  return '<div class="rpcol"><div class="rpcol-h">' + t + '<span class="mut">' + arr.length + ' 句</span></div>'
+    + '<div class="rpcol-b">'
+    + (arr.map((x, i) => '<div class="rp-line"><span class="rp-n">' + (i+1) + '</span><span class="rp-t">' + nmEsc(x) + '</span></div>').join('')
+       || '<div class="mut" style="padding:6px 0">（无）</div>')
+    + '</div></div>';
+}
 function nmStepBody(){
   const a=nmAir(), sm=nmSmalls(), rows=nmRows(), on=rows.filter(r=>r.on), conf=nmConflicts();
   const st=nmEditStat();
@@ -2673,12 +2688,11 @@ if(NM.step===1){
                 &&rowsOn.length&&NM.ran&&!badRef&&!Object.keys(NM.rerr).filter(k=>NM.rerr[k]).length);
   return `<div class="card"><div class="ch">最终报告输出（运行结果）</div><div class="cb">
       <div class="rgrid">
-        ${nmSecBlock('findings', secs.findings, false)}
-        ${nmSecBlock('impression', secs.impression, false)}
+        ${nmReportCol('findings')}
+        ${nmReportCol('impression')}
       </div>
       <div style="margin-top:10px;font-size:12px;color:#62779E">
-        共 ${secs.findings.length+secs.impression.length} 句 · 其中第三方拼入 ${secs.findings.concat(secs.impression).filter(x=>x.kind==='spliced').length} 句 ·
-        人工改写 ${st.ed} 句 · 人工补充描述 ${st.ex} 条${st.rm?(' · 已移除 '+st.rm+' 句'):''}${st.pa?(' · 整段改写 '+st.pa+' 段'):''}${st.rf?(' · 字段引用 '+st.rf+' 处'):''}
+        共 ${secs.findings.length+secs.impression.length} 句 · 其中第三方拼入 ${secs.findings.concat(secs.impression).filter(x=>x.kind==='spliced').length} 句
       </div></div></div>
     ${nmCorpusCard()}
     <div class="card"><div class="ch">发布校验</div><div class="cb">
