@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.16（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.17（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.16 工程规则代码输入 ===== */
+/* ===== V3.17 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.16 结构化语料输入（入参）===== */
+/* ===== V3.17 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,6 +456,12 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
+/* ===== V3.17 规则执行结果 ===== */
+.nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
+.nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
+.nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
+  background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
+.nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
 </style>
 
 </head>
@@ -1368,7 +1374,7 @@ let NM={step:0, name:'胸部 AIR 增强版（联合第三方小模型）', code:
         desc:'以胸部 AIR 报告为基底，把第三方小模型的检出 / 量化结果拼进「影像所见」与「诊断意见」',
         airId:'AIR01', sel:['P01','P02'],
         pick:{}, slot:{}, prio:{}, caseId:null, ran:false, running:false, published:[],
-        rules:{}, rerr:{}, moff:{},
+        rules:{}, rerr:{}, moff:{}, rout:{},
         sec:{findings:[], impression:[]}, editing:null, exSeq:0, uploads:[],
         para:{findings:null, impression:null}, paraOpen:{findings:0, impression:0}, paraBuf:null,
         paraSrc:{findings:0, impression:0},
@@ -2082,7 +2088,7 @@ function nmAirOutputEditable(){
 }
 
 /* ---- 各步骤 ---- */
-/* ===== 字段整合 · 工程规则（按小模型独立） ===== */
+/* ===== 字段整合 · 工程规则（按小模型独立，显式执行） ===== */
 function nmRuleDefault(pid){
   const p = nmSmall(pid) || {name:pid};
   const fs = nmRows().filter(r=>r.pid===pid && r.on);
@@ -2103,7 +2109,7 @@ function nmRuleDefault(pid){
          '   输入 input = { model, fields }\n' +
          '     · fields：本模型已勾选字段的「标准 Key → 取值」\n' +
          '   输出 return { findings: [影像所见片段], impression: [诊断意见片段] }\n' +
-         '   可自由改写逻辑；停用该模型后本规则不参与整合。 */\n' +
+         '   改完点右上「▶ 执行规则」运行；停用该模型后本规则不参与整合。 */\n' +
          'function build(input){\n' +
          '  const f = input.fields;\n' +
          '  return {\n' +
@@ -2113,14 +2119,9 @@ function nmRuleDefault(pid){
          '}';
 }
 function nmRuleGet(pid){ if(NM.rules[pid]==null) NM.rules[pid]=nmRuleDefault(pid); return NM.rules[pid]; }
-function nmRuleSet(pid,v){ NM.rules[pid]=v; NM.rerr[pid]=null; }
-function nmRuleReset(pid){ delete NM.rules[pid]; delete NM.rerr[pid]; renderNewModel(); toast('已恢复该小模型的默认工程规则'); }
-function nmRuleCheck(pid){
-  const r = nmRunRule(pid);
-  NM.rerr[pid] = r.error || null;
-  renderNewModel();
-  toast(r.error ? ('规则异常：' + r.error) : '规则校验通过（该小模型）');
-}
+/* 改代码：清掉上一次执行结果，状态回到「代码已改 · 待执行」 */
+function nmRuleSet(pid,v){ NM.rules[pid]=v; NM.rerr[pid]=null; delete NM.rout[pid]; }
+function nmRuleReset(pid){ delete NM.rules[pid]; delete NM.rerr[pid]; delete NM.rout[pid]; renderNewModel(); toast('已恢复该小模型的默认工程规则（需重新执行）'); }
 function nmMToggle(pid){
   NM.moff[pid] = !NM.moff[pid];
   NM.ran = false;
@@ -2140,24 +2141,62 @@ function nmRunRule(pid){
     return { error: String((e && e.message) || e) };
   }
 }
+/* ▶ 执行单个小模型的规则：跑一次、存档、刷新卡片内结果 */
+function nmRunModel(pid){
+  const name = (nmSmall(pid) || {}).name || pid;
+  const o = nmRunRule(pid);
+  const ts = new Date().toTimeString().slice(0,8);
+  NM.rout[pid] = { findings: o.findings||[], impression: o.impression||[], err: o.error||null, ts: ts };
+  NM.rerr[pid] = o.error || null;
+  renderNewModel();
+  toast(o.error ? ('执行失败：' + o.error) : ('已执行「' + name + '」· 生成片段 ' + ((o.findings||[]).length + (o.impression||[]).length) + ' 条'));
+}
+/* ▶ 全部执行（自动跳过已停用的模型） */
+function nmRunAll(){
+  const ts = new Date().toTimeString().slice(0,8);
+  let okN = 0, errN = 0, frag = 0;
+  nmRows().reduce((m,r)=>{ m[r.pid]=1; return m; }, {});
+  Object.keys(nmRows().reduce((m,r)=>{ m[r.pid]=1; return m; }, {})).forEach(pid=>{
+    if(NM.moff[pid]) return;
+    const o = nmRunRule(pid);
+    NM.rout[pid] = { findings:o.findings||[], impression:o.impression||[], err:o.error||null, ts:ts };
+    NM.rerr[pid] = o.error || null;
+    if(o.error) errN++; else { okN++; frag += (o.findings||[]).length + (o.impression||[]).length; }
+  });
+  renderNewModel();
+  toast('已执行 ' + (okN+errN) + ' 个小模型' + (errN?('（'+errN+' 个失败）'):'') + ' · 生成片段 ' + frag + ' 条');
+}
+function nmRuleCheck(pid){
+  const r = nmRunRule(pid);
+  NM.rerr[pid] = r.error || null;
+  renderNewModel();
+  toast(r.error ? ('规则异常：' + r.error) : '规则校验通过（该小模型）');
+}
+/* 整合执行结果：只显示已执行的结果 */
 function nmRulePreviewHTML(){
   const rows2 = nmRows(), gs2=[], gi2={};
   rows2.forEach(r=>{ if(!gi2[r.pid]){ gi2[r.pid]={pid:r.pid, name:r.pname, rows:[]}; gs2.push(gi2[r.pid]); } gi2[r.pid].rows.push(r); });
+  const ran = gs2.filter(g => NM.rout[g.pid] && !NM.moff[g.pid]);
   const blocks = gs2.map(g=>{
     if(NM.moff[g.pid]) return `<div class="nmrpb off"><div class="nmrpb-h"><b>${nmEsc(g.name)}</b><span class="tag gray">已停用 · 不参与整合</span></div></div>`;
-    const o = nmRunRule(g.pid);
-    if(o.error) return `<div class="nmrpb"><div class="nmrpb-h"><b>${nmEsc(g.name)}</b><span class="tag red">规则执行失败</span></div><div class="nmcodeerr" style="margin:8px 12px 12px">${nmEsc(o.error)}</div></div>`;
-    const F = (o.findings||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无影像所见片段）</div>';
-    const I = (o.impression||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无诊断意见片段）</div>';
-    return `<div class="nmrpb"><div class="nmrpb-h"><b>${nmEsc(g.name)}</b><span class="tag green">执行通过</span></div>
+    const o = NM.rout[g.pid];
+    if(!o) return `<div class="nmrpb off"><div class="nmrpb-h"><b>${nmEsc(g.name)}</b><span class="tag gray">未执行 · 点该模型的「▶ 执行规则」</span></div></div>`;
+    if(o.err) return `<div class="nmrpb"><div class="nmrpb-h"><b>${nmEsc(g.name)}</b><span class="tag red">执行失败</span></div><div class="nmcodeerr" style="margin:8px 12px 12px">${nmEsc(o.err)}</div></div>`;
+    const F = (o.findings||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>';
+    const I = (o.impression||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>';
+    return `<div class="nmrpb"><div class="nmrpb-h"><b>${nmEsc(g.name)}</b><span class="tag green">已执行 ${nmEsc(o.ts||'')}</span></div>
         <div class="nmrp-sec">影像所见</div>${F}<div class="nmrp-sec">诊断意见</div>${I}</div>`;
   }).join('');
+  const total = ran.reduce((a,g)=>a + (NM.rout[g.pid].findings||[]).length + (NM.rout[g.pid].impression||[]).length, 0);
+  const miss = gs2.filter(g=>!NM.moff[g.pid] && !NM.rout[g.pid]).length;
   return `<div class="card"><div class="ch">④ 整合执行结果（只读预览）
-      <span class="r"><span class="mut" style="font-size:11px">由各小模型的工程规则实时执行 · 改代码即改结果 · 只读</span></span></div>
+      <span class="r"><span class="tag ${ran.length?'green':'gray'}">已执行 ${ran.length} / ${gs2.filter(g=>!NM.moff[g.pid]).length} 个模型</span>
+        <span class="tag blue">片段合计 ${total} 条</span>
+        <button class="btn sm" onclick="nmRunAll()">▶ 全部执行</button></span></div>
     <div class="cb"><div class="nmrpwrap">${blocks}</div>
       <div class="mut" style="font-size:11.5px;margin-top:10px;line-height:1.9">
-        报告不再提供人工改写：<b>所有逻辑改动都在对应小模型的工程规则里完成</b>，规则执行的输出就是这段片段。<br>
-        发布前建议到「⑤ 测试输出」用真实检查跑一遍，确认片段与 AIR 原文衔接正常。
+        这里只显示<b>已执行</b>的结果${miss?('；还有 <b>'+miss+'</b> 个模型未执行'):''}。改代码后需重新点「▶ 执行规则」，结果才会刷新。<br>
+        报告不再提供人工改写：<b>所有逻辑改动都在对应小模型的工程规则里完成</b>。发布前建议到「⑤ 测试输出」用真实检查跑一遍。
       </div></div></div>`;
 }
 
@@ -2343,26 +2382,41 @@ if(NM.step===1){
   }
   if(NM.step===3){
     if(!a) return '<div class="card"><div class="cb">请先选择基础 AIR。</div></div>';
-    /* 按小模型分组：每个小模型一张卡，各自独立的字段勾选 + 工程规则 */
+    /* 按小模型分组：每个小模型一张卡，各自独立的字段勾选 + 工程规则 + 执行预览 */
     const gs=[], gi={};
     rows.forEach(r=>{ if(!gi[r.pid]){ gi[r.pid]={pid:r.pid, name:r.pname, rows:[]}; gs.push(gi[r.pid]); } gi[r.pid].rows.push(r); });
     const cards = gs.map((g,i)=>{
       const off = !!NM.moff[g.pid];
       const onN = g.rows.filter(r=>r.on).length;
       const rr = NM.rerr[g.pid] || null;
+      const out = NM.rout[g.pid] || null;
+      const dirty = (NM.rules[g.pid]!=null) && !out;
+      const statusTag = out ? (out.err ? '<span class="tag red">执行失败</span>'
+                                       : '<span class="tag green">已执行 ' + out.ts + '</span>')
+                            : (dirty ? '<span class="tag orange">代码已改 · 待执行</span>' : '<span class="tag gray">待执行</span>');
       const trs = g.rows.map(r=>`<tr class="${r.on?'':'offrow'}">
           <td style="text-align:center"><input type="checkbox" ${r.on?'checked':''} onchange="nmToggleField('${r.id}')"></td>
           <td><b>${r.cn}</b><div class="mono" style="font-size:10px;color:#8AA0C8">${r.key}</div></td>
           <td><span class="tag gray">${r.pname}</span></td>
           <td class="mono" style="font-size:11.5px">${r.val}</td></tr>`).join('');
+      const resBlock = out ? (out.err
+          ? `<div class="nmcodeerr" style="margin:0 18px 14px">⚠ ${nmEsc(out.err)}</div>`
+          : `<div class="nmrunbox">
+               <div class="nmrunbox-h">本次执行结果
+                 <span class="mut">影像所见 ${(out.findings||[]).length} 条 · 诊断意见 ${(out.impression||[]).length} 条 · ${nmEsc(out.ts)}</span></div>
+               <div class="nmrp-sec">影像所见</div>
+               ${(out.findings||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>'}
+               <div class="nmrp-sec">诊断意见</div>
+               ${(out.impression||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>'}
+             </div>`)
+        : '';
       return `<div class="card" style="${off?'background:#FAFBFD':''}">
         <div class="ch">④-${i+1} ${g.name}
           <span class="r">
             <span class="tag ${off?'gray':'green'}">${off?'已停用 · 不参与整合':'参与整合'}</span>
             <span class="tag blue">勾选 ${onN} / ${g.rows.length} 个字段</span>
-            ${rr?`<span class="tag red">规则异常</span>`:`<span class="tag green">规则就绪</span>`}
+            ${statusTag}
             <button class="btn sm" onclick="nmMToggle('${g.pid}')">${off?'⏻ 启用该模型整合':'⏻ 停用该模型整合'}</button>
-            <button class="btn sm" onclick="nmRuleCheck('${g.pid}')">✓ 校验规则</button>
             <button class="btn sm" onclick="nmRuleReset('${g.pid}')">↺ 恢复默认规则</button>
           </span></div>
         <div class="cb" style="padding:4px 0 0">
@@ -2371,18 +2425,25 @@ if(NM.step===1){
             <tbody>${trs}</tbody></table>
           <div class="nmcodebox">
             <div class="nmcodeh"><b>工程规则（代码输入）</b>
-              <span class="mut">仅作用于「${g.name}」· 停用该模型后本规则不参与整合</span></div>
-            <textarea class="nmcode" spellcheck="false" oninput="nmRuleSet('${g.pid}',this.value)" onblur="renderNewModel()">${nmEsc(nmRuleGet(g.pid))}</textarea>
+              <span class="mut">仅作用于「${g.name}」· 停用该模型后本规则不参与整合</span>
+              <span style="margin-left:auto;display:flex;gap:8px">
+                <button class="btn sm pri" onclick="nmRunModel('${g.pid}')">▶ 执行规则</button>
+                <button class="btn sm" onclick="nmRunModel('${g.pid}')" title="执行并刷新下方结果">↻ 重新执行</button>
+              </span></div>
+            <textarea class="nmcode" spellcheck="false" oninput="nmRuleSet('${g.pid}',this.value)">${nmEsc(nmRuleGet(g.pid))}</textarea>
             ${rr?`<div class="nmcodeerr">⚠ ${nmEsc(rr)}</div>`
-                :`<div class="nmcodeok">✓ 规则语法与输出契约通过（input.fields → { findings, impression }）</div>`}
+                :(out?`<div class="nmcodeok">✓ 已执行 · 输出契约 { findings, impression } 校验通过</div>`
+                     :`<div class="nmcodehint">程序已就绪，点右上「▶ 执行规则」运行该模型的规则并生成片段预览</div>`)}
           </div>
+          ${resBlock}
         </div></div>`;
     }).join('');
     return `<div class="card"><div class="ch">④ 字段与工程规则：按小模型分开整合
         <span class="r"><span class="tag blue">${gs.length} 个小模型</span>
-          <span class="tag ${gs.filter(g=>!NM.moff[g.pid]).length?'green':'gray'}">参与整合 ${gs.filter(g=>!NM.moff[g.pid]).length} 个</span></span></div>
+          <span class="tag ${gs.filter(g=>!NM.moff[g.pid]).length?'green':'gray'}">参与整合 ${gs.filter(g=>!NM.moff[g.pid]).length} 个</span>
+          <button class="btn sm pri" onclick="nmRunAll()">▶ 全部执行</button></span></div>
         <div class="cb"><div class="nmintro">
-          <b>一个小模型一套规则</b>：勾选要用的字段 → 在<b>该模型下方</b>写工程规则代码 → 平台按规则生成片段。<br>
+          <b>一个小模型一套规则</b>：勾选要用的字段 → 在该模型下方写工程规则代码 → 点 <b>▶ 执行规则</b> 运行，结果显示在该模型卡片内。<br>
           不想用某个小模型的结果，<b>直接停用该模型</b>；要单独调整某个模型的整合逻辑，<b>只改它自己那一段代码</b>，其余模型不受影响。
         </div></div></div>
       ${cards}
