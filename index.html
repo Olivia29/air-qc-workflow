@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.18（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.19（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.18 工程规则代码输入 ===== */
+/* ===== V3.19 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.18 结构化语料输入（入参）===== */
+/* ===== V3.19 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,13 +456,13 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.18 规则执行结果 ===== */
+/* ===== V3.19 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
-/* ===== V3.18 入参代码输入 ===== */
+/* ===== V3.19 入参代码输入 ===== */
 .ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
 .ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
 .ymtab:hover{background:#F2F7FE}
@@ -2204,10 +2204,7 @@ function nmRulePreviewHTML(){
         <span class="tag blue">片段合计 ${total} 条</span>
         <button class="btn sm" onclick="nmRunAll()">▶ 全部执行</button></span></div>
     <div class="cb"><div class="nmrpwrap">${blocks}</div>
-      <div class="mut" style="font-size:11.5px;margin-top:10px;line-height:1.9">
-        这里只显示<b>已执行</b>的结果${miss?('；还有 <b>'+miss+'</b> 个模型未执行'):''}。改代码后需重新点「▶ 执行规则」，结果才会刷新。<br>
-        报告不再提供人工改写：<b>所有逻辑改动都在对应小模型的工程规则里完成</b>。发布前建议到「⑤ 测试输出」用真实检查跑一遍。
-      </div></div></div>`;
+</div></div>`;
 }
 
 /* ===== 结构化语料输入（入参）· 支持代码输入 · 与当前输出语料对比 ===== */
@@ -2380,7 +2377,7 @@ function nmCorpusCard(){
   const codeBox = `<div class="ymcode">
       <div class="nmcodebox" style="margin:12px 18px 0">
         <div class="nmcodeh"><b>入参模板（代码输入）</b>
-          <span class="mut">ctx.case / ctx.air / ctx.models / ctx.rules · 返回对象即为入参</span>
+          
           <span style="margin-left:auto;display:flex;gap:8px">
             <button class="btn sm pri" onclick="nmCorpusRun()">▶ 编译入参</button>
             <button class="btn sm" onclick="nmCorpusReset()">↺ 恢复默认模板</button>
@@ -2389,7 +2386,7 @@ function nmCorpusCard(){
           oninput="nmCorpusCodeSet(this.value)">${nmEsc(nmCorpusCodeGet())}</textarea>
         ${NM.corpusErr ? `<div class="nmcodeerr">⚠ ${nmEsc(NM.corpusErr)}</div>`
           : (compiled ? `<div class="nmcodeok">✓ 已编译 · ${nmEsc(NM.corpusTs||'')} · 顶层字段 ${Object.keys(compiled).length} 个</div>`
-                      : `<div class="nmcodehint">改完代码点「▶ 编译入参」，编译结果会替换左侧结构化语料</div>`)}
+                      : ``)}
       </div>
       ${compiled ? `<div class="ymjson"><div class="ymjson-h">编译结果（JSON）<button class="btn sm" onclick="nmCorpusCopy()">⧉ 复制</button></div>
         <pre class="jsonbox" style="margin:0;border-radius:0 0 8px 8px">${nmEsc(JSON.stringify(compiled, null, 2))}</pre></div>` : ''}
@@ -2404,9 +2401,7 @@ function nmCorpusCard(){
         <button class="btn sm" onclick="nmCorpusCopy()">⧉ 复制入参</button>
       </span></div>
     <div class="cb">
-      <div class="ymintro">左边是<b>这次喂给大模型的全部语料</b>；右边是<b>当前实际输出的语料</b>。
-        ${tab==='code' ? '当前为<b>代码输入</b>模式：入参结构由代码定义，编译后替换左侧内容。'
-                       : '可切到<b>代码输入</b>，用代码定义/改写入参结构（增删字段、调整层级）。'}</div>
+
       ${tab==='code' ? codeBox : ''}
       <div class="ymgrid">
         <div class="ymcol"><div class="ymcol-t">入参 · 结构化语料${compiled?'（代码编译）':''}</div>${left}</div>
@@ -2467,11 +2462,7 @@ function nmStepBody(){
           placeholder="说明这个模型做什么、适用场景、与哪些第三方小模型组合、输出交给谁用">${nmEsc(NM.desc||'')}</textarea>
         <div class="mut" id="descCnt" style="font-size:11px;margin-top:4px">已填写 ${(NM.desc||'').length} 字 · 会随模型定义一起保存</div>
       </div>
-      <div style="margin-top:12px;font-size:12.5px;color:#62779E;line-height:1.95">
-        💡 <b>这个模块不是训练新算法</b> —— 它<b>以本公司 AIR 报告为基底</b>，把第三方小模型的返回结果
-        <b>拼进 AIR 报告的「影像所见」与「诊断意见」</b>，形成一份更完整的报告输出。<br>
-        <span class="mut">第三方小模型只提供素材句；拼进来之后还可以在「字段拼接」页直接改写、补充描述。</span>
-      </div></div></div>`;
+</div></div>`;
   }
   
 if(NM.step===1){
@@ -2488,7 +2479,7 @@ if(NM.step===1){
         ${onSel?'<div class="airpick">✓ 基础air模型</div>':''}
       </div>`;}).join('');
     return `<div class="card"><div class="ch">② 选择基础 AIR（本公司自研）
-        <span class="r"><span class="mut" style="font-size:11px">拼接以 AIR 的报告结构为底，第三方小模型结果只是"素材句"</span></span></div>
+        </div>
       <div class="cb"><div class="airgrid">${cards}</div></div></div>`;
   }
   if(NM.step===2){
@@ -2513,7 +2504,7 @@ if(NM.step===1){
         <span class="r"><span class="tag blue">已选 ${NM.sel.length} 个</span></span></div>
       <div class="cb"><div class="pgrid">${cards}</div></div></div>
       <div class="card"><div class="ch">已选小模型与顺序
-        <span class="r"><span class="mut" style="font-size:11px">各模型独立整合 · 顺序仅决定片段先后</span></span></div>
+        </div>
       <div class="cb">${ord}</div></div>`;
   }
   if(NM.step===3){
@@ -2569,7 +2560,7 @@ if(NM.step===1){
             <textarea class="nmcode" spellcheck="false" oninput="nmRuleSet('${g.pid}',this.value)">${nmEsc(nmRuleGet(g.pid))}</textarea>
             ${rr?`<div class="nmcodeerr">⚠ ${nmEsc(rr)}</div>`
                 :(out?`<div class="nmcodeok">✓ 已执行 · 输出契约 { findings, impression } 校验通过</div>`
-                     :`<div class="nmcodehint">程序已就绪，点右上「▶ 执行规则」运行该模型的规则并生成片段预览</div>`)}
+                     :``)}
           </div>
           ${resBlock}
         </div></div>`;
@@ -2578,10 +2569,7 @@ if(NM.step===1){
         <span class="r"><span class="tag blue">${gs.length} 个小模型</span>
           <span class="tag ${gs.filter(g=>!NM.moff[g.pid]).length?'green':'gray'}">参与整合 ${gs.filter(g=>!NM.moff[g.pid]).length} 个</span>
           <button class="btn sm pri" onclick="nmRunAll()">▶ 全部执行</button></span></div>
-        <div class="cb"><div class="nmintro">
-          <b>一个小模型一套规则</b>：勾选要用的字段 → 在该模型下方写工程规则代码 → 点 <b>▶ 执行规则</b> 运行，结果显示在该模型卡片内。<br>
-          不想用某个小模型的结果，<b>直接停用该模型</b>；要单独调整某个模型的整合逻辑，<b>只改它自己那一段代码</b>，其余模型不受影响。
-        </div></div></div>
+      </div>
       ${cards}
       ${nmRulePreviewHTML()}`;
   }
@@ -2630,10 +2618,7 @@ if(NM.step===1){
           <span class="upic">⬆</span>
           <div style="flex:1;min-width:0">
             <b>本地上传影像</b>
-            <div class="mut" style="font-size:11.5px;margin-top:3px">
-              支持 DICOM（.dcm / .zip 压缩包）与常见影像格式；上传后平台自动识别<b>检查模态 / 部位 / 层厚</b>，
-              置信度偏低时标「待人工确认」，可由医生人工指定
-            </div>
+
           </div>
           <button class="btn sm" onclick="document.getElementById('upFile').click()">选择文件</button>
           <input type="file" id="upFile" multiple style="display:none"
@@ -2652,9 +2637,7 @@ if(NM.step===1){
           </div>
           <div class="mut" style="font-size:11.5px;margin:8px 0 4px">匹配到 <b>${nmPacsShow().length}</b> 条检查（共 ${PACS.length} 条）</div>
           ${pacsRows || '<div class="mut" style="font-size:12px;padding:6px 0">没有匹配的检查，换个患者号或检查项目试试。</div>'}
-          <div class="mut" style="font-size:11px;margin-top:6px">
-            拉取由平台完成影像获取、序列识别与缓存，医生无需离开本页；拉取后自动进入下方「可选影像」。
-          </div>
+
         </div>
 
         <div class="srctag" style="margin-top:16px">影像来源三 · 平台已有检查</div>
@@ -2663,10 +2646,7 @@ if(NM.step===1){
       </div></div>
       ${NM.ran?`
       <div class="card"><div class="ch">运行轨迹（状态与异常均来自平台标准）</div><div class="cb">${trace}
-        <div style="margin-top:12px;font-size:12.5px;color:#5E7496;line-height:1.9">
-          本次运行：AIR 生成报告基底 → 平台按各模型数据需求分发影像 → ${NM.sel.length} 个第三方小模型返回结果 →
-          按「字段拼接」配置写进 AIR 的影像所见 / 诊断意见${(st.ed||st.ex)?('（含 '+st.ed+' 处人工改写、'+st.ex+' 条人工补充描述）'):''} → 输出拼接后报告。
-        </div></div></div>
+</div></div>
       <div class="card"><div class="ch">拼接输出对照 <span class="r">
           <span class="tag gray">← AIR 原始</span><span class="tag green">拼接后（含人工编辑） →</span></span></div>
         <div class="cb"><div class="rgrid">
@@ -2731,7 +2711,6 @@ function renderNewModel(){
   const a=nmAir(), rows=nmRows(), on=rows.filter(r=>r.on), conf=nmConflicts(), st=nmEditStat();
   if(NM.step===3 || NM.step===4 || NM.step===5) nmSyncSections();
   let h=`<div class="ph"><h2>🧬 创建模型</h2>
-      <span class="crumb">以本公司 AIR 报告为基底 → 选择第三方小模型 → 把结果拼进「影像所见 / 诊断意见」并可直接编辑 → 选影像（含本地上传）测试输出</span>
       <div class="r"><button class="btn sm" onclick="nmReset()">↺ 重置</button>
         <button class="btn sm pri" onclick="nmPublish()">✔ 发布模型</button></div></div>
     <div class="card" style="margin-bottom:14px"><div class="cb" style="padding:12px 18px">
