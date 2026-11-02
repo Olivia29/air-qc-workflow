@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.17（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.18（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.17 工程规则代码输入 ===== */
+/* ===== V3.18 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.17 结构化语料输入（入参）===== */
+/* ===== V3.18 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,12 +456,21 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.17 规则执行结果 ===== */
+/* ===== V3.18 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
+/* ===== V3.18 入参代码输入 ===== */
+.ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
+.ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
+.ymtab:hover{background:#F2F7FE}
+.ymtab.on{background:#0B63CE;color:#fff;font-weight:600}
+.ymjson{margin:12px 18px 0;border:1px solid #E3ECF9;border-radius:9px;overflow:hidden}
+.ymjson-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#EEF4FD;
+  border-bottom:1px solid #E3ECF9;font-size:12px;color:#2E4A6B;font-weight:700}
+.ym-ok{color:#12805C}
 </style>
 
 </head>
@@ -1375,6 +1384,7 @@ let NM={step:0, name:'胸部 AIR 增强版（联合第三方小模型）', code:
         airId:'AIR01', sel:['P01','P02'],
         pick:{}, slot:{}, prio:{}, caseId:null, ran:false, running:false, published:[],
         rules:{}, rerr:{}, moff:{}, rout:{},
+        corpusTab:'view', corpusCode:null, corpusOut:null, corpusErr:null, corpusTs:'',
         sec:{findings:[], impression:[]}, editing:null, exSeq:0, uploads:[],
         para:{findings:null, impression:null}, paraOpen:{findings:0, impression:0}, paraBuf:null,
         paraSrc:{findings:0, impression:0},
@@ -2200,13 +2210,104 @@ function nmRulePreviewHTML(){
       </div></div></div>`;
 }
 
-/* ===== 结构化语料输入（入参）· 与当前输出语料对比 ===== */
+/* ===== 结构化语料输入（入参）· 支持代码输入 · 与当前输出语料对比 ===== */
 function nmCaseNow(){
   const c = nmCases().find(x => x.id === NM.caseId) || null;
   if(c) return c;
   const a = nmAir() || {};
   return {name:'（未选测试影像）', pid:'—', age:'', sex:'', exam:(a.exam||'—'), date:'—', modal:(a.modal||'—')};
 }
+/* —— 代码输入：ctx 上下文（入参模板可用） —— */
+function nmCorpusCtx(){
+  const a = nmAir() || {}, c = nmCaseNow(), rows = nmRows();
+  const gs = {}, order = [];
+  rows.forEach(r => { if(!gs[r.pid]){ gs[r.pid] = {name:r.pname, off:!!NM.moff[r.pid], fields:{}}; order.push(r.pid); } if(r.on) gs[r.pid].fields[r.key] = r.val; });
+  const phs = [];
+  (a.findings||[]).concat(a.impression||[]).forEach(x => { if(x.ph) phs.push('{' + x.ph + '}'); });
+  return {
+    case: {name:c.name, sex:c.sex||'', age:c.age||'', date:c.date||'', exam:c.exam||'', pid:c.pid||''},
+    air: {name:a.name||'', ver:a.ver||'', exam:a.exam||'', modal:a.modal||'', need:a.need||{},
+          placeholders:phs, findings:(a.findings||[]).length, impression:(a.impression||[]).length},
+    models: order.map(pid => ({name:gs[pid].name, off:gs[pid].off, fields:gs[pid].fields})),
+    rules: order.map(pid => ({name:gs[pid].name, code:(NM.rules[pid]!=null?NM.rules[pid]:nmRuleDefault(pid))}))
+  };
+}
+function nmCorpusDefaultCode(){
+  return '/* 入参模板（代码输入）\n' +
+    '   ctx 可用：ctx.case / ctx.air / ctx.models / ctx.rules\n' +
+    '   返回的对象就是「喂给大模型的结构化语料」，可自由增删字段、改结构；\n' +
+    '   注意：不要放患者姓名、住院号等身份信息。 */\n' +
+    'return {\n' +
+    '  task: "生成「影像所见 / 诊断意见」两段结构化报告片段",\n' +
+    '  exam: ctx.air.exam,\n' +
+    '  modality: ctx.air.modal,\n' +
+    '  patient: { sex: ctx.case.sex || "—", age: ctx.case.age || "—" },\n' +
+    '  air: {\n' +
+    '    version: ctx.air.ver,\n' +
+    '    placeholders: ctx.air.placeholders,\n' +
+    '    findings_count: ctx.air.findings,\n' +
+    '    impression_count: ctx.air.impression\n' +
+    '  },\n' +
+    '  models: ctx.models.map(m => ({ name: m.name, enabled: !m.off, fields: m.fields })),\n' +
+    '  contract: { findings: "string[]", impression: "string[]", order: "按 models 顺序拼接" }\n' +
+    '};';
+}
+function nmCorpusCodeGet(){ if(NM.corpusCode==null) NM.corpusCode = nmCorpusDefaultCode(); return NM.corpusCode; }
+function nmCorpusCodeSet(v){ NM.corpusCode = v; NM.corpusErr = null; NM.corpusOut = null; }
+function nmCorpusTab(t){ NM.corpusTab = t; renderNewModel(); }
+function nmCorpusReset(){ NM.corpusCode = null; NM.corpusErr = null; NM.corpusOut = null; renderNewModel(); toast('已恢复默认入参模板（需重新编译）'); }
+/* ▶ 编译入参：执行代码，产出结构化语料 */
+function nmCorpusRun(){
+  const code = nmCorpusCodeGet();
+  try{
+    const fn = new Function('ctx', code);
+    const out = fn(nmCorpusCtx());
+    if(!out || typeof out !== 'object') throw new Error('模板需 return 一个对象');
+    NM.corpusOut = out;
+    NM.corpusErr = null;
+    NM.corpusTs = new Date().toTimeString().slice(0,8);
+    renderNewModel();
+    toast('入参已编译 · 共 ' + Object.keys(out).length + ' 个顶层字段');
+  }catch(e){
+    NM.corpusErr = String((e && e.message) || e);
+    NM.corpusOut = null;
+    renderNewModel();
+    toast('编译失败：' + NM.corpusErr);
+  }
+}
+/* —— 把任意对象摊平成「键 → 值」行，用于左栏展示 —— */
+function nmFlatRows(v, prefix, out){
+  if(v===null || v===undefined){ out.push([prefix || '(值)', '—']); return; }
+  if(typeof v !== 'object'){ out.push([prefix, String(v)]); return; }
+  if(Array.isArray(v)){
+    if(!v.length){ out.push([prefix, '[]']); return; }
+    if(typeof v[0] !== 'object'){ out.push([prefix, v.join(' · ')]); return; }
+    v.forEach((it, i) => {
+      if(typeof it !== 'object' || it === null){ out.push([prefix + '[' + i + ']', String(it)]); return; }
+      const nm = it.name ? (' · ' + it.name) : ('[' + (i+1) + ']');
+      Object.keys(it).forEach(k => {
+        if(k === 'name') return;
+        const val = it[k];
+        if(val && typeof val === 'object') nmFlatRows(val, prefix + nm + '.' + k, out);
+        else out.push([prefix + nm + '.' + k, (typeof val === 'boolean' ? (val ? 'true' : 'false') : String(val))]);
+      });
+    });
+    return;
+  }
+  const ks = Object.keys(v);
+  if(!ks.length){ out.push([prefix, '{}']); return; }
+  ks.forEach(k => nmFlatRows(v[k], prefix ? prefix + '.' + k : k, out));
+}
+function nmCorpusGroupsFromObj(obj){
+  const groups = [];
+  Object.keys(obj).forEach(k => {
+    const rows = [];
+    nmFlatRows(obj[k], '', rows);
+    groups.push({t:k, items: rows.map(r => ['  ' + (r[0] || '(值)'), r[1]])});
+  });
+  return groups;
+}
+/* —— 默认（未编译时）的结构化语料视图 —— */
 function nmCorpusGroups(){
   const a = nmAir() || {}, c = nmCaseNow(), rows = nmRows();
   const G = [];
@@ -2225,17 +2326,17 @@ function nmCorpusGroups(){
   ]});
   const gs = {}, order = [];
   rows.forEach(r => { if(!gs[r.pid]){ gs[r.pid] = {name:r.pname, fs:[]}; order.push(r.pid); } gs[r.pid].fs.push(r); });
-  const subs = order.map(pid => {
+  G.push({t:'③ 第三方小模型结果', items:[], subs:order.map(pid => {
     const off = !!NM.moff[pid], g = gs[pid];
     return {t: g.name + (off ? '（已停用 · 不参与）' : '（参与整合）'),
       items: g.fs.map(r => ['  ' + r.key, off ? '—' : (r.on ? (String(r.val) + '　已勾选') : '未勾选')])};
-  });
-  G.push({t:'③ 第三方小模型结果', items:[], subs:subs});
+  })});
   const rs = order.filter(pid => !NM.moff[pid]).map(pid => {
     const code = NM.rules[pid] != null ? NM.rules[pid] : nmRuleDefault(pid);
-    const o = nmRunRule(pid);
-    return ['  ' + gs[pid].name, o.error ? ('规则异常：' + String(o.error).slice(0, 46))
-      : ('规则 ' + code.split('\n').length + ' 行 → 片段 ' + ((o.findings||[]).length + (o.impression||[]).length) + ' 条')];
+    const o = NM.rout[pid] || nmRunRule(pid);
+    const n = o.err ? 0 : ((o.findings||[]).length + (o.impression||[]).length);
+    return ['  ' + gs[pid].name, o.err ? ('规则异常：' + String(o.err).slice(0, 46))
+      : ('规则 ' + code.split('\n').length + ' 行 → 片段 ' + n + ' 条')];
   });
   G.push({t:'④ 工程规则', items: rs.length ? rs : [['—', '（无参与整合的小模型）']]});
   G.push({t:'⑤ 输出契约', items:[
@@ -2251,34 +2352,64 @@ function nmCorpusStat(){
   const used = on.filter(r => String(r.val).length > 1 && txt.indexOf(String(r.val)) >= 0);
   const unused = on.filter(r => used.indexOf(r) < 0);
   let frag = 0, errs = 0;
-  Object.keys(nmRows().reduce((m,r)=>{ m[r.pid]=1; return m; }, {})).forEach(pid => {
+  const pids = Object.keys(nmRows().reduce((m,r)=>{ m[r.pid]=1; return m; }, {}));
+  pids.forEach(pid => {
     if(NM.moff[pid]) return;
-    const o = nmRunRule(pid);
-    if(o.error) errs++; else frag += (o.findings||[]).length + (o.impression||[]).length;
+    const o = NM.rout[pid] || nmRunRule(pid);
+    if(o.err) errs++; else frag += (o.findings||[]).length + (o.impression||[]).length;
   });
   return {onN:on.length, usedN:used.length, unused:unused.map(r=>r.key), frag:frag, errs:errs,
           sent:secs.findings.length + secs.impression.length, secs:secs};
 }
 function nmCorpusCard(){
-  const G = nmCorpusGroups(), st = nmCorpusStat();
+  const tab = NM.corpusTab || 'view';
+  const compiled = NM.corpusOut;
+  const G = compiled ? nmCorpusGroupsFromObj(compiled) : nmCorpusGroups();
+  const st = nmCorpusStat();
   const left = G.map(g => `<div class="ymg"><div class="ymg-t">${nmEsc(g.t)}</div>
       ${(g.items||[]).map(it => `<div class="ym-row"><span class="ym-k">${nmEsc(it[0])}</span><span class="ym-v">${nmEsc(it[1])}</span></div>`).join('')}
       ${(g.subs||[]).map(s => `<div class="ym-sub"><div class="ym-sub-t">${nmEsc(s.t)}</div>
           ${s.items.map(it => `<div class="ym-row"><span class="ym-k mono">${nmEsc(it[0])}</span><span class="ym-v">${nmEsc(it[1])}</span></div>`).join('')}</div>`).join('')}
     </div>`).join('');
   const secRows = sec => (st.secs[sec]||[]).map((x,i) => `<div class="ym-o"><span class="ym-n">${i+1}</span>${nmEsc(x.txt||'')}</div>`).join('') || '<div class="ym-o mut">（无）</div>';
-  const diff = `入参字段 ${st.onN} 项 → 已进入输出 ${st.usedN} 项` +
-    (st.unused.length ? `；<b class="ym-warn">未进入输出 ${st.unused.length} 项</b>（${st.unused.join('、')}）` : '；全部字段均进入输出') +
-    `　｜　规则片段 ${st.frag} 条${st.errs ? `（<b class="ym-warn">${st.errs} 个模型规则异常</b>）` : ''}　｜　当前输出 ${st.sent} 句`;
+  const diff = (compiled ? '<b class="ym-ok">入参已编译</b>（' + Object.keys(compiled).length + ' 个顶层字段）　｜　' : '') +
+    `字段 ${st.onN} 项 → 进入输出 ${st.usedN} 项` +
+    (st.unused.length ? `；<b class="ym-warn">未进入 ${st.unused.length} 项</b>（${st.unused.join('、')}）` : '；全部字段均进入输出') +
+    `　｜　片段 ${st.frag} 条${st.errs ? `（<b class="ym-warn">${st.errs} 个模型规则异常</b>）` : ''}　｜　输出 ${st.sent} 句`;
+
+  const codeBox = `<div class="ymcode">
+      <div class="nmcodebox" style="margin:12px 18px 0">
+        <div class="nmcodeh"><b>入参模板（代码输入）</b>
+          <span class="mut">ctx.case / ctx.air / ctx.models / ctx.rules · 返回对象即为入参</span>
+          <span style="margin-left:auto;display:flex;gap:8px">
+            <button class="btn sm pri" onclick="nmCorpusRun()">▶ 编译入参</button>
+            <button class="btn sm" onclick="nmCorpusReset()">↺ 恢复默认模板</button>
+          </span></div>
+        <textarea class="nmcode" spellcheck="false" style="min-height:240px"
+          oninput="nmCorpusCodeSet(this.value)">${nmEsc(nmCorpusCodeGet())}</textarea>
+        ${NM.corpusErr ? `<div class="nmcodeerr">⚠ ${nmEsc(NM.corpusErr)}</div>`
+          : (compiled ? `<div class="nmcodeok">✓ 已编译 · ${nmEsc(NM.corpusTs||'')} · 顶层字段 ${Object.keys(compiled).length} 个</div>`
+                      : `<div class="nmcodehint">改完代码点「▶ 编译入参」，编译结果会替换左侧结构化语料</div>`)}
+      </div>
+      ${compiled ? `<div class="ymjson"><div class="ymjson-h">编译结果（JSON）<button class="btn sm" onclick="nmCorpusCopy()">⧉ 复制</button></div>
+        <pre class="jsonbox" style="margin:0;border-radius:0 0 8px 8px">${nmEsc(JSON.stringify(compiled, null, 2))}</pre></div>` : ''}
+    </div>`;
+
   return `<div class="card"><div class="ch">结构化语料输入（入参）
-      <span class="r"><span class="tag blue">大模型实际拿到的语料</span>
-        <span class="tag gray">与右侧当前输出对比</span>
-        <button class="btn sm" onclick="nmCorpusCopy()">⧉ 复制入参</button></span></div>
+      <span class="r">
+        <span class="ymtabs">
+          <button class="ymtab ${tab==='view'?'on':''}" onclick="nmCorpusTab('view')">结构化视图</button>
+          <button class="ymtab ${tab==='code'?'on':''}" onclick="nmCorpusTab('code')">代码输入</button>
+        </span>
+        <button class="btn sm" onclick="nmCorpusCopy()">⧉ 复制入参</button>
+      </span></div>
     <div class="cb">
-      <div class="ymintro">左边是<b>这次喂给大模型的全部语料</b>（任务、病例、AIR 模板、各小模型的原始字段值、工程规则与输出契约）；
-        右边是<b>当前实际输出的语料</b>。两栏对照即可看出：模型拿到了什么、又用上了什么、哪些字段没被写进报告。</div>
+      <div class="ymintro">左边是<b>这次喂给大模型的全部语料</b>；右边是<b>当前实际输出的语料</b>。
+        ${tab==='code' ? '当前为<b>代码输入</b>模式：入参结构由代码定义，编译后替换左侧内容。'
+                       : '可切到<b>代码输入</b>，用代码定义/改写入参结构（增删字段、调整层级）。'}</div>
+      ${tab==='code' ? codeBox : ''}
       <div class="ymgrid">
-        <div class="ymcol"><div class="ymcol-t">入参 · 结构化语料</div>${left}</div>
+        <div class="ymcol"><div class="ymcol-t">入参 · 结构化语料${compiled?'（代码编译）':''}</div>${left}</div>
         <div class="ymcol"><div class="ymcol-t">当前输出语料</div>
           <div class="ymsec">影像所见</div>${secRows('findings')}
           <div class="ymsec">诊断意见</div>${secRows('impression')}
@@ -2288,6 +2419,12 @@ function nmCorpusCard(){
     </div></div>`;
 }
 function nmCorpusCopy(){
+  if(NM.corpusOut){
+    const txt = JSON.stringify(NM.corpusOut, null, 2);
+    try { navigator.clipboard.writeText(txt).then(()=>toast('已复制编译后的入参 JSON'), ()=>toast('复制失败，请手动选择')); }
+    catch(e){ toast('复制失败，请手动选择'); }
+    return;
+  }
   const G = nmCorpusGroups();
   let lines = ['# 结构化语料输入（入参）'];
   G.forEach(g => {
@@ -2296,9 +2433,8 @@ function nmCorpusCopy(){
     (g.subs||[]).forEach(s => { lines.push('  · ' + s.t); s.items.forEach(it => lines.push('    ' + it[0].trim() + ' = ' + it[1])); });
   });
   const txt = lines.join('\n');
-  try {
-    navigator.clipboard.writeText(txt).then(()=>toast('入参语料已复制（'+txt.split('\n').length+' 行）'), ()=>toast('复制失败，请手动选择文本'));
-  } catch(e){ toast('复制失败，请手动选择文本'); }
+  try { navigator.clipboard.writeText(txt).then(()=>toast('入参语料已复制（'+txt.split('\n').length+' 行）'), ()=>toast('复制失败，请手动选择文本')); }
+  catch(e){ toast('复制失败，请手动选择文本'); }
 }
 
 function nmStepBody(){
