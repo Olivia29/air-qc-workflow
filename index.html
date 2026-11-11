@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.26（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.27（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.26 工程规则代码输入 ===== */
+/* ===== V3.27 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.26 结构化语料输入（入参）===== */
+/* ===== V3.27 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,13 +456,13 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.26 规则执行结果 ===== */
+/* ===== V3.27 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
-/* ===== V3.26 入参代码输入 ===== */
+/* ===== V3.27 入参代码输入 ===== */
 .ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
 .ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
 .ymtab:hover{background:#F2F7FE}
@@ -471,7 +471,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymjson-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#EEF4FD;
   border-bottom:1px solid #E3ECF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .ym-ok{color:#12805C}
-/* ===== V3.26 报告输出列 & 入参单栏 ===== */
+/* ===== V3.27 报告输出列 & 入参单栏 ===== */
 .rpcol{border:1px solid #E3ECF9;border-radius:9px;background:#fff;overflow:hidden}
 .rpcol-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F3F7FD;
   border-bottom:1px solid #E3ECF9;font-size:13px;font-weight:700;color:#2E4A6B}
@@ -481,13 +481,83 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .rp-n{flex:0 0 16px;color:#A9BBD6;font-family:ui-monospace,Consolas,monospace;font-size:11px;padding-top:2px}
 .rp-t{flex:1;min-width:0}
 .ymgrid.one{grid-template-columns:1fr}
-/* ===== V3.26 发布范围 chips ===== */
+/* ===== V3.27 发布范围 chips ===== */
 .chips{display:flex;flex-wrap:wrap;gap:6px;max-width:780px}
 .chip{border:1px solid #D6E4F7;background:#fff;color:#4B6285;border-radius:14px;padding:3px 10px;
   font-size:12px;cursor:pointer;font-family:inherit;line-height:1.6}
 .chip:hover{background:#F2F7FE}
 .chip.on{background:#0B63CE;border-color:#0B63CE;color:#fff;font-weight:600}
 .chip-warn{color:#C0392B;font-size:12px;align-self:center}
+/* ===== V3.27 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
+#pg-newmodel{padding:20px 24px 32px}
+#pg-newmodel .ph{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 16px}
+#pg-newmodel .ph h2{font-size:20px;font-weight:600;color:#1F2329;margin:0;display:flex;align-items:center;gap:8px}
+#pg-newmodel .ph .r{display:flex;align-items:center;gap:8px}
+#pg-newmodel .card{background:#fff;border:1px solid #E5E6EB;border-radius:8px;
+  box-shadow:0 1px 2px rgba(31,35,41,.04);margin-bottom:16px;overflow:hidden}
+#pg-newmodel .card .ch{min-height:48px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;border-bottom:1px solid #F0F1F3;font-size:15px;font-weight:600;color:#1F2329;background:#fff}
+#pg-newmodel .card .ch .r{display:flex;align-items:center;gap:8px;font-weight:400}
+#pg-newmodel .card .cb{padding:16px}
+#pg-newmodel .tbl-wrap{padding:0}
+#pg-newmodel .tbl-wrap table.tb{border-radius:0}
+
+/* 步骤条：等宽方块 + 明确的当前/已完成态 */
+#pg-newmodel .nmsteps{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#pg-newmodel .nmstep{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 14px;border-radius:6px;
+  font-size:13px;color:#4E5969;background:#F7F8FA;border:1px solid #EDEEF0;cursor:pointer;user-select:none}
+#pg-newmodel .nmstep .n{width:18px;height:18px;border-radius:50%;background:#E5E6EB;color:#86909C;
+  font-size:11px;line-height:18px;text-align:center;flex:0 0 18px}
+#pg-newmodel .nmstep.done{background:#F0FAF4;border-color:#CBEBDA;color:#12805C}
+#pg-newmodel .nmstep.done .n{background:#12805C;color:#fff}
+#pg-newmodel .nmstep.on{background:#E8F1FE;border-color:#BBD4F8;color:#0B63CE;font-weight:600}
+#pg-newmodel .nmstep.on .n{background:#0B63CE;color:#fff}
+#pg-newmodel .nmarr{color:#C9CDD4;font-size:12px}
+
+/* 表格：表头浅灰、斑马纹、hover、行高统一 */
+#pg-newmodel table.tb{width:100%;border-collapse:collapse;font-size:13px;table-layout:auto}
+#pg-newmodel table.tb thead th{background:#FAFBFC;color:#86909C;font-weight:500;font-size:12.5px;
+  padding:11px 16px;border-bottom:1px solid #F0F1F3;text-align:left;white-space:nowrap}
+#pg-newmodel table.tb tbody td{padding:16px;border-bottom:1px solid #F5F6F7;color:#1F2329;vertical-align:middle;line-height:1.6}
+#pg-newmodel table.tb tbody tr:nth-child(even) td{background:#FCFCFD}
+#pg-newmodel table.tb tbody tr:hover td{background:#F5F9FF}
+#pg-newmodel table.tb tbody tr:last-child td{border-bottom:0}
+#pg-newmodel .tb-desc{max-width:380px;color:#4E5969;font-size:12.5px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+
+/* 表单 */
+#pg-newmodel .pf2 label{display:block;font-size:12.5px;color:#4E5969;font-weight:500;margin-bottom:6px}
+#pg-newmodel input.inp,#pg-newmodel textarea.inp{width:100%;box-sizing:border-box;font-size:13px;color:#1F2329;
+  border:1px solid #E5E6EB;border-radius:6px;background:#fff;font-family:inherit}
+#pg-newmodel input.inp{height:34px;padding:0 10px;line-height:34px}
+#pg-newmodel textarea.inp{height:auto;line-height:1.75;padding:8px 10px;resize:vertical}
+#pg-newmodel input.inp:focus,#pg-newmodel textarea.inp:focus{border-color:#0B63CE;outline:none;box-shadow:0 0 0 2px rgba(11,99,206,.10)}
+#pg-newmodel .nmgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* 按钮 */
+#pg-newmodel .btn{height:32px;padding:0 14px;border-radius:6px;font-size:13px;font-family:inherit;
+  border:1px solid #E5E6EB;background:#fff;color:#1F2329;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+#pg-newmodel .btn:hover{border-color:#C9CDD4;background:#FAFBFC;color:#1F2329}
+#pg-newmodel .btn.pri{background:#0B63CE;border-color:#0B63CE;color:#fff}
+#pg-newmodel .btn.pri:hover{background:#0A57B5;border-color:#0A57B5;color:#fff}
+#pg-newmodel .btn.sm{height:28px;padding:0 12px;font-size:12.5px}
+#pg-newmodel .pf2 .btn.sm{height:34px}
+#pg-newmodel .btn.linkbtn{height:24px;padding:0 6px;border:0;background:transparent;color:#0B63CE;font-size:12.5px}
+#pg-newmodel .btn.linkbtn:hover{background:transparent;text-decoration:underline}
+#pg-newmodel .btn.linkbtn.danger{color:#C0392B}
+
+/* 标签 */
+#pg-newmodel .tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;font-size:12px;font-weight:400}
+#pg-newmodel table.tb td b + .tag{margin-left:8px}
+#pg-newmodel .tag.green{background:#F6FFED;color:#389E0D}
+#pg-newmodel .tag.gray{background:#F2F3F5;color:#5A6472}
+#pg-newmodel .tag.blue{background:#E8F1FE;color:#0B63CE}
+#pg-newmodel .tag.red{background:#FDECEC;color:#C0392B}
+#pg-newmodel .tag.orange{background:#FFF4E6;color:#B25E00}
+
+/* 底部步骤导航：贴右、统一间距 */
+#pg-newmodel > div:last-child{margin-top:16px;position:sticky;bottom:0;background:#fff;
+  border-top:1px solid #F0F1F3;padding:12px 0 4px;z-index:5}
+@media (max-width:1280px){#pg-newmodel .nmgrid{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -1589,11 +1659,6 @@ function nmEditStat(){
   return {ed:ed, ex:ex, rm:rm, pa:pa, rf:nmParaRefStat()};
 }
 
-/* 模型说明字数即时刷新（避免只在重渲染时才更新） */
-function nmDescCount(t){
-  const el=document.getElementById('descCnt');
-  if(el) el.textContent='已填写 '+((t&&t.value)||'').length+' 字 · 会随模型定义一起保存';
-}
 
 /* ---- 模型编码自动生成：MIIA-{类型码}-{YYMMDD}-{3 位流水} ---- */
 function nmGenCode(){
@@ -1959,7 +2024,7 @@ function nmMatch(c){
   if(isNaN(th) || th>parseFloat(a.need.thick.replace('≤',''))) bad.push('层厚超限（需 '+a.need.thick+'）');
   return bad;
 }
-/* ===== V3.26 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
+/* ===== V3.27 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
 function nmNow(){ const d=new Date(); const p=function(n){return ('0'+n).slice(-2);};
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
 function nmModels(){
@@ -2038,30 +2103,32 @@ function nmDelModel(i){
 }
 function nmModelListCard(){
   const list = nmModels();
-  const rows = list.map((m,i)=>`<tr${NM.editId===i?' style="background:#F4F9FF"':''}>
-      <td><b>${nmEsc(m.name)}</b>${NM.editId===i?' <span class="tag blue">编辑中</span>':''}
-          <div class="mut" style="font-size:11px">${nmEsc(m.desc||'')}</div></td>
-      <td class="mono" style="font-size:11px">${nmEsc(m.code)}</td>
+  const rows = list.map((m,i)=>`<tr>
+      <td><b>${nmEsc(m.name)}</b>${NM.editId===i?' <span class="tag blue">编辑中</span>':''}</td>
+      <td class="mono" style="font-size:12px">${nmEsc(m.code)}</td>
       <td><b>${nmEsc(m.ver||'—')}</b></td>
-      <td class="mut" style="font-size:11.5px">${nmEsc(m.air||'—')}</td>
-      <td class="mut" style="font-size:11.5px">${m.sel||0} 个 / ${m.fields||0} 字段</td>
-      <td class="mut" style="font-size:11px">${nmEsc(m.range||'全部机构')}</td>
-      <td><span class="tag ${m.status==='已发布'?'green':'gray'}">${nmEsc(m.status||'草稿')}</span></td>
-      <td class="mut" style="font-size:11px">${nmEsc(m.at||'—')}</td>
-      <td style="white-space:nowrap">
-        <button class="btn sm" onclick="nmEditModel(${i})">编辑</button>
-        <button class="btn sm" onclick="nmCopyModel(${i})">复制</button>
-        <button class="btn sm" onclick="nmDelModel(${i})" style="color:#C0392B">删除</button>
+      <td>${nmEsc(m.air||'—')}</td>
+      <td><span class="tag ${m.status==='已发布'?'green':(m.status==='草稿'?'gray':'orange')}">${nmEsc(m.status||'草稿')}</span></td>
+      <td><div class="tb-desc" title="${nmEsc(m.desc||'')}">${nmEsc(m.desc||'—')}</div></td>
+      <td class="mut" style="font-size:12px">${nmEsc(m.at||'—')}</td>
+      <td style="white-space:nowrap;text-align:right">
+        <button class="btn linkbtn" onclick="nmEditModel(${i})">编辑</button>
+        <button class="btn linkbtn" onclick="nmCopyModel(${i})">复制</button>
+        <button class="btn linkbtn danger" onclick="nmDelModel(${i})">删除</button>
       </td></tr>`).join('');
   return `<div class="card" style="margin-bottom:14px">
       <div class="ch">模型管理
         <span class="r"><span class="tag gray">${list.length} 个模型</span>
           <button class="btn sm pri" onclick="nmNewModel()">＋ 新建模型</button></span></div>
-      <div class="cb" style="padding:4px 0 0"><table class="tb">
-        <tr><th>模型名称</th><th>编码</th><th>版本</th><th>基础 AIR</th><th>小模型 / 字段</th><th>发布范围</th><th>状态</th><th>更新时间</th><th style="width:190px">操作</th></tr>
-        ${rows}</table></div></div>`;
+      <div class="cb tbl-wrap"><table class="tb">
+        <thead><tr>
+          <th style="min-width:200px">模型名称</th><th style="min-width:170px">模型编码</th><th style="width:70px">版本</th>
+          <th style="min-width:150px">基础 AIR</th><th style="width:90px">状态</th><th>模型说明</th>
+          <th style="width:140px">更新时间</th><th style="width:150px;text-align:right">操作</th>
+        </tr></thead>
+        <tbody>${rows}</tbody></table></div></div>`;
 }
-/* ===== V3.26 发布范围与版本撤回 ===== */
+/* ===== V3.27 发布范围与版本撤回 ===== */
 function nmPubScopeUI(){
   const mode = NM.pubScope || 'all';
   const ORGS = ['浮梁县人民医院','江西省人民医院','金华广福医院','遂川县人民医院',
@@ -2646,7 +2713,7 @@ function nmCorpusCopy(){
   catch(e){ toast('复制失败，请手动选择文本'); }
 }
 
-/* ===== V3.26 最终报告输出：与输出语料同源（nmSections） ===== */
+/* ===== V3.27 最终报告输出：与输出语料同源（nmSections） ===== */
 function nmReportCol(sec){
   const t = sec === 'findings' ? '影像所见' : '诊断意见';
   const arr = (nmSections()[sec] || []).map(x => x.txt || '');
@@ -2656,7 +2723,7 @@ function nmReportCol(sec){
        || '<div class="mut" style="padding:6px 0">（无）</div>')
     + '</div></div>';
 }
-/* ===== V3.26 纯文本段落渲染（去占位符、去来源标注） ===== */
+/* ===== V3.27 纯文本段落渲染（去占位符、去来源标注） ===== */
 function nmPlainSec(findings, impression){
   function clean(arr){
     return (arr || [])
@@ -2700,9 +2767,8 @@ function nmStepBody(){
         </div>
       </div>
       <div class="pf2" style="margin-top:14px"><label>模型说明</label>
-        <textarea class="inp ta" rows="4" oninput="NM.desc=this.value;nmDescCount(this)"
+        <textarea class="inp ta" rows="4" oninput="NM.desc=this.value"
           placeholder="说明这个模型做什么、适用场景、与哪些第三方小模型组合、输出交给谁用">${nmEsc(NM.desc||'')}</textarea>
-        <div class="mut" id="descCnt" style="font-size:11px;margin-top:4px">已填写 ${(NM.desc||'').length} 字 · 会随模型定义一起保存</div>
       </div>
 </div></div>`;
   }
@@ -2963,11 +3029,7 @@ function renderNewModel(){
       <div class="nmsteps">${NM_STEPS.map((s,i)=>
         `<div class="nmstep ${i===NM.step?'on':''} ${i<NM.step?'done':''}" onclick="nmGo(${i})">
            <span class="n">${i<NM.step?'✓':(i+1)}</span>${s}</div>`).join('<span class="nmarr">→</span>')}</div>
-      <div style="margin-top:10px;font-size:11.5px;color:#8AA0C8">
-        基底：${a?a.name+' '+a.ver:'未选择'} ｜ 第三方小模型：${NM.sel.length} 个 ｜ 已勾选拼入字段：${on.length} 个
-        ${conf.length?('｜ 工程规则：'+NM.sel.filter(p=>!NM.moff[p]).length+' / '+NM.sel.length+' 个小模型参与整合'):''}
-        ｜ 规则异常：${Object.keys(NM.rerr).filter(k=>NM.rerr[k]).length} 个 ｜ ｜ 测试影像：${NM.ran?((nmCases().find(c=>c.id===NM.caseId)||{}).name||'—')+' 已跑通':'未测试'}
-      </div></div></div>
+    </div></div>
     ${nmStepBody()}
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
       ${NM.step>0?`<button class="btn" onclick="nmGo(${NM.step-1})">← 上一步</button>`:''}
