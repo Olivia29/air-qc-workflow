@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.28（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.29（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.28 工程规则代码输入 ===== */
+/* ===== V3.29 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.28 结构化语料输入（入参）===== */
+/* ===== V3.29 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,13 +456,13 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.28 规则执行结果 ===== */
+/* ===== V3.29 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
-/* ===== V3.28 入参代码输入 ===== */
+/* ===== V3.29 入参代码输入 ===== */
 .ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
 .ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
 .ymtab:hover{background:#F2F7FE}
@@ -471,7 +471,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymjson-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#EEF4FD;
   border-bottom:1px solid #E3ECF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .ym-ok{color:#12805C}
-/* ===== V3.28 报告输出列 & 入参单栏 ===== */
+/* ===== V3.29 报告输出列 & 入参单栏 ===== */
 .rpcol{border:1px solid #E3ECF9;border-radius:9px;background:#fff;overflow:hidden}
 .rpcol-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F3F7FD;
   border-bottom:1px solid #E3ECF9;font-size:13px;font-weight:700;color:#2E4A6B}
@@ -481,14 +481,14 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .rp-n{flex:0 0 16px;color:#A9BBD6;font-family:ui-monospace,Consolas,monospace;font-size:11px;padding-top:2px}
 .rp-t{flex:1;min-width:0}
 .ymgrid.one{grid-template-columns:1fr}
-/* ===== V3.28 发布范围 chips ===== */
+/* ===== V3.29 发布范围 chips ===== */
 .chips{display:flex;flex-wrap:wrap;gap:6px;max-width:780px}
 .chip{border:1px solid #D6E4F7;background:#fff;color:#4B6285;border-radius:14px;padding:3px 10px;
   font-size:12px;cursor:pointer;font-family:inherit;line-height:1.6}
 .chip:hover{background:#F2F7FE}
 .chip.on{background:#0B63CE;border-color:#0B63CE;color:#fff;font-weight:600}
 .chip-warn{color:#C0392B;font-size:12px;align-self:center}
-/* ===== V3.28 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
+/* ===== V3.29 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
 #pg-newmodel{padding:20px 24px 32px}
 #pg-newmodel .ph{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 16px}
 #pg-newmodel .ph h2{font-size:20px;font-weight:600;color:#1F2329;margin:0;display:flex;align-items:center;gap:8px}
@@ -558,7 +558,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel > div:last-child{margin-top:16px;position:sticky;bottom:0;background:#fff;
   border-top:1px solid #F0F1F3;padding:12px 0 4px;z-index:5}
 @media (max-width:1280px){#pg-newmodel .nmgrid{grid-template-columns:1fr}}
-/* ===== V3.28 基础 AIR 列表 ===== */
+/* ===== V3.29 基础 AIR 列表 ===== */
 #pg-newmodel .airtbl tbody tr.airrow{cursor:pointer}
 #pg-newmodel .airtbl tbody tr.airrow:hover td{background:#F5F9FF}
 #pg-newmodel .airtbl tbody tr.airrow.on td{background:#EEF5FF}
@@ -2090,7 +2090,7 @@ function nmMatch(c){
   if(isNaN(th) || th>parseFloat(a.need.thick.replace('≤',''))) bad.push('层厚超限（需 '+a.need.thick+'）');
   return bad;
 }
-/* ===== V3.28 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
+/* ===== V3.29 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
 function nmNow(){ const d=new Date(); const p=function(n){return ('0'+n).slice(-2);};
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
 function nmModels(){
@@ -2194,7 +2194,7 @@ function nmModelListCard(){
         </tr></thead>
         <tbody>${rows}</tbody></table></div></div>`;
 }
-/* ===== V3.28 发布范围与版本撤回 ===== */
+/* ===== V3.29 发布范围与版本撤回 ===== */
 function nmPubScopeUI(){
   const mode = NM.pubScope || 'all';
   const ORGS = ['浮梁县人民医院','江西省人民医院','金华广福医院','遂川县人民医院',
@@ -2778,7 +2778,7 @@ function nmCorpusCopy(){
   catch(e){ toast('复制失败，请手动选择文本'); }
 }
 
-/* ===== V3.28 最终报告输出：与输出语料同源（nmSections） ===== */
+/* ===== V3.29 最终报告输出：与输出语料同源（nmSections） ===== */
 function nmReportCol(sec){
   const t = sec === 'findings' ? '影像所见' : '诊断意见';
   const arr = (nmSections()[sec] || []).map(x => x.txt || '');
@@ -2788,7 +2788,7 @@ function nmReportCol(sec){
        || '<div class="mut" style="padding:6px 0">（无）</div>')
     + '</div></div>';
 }
-/* ===== V3.28 纯文本段落渲染（去占位符、去来源标注） ===== */
+/* ===== V3.29 纯文本段落渲染（去占位符、去来源标注） ===== */
 function nmPlainSec(findings, impression){
   function clean(arr){
     return (arr || [])
@@ -2813,7 +2813,7 @@ function nmPlainSec(findings, impression){
   }
   return blk('影像所见', findings) + blk('诊断意见', impression);
 }
-/* ===== V3.28 未绑定基础 AIR 提示 ===== */
+/* ===== V3.29 未绑定基础 AIR 提示 ===== */
 function nmNoAirBar(){
   if(nmAir()) return '';
   return '<div class="noairbar">未绑定基础 AIR：本模型只整合第三方小模型结果，输出不含 AIR 原文；'
@@ -2859,14 +2859,13 @@ function nmStepBody(){
         <td>${x.ver}</td>
         <td>${x.modal} · ${x.part}</td>
         <td>${x.need.scan} · ${x.need.series} · ${x.need.thick}</td>
-        <td>${(x.findings||[]).length} 句 / ${(x.impression||[]).length} 句</td>
         <td>${x.apps}</td>
         <td><span class="tag ${stTag}">${x.status}</span></td>
       </tr>`;
     }).join('');
     const noBind = `<tr class="airrow${!NM.airId?' on':''}" onclick="nmSetAir('')">
         <td style="width:46px"><span class="radio${!NM.airId?' on':''}"></span></td>
-        <td colspan="7"><b>不绑定基础 AIR</b>
+        <td colspan="6"><b>不绑定基础 AIR</b>
           <span class="mut" style="margin-left:8px;font-size:12.5px">完全自定义：报告只由第三方小模型结果按工程规则生成，不含 AIR 原文</span></td>
       </tr>`;
     return `<div class="card"><div class="ch">② 选择基础 AIR（本公司自研）
@@ -2876,7 +2875,7 @@ function nmStepBody(){
         <thead><tr>
           <th style="width:46px"></th><th style="min-width:180px">AIR 名称</th><th style="width:70px">版本</th>
           <th style="width:120px">模态 · 部位</th><th style="width:210px">数据需求</th>
-          <th style="width:150px">报告结构</th><th style="width:150px">拼接应用</th><th style="width:90px">状态</th>
+          <th style="width:150px">拼接应用</th><th style="width:90px">状态</th>
         </tr></thead>
         <tbody>${trs}${noBind}</tbody></table></div></div>`;
   }
