@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.36（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.37（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.36 工程规则代码输入 ===== */
+/* ===== V3.37 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.36 结构化语料输入（入参）===== */
+/* ===== V3.37 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,13 +456,13 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.36 规则执行结果 ===== */
+/* ===== V3.37 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
-/* ===== V3.36 入参代码输入 ===== */
+/* ===== V3.37 入参代码输入 ===== */
 .ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
 .ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
 .ymtab:hover{background:#F2F7FE}
@@ -471,7 +471,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymjson-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#EEF4FD;
   border-bottom:1px solid #E3ECF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .ym-ok{color:#12805C}
-/* ===== V3.36 报告输出列 & 入参单栏 ===== */
+/* ===== V3.37 报告输出列 & 入参单栏 ===== */
 .rpcol{border:1px solid #E3ECF9;border-radius:9px;background:#fff;overflow:hidden}
 .rpcol-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F3F7FD;
   border-bottom:1px solid #E3ECF9;font-size:13px;font-weight:700;color:#2E4A6B}
@@ -481,14 +481,14 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .rp-n{flex:0 0 16px;color:#A9BBD6;font-family:ui-monospace,Consolas,monospace;font-size:11px;padding-top:2px}
 .rp-t{flex:1;min-width:0}
 .ymgrid.one{grid-template-columns:1fr}
-/* ===== V3.36 发布范围 chips ===== */
+/* ===== V3.37 发布范围 chips ===== */
 .chips{display:flex;flex-wrap:wrap;gap:6px;max-width:780px}
 .chip{border:1px solid #D6E4F7;background:#fff;color:#4B6285;border-radius:14px;padding:3px 10px;
   font-size:12px;cursor:pointer;font-family:inherit;line-height:1.6}
 .chip:hover{background:#F2F7FE}
 .chip.on{background:#0B63CE;border-color:#0B63CE;color:#fff;font-weight:600}
 .chip-warn{color:#C0392B;font-size:12px;align-self:center}
-/* ===== V3.36 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
+/* ===== V3.37 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
 #pg-newmodel{padding:20px 24px 32px}
 #pg-newmodel .ph{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 16px}
 #pg-newmodel .ph h2{font-size:20px;font-weight:600;color:#1F2329;margin:0;display:flex;align-items:center;gap:8px}
@@ -558,7 +558,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel > div:last-child{margin-top:16px;position:sticky;bottom:0;background:#fff;
   border-top:1px solid #F0F1F3;padding:12px 0 4px;z-index:5}
 @media (max-width:1280px){#pg-newmodel .nmgrid{grid-template-columns:1fr}}
-/* ===== V3.36 基础 AIR 列表 ===== */
+/* ===== V3.37 基础 AIR 列表 ===== */
 #pg-newmodel .airtbl tbody tr.airrow{cursor:pointer}
 #pg-newmodel .airtbl tbody tr.airrow:hover td{background:#F5F9FF}
 #pg-newmodel .airtbl tbody tr.airrow.on td{background:#EEF5FF}
@@ -569,7 +569,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .radio.on:after{content:'';position:absolute;left:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#0B63CE}
 #pg-newmodel .noairbar{margin:0 0 16px;padding:10px 14px;border:1px solid #FFE0B2;background:#FFF8E1;
   color:#B25E00;font-size:12.5px;border-radius:6px;line-height:1.7}
-/* ===== V3.36 小模型筛选与表格 ===== */
+/* ===== V3.37 小模型筛选与表格 ===== */
 #pg-newmodel .smbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0 0 12px}
 #pg-newmodel .smbar .smq{width:240px}
 #pg-newmodel .smbar .smf{width:120px}
@@ -587,7 +587,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .chk.on:after{content:'';position:absolute;left:4px;top:1px;width:5px;height:9px;
   border:2px solid #fff;border-top:0;border-left:0;transform:rotate(42deg)}
 #pg-newmodel .smempty{padding:28px 0;text-align:center;color:#86909C;font-size:12.5px}
-/* ===== V3.36 第④步 模型整合 ===== */
+/* ===== V3.37 第④步 模型整合 ===== */
 #pg-newmodel .nmrc .ch{gap:10px}
 #pg-newmodel .nmrc-no{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;
   background:#E8F1FE;color:#0B63CE;font-size:12px;font-weight:600;letter-spacing:.2px}
@@ -622,11 +622,11 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .nmrunbox-b{padding:10px 14px 12px}
 #pg-newmodel .nmrunbox .nmrp-sec{font-size:11.5px;font-weight:600;color:#86909C;margin:6px 0 4px}
 #pg-newmodel .nmrunbox .nmrp-l{font-size:13px;color:#1F2329;line-height:1.9}
-/* ===== V3.36 第⑤步：本地上传 ===== */
+/* ===== V3.37 第⑤步：本地上传 ===== */
 #pg-newmodel .upz.drag{border-color:#0B63CE;background:#EEF5FF}
 #pg-newmodel .upempty{margin:6px 0 4px;padding:16px;border:1px dashed #E5E6EB;border-radius:6px;
   text-align:center;color:#86909C;font-size:12.5px;background:#FCFCFD}
-/* ===== V3.36 发布校验（两态清单） ===== */
+/* ===== V3.37 发布校验（两态清单） ===== */
 #pg-newmodel .ck-h{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:6px;margin-bottom:12px}
 #pg-newmodel .ck-h.ok{background:#F1FAF5;border:1px solid #D6EEE0}
 #pg-newmodel .ck-h.bad{background:#FEF4F3;border:1px solid #F7D9D5}
@@ -648,10 +648,10 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .ck-v{flex:1;color:#6B7684;font-size:12.5px}
 #pg-newmodel .ck-row.bad .ck-v{color:#C0392B}
 #pg-newmodel .ck-btns{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
-/* ===== V3.36 标准能力字段库：示例列 ===== */
+/* ===== V3.37 标准能力字段库：示例列 ===== */
 #pg-lib .smp{background:#F6F8FA;color:#4E5969;padding:1px 6px;border-radius:4px;font-size:11.5px;
   display:inline-block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
-/* ===== V3.36 字段库就地编辑 ===== */
+/* ===== V3.37 字段库就地编辑 ===== */
 #pg-lib .libtxt{cursor:text;border-bottom:1px dashed transparent;padding-bottom:1px}
 #pg-lib .libtxt:hover{border-bottom-color:#C9CDD4;color:#0B63CE}
 #pg-lib .smp{cursor:text}
@@ -660,7 +660,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-lib tr.editing td{background:#FFFDF5}
 #pg-lib .libact{white-space:nowrap}
 #pg-lib .libact .btn+.btn{margin-left:6px}
-/* ===== V3.36 字段库编辑 / 删除弹窗 ===== */
+/* ===== V3.37 字段库编辑 / 删除弹窗 ===== */
 #maskEdit .modal .mb label.lbl{display:block;font-size:11px;color:#8AA0C8;font-weight:600;margin:10px 0 4px}
 #maskEdit .modal .mb label.lbl:first-child{margin-top:0}
 #maskEdit .modal .mb .inp{margin:0}
@@ -670,6 +670,11 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-lib .libact .btn+.btn{margin-left:6px}
 #pg-lib .libact .btn.del{color:#C0392B;border-color:#F2C9C4}
 #pg-lib .libact .btn.del:hover{background:#FEF4F3;border-color:#E7A9A2}
+/* ===== V3.37 字段库检索 ===== */
+#pg-lib .libbar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #F0F1F3}
+#pg-lib .libbar .libq{width:300px;height:32px;line-height:32px;font-size:12.5px}
+#pg-lib .libbar .libf{width:120px;height:32px;font-size:12.5px}
+#pg-lib .libempty{padding:30px 0;text-align:center;color:#86909C;font-size:12.5px}
 </style>
 
 </head>
@@ -780,7 +785,19 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
     <div class="ph"><h2>📚 标准能力字段库</h2><span class="crumb">全局统一：第三方声明支持某能力，就必须按该 Key 返回</span>
       <div class="r"><button class="btn sm pri" onclick="openNewCap()">＋ 新增标准能力</button></div></div>
     <div class="card"><div class="ch">标准字段库 <span class="r"><span class="tag blue" id="libCount"></span><span class="tag teal">可动态扩展</span></span></div>
-      <div class="cb" style="padding:4px 0 0"><table class="tb">
+      <div class="cb" style="padding:4px 0 0">
+      <div class="libbar">
+        <input class="inp libq" id="libQ" placeholder="搜索标准 Key / 中文名 / 语义说明 / 示例"
+               oninput="LIB_Q=this.value;renderLib()">
+        <select class="inp libf" id="libCat" onchange="LIB_CAT=this.value;renderLib()">
+          <option value="">全部分类</option><option>检出</option><option>定位</option><option>量化</option>
+          <option>分类</option><option>质控</option><option>扩展</option></select>
+        <select class="inp libf" id="libType" onchange="LIB_TYPE=this.value;renderLib()">
+          <option value="">全部类型</option><option>boolean</option><option>int</option><option>number</option>
+          <option>string</option><option>enum</option><option>text</option></select>
+        <button class="btn sm" onclick="libReset()">重置</button>
+      </div>
+      <table class="tb">
         <tr><th>标准 Key</th><th>中文名</th><th>类型</th><th>语义说明</th><th>示例</th><th>分类</th><th>被引用</th><th style="width:150px">操作</th></tr>
         <tbody id="libRows"></tbody></table></div>
     </div>
@@ -1165,10 +1182,33 @@ function toggleCap(pid,key){
 }
 
 /* ================== 3 标准能力字段库 ================== */
-let LIB_EDIT=null, LIB_DEL=null;
+let LIB_EDIT=null, LIB_DEL=null, LIB_Q='', LIB_CAT='', LIB_TYPE='';
+function libReset(){
+  LIB_Q=''; LIB_CAT=''; LIB_TYPE='';
+  const q=$('#libQ'), c=$('#libCat'), t=$('#libType');
+  if(q) q.value=''; if(c) c.value=''; if(t) t.value='';
+  renderLib();
+}
+function libFiltered(){
+  const q=(LIB_Q||'').trim().toLowerCase();
+  return CAPS.filter(c=>{
+    if(LIB_CAT && c.cat!==LIB_CAT) return false;
+    if(LIB_TYPE && c.type!==LIB_TYPE) return false;
+    if(!q) return true;
+    const hay=[c.key,c.cn,c.desc,c.sample==null?'':c.sample,c.cat,c.type].join(' ').toLowerCase();
+    return hay.indexOf(q)>=0;
+  });
+}
 function renderLib(){
-  $('#libCount').textContent=CAPS.length+' 个标准字段';
-  $('#libRows').innerHTML=CAPS.map(c=>{
+  const list=libFiltered(), filtering=!!(LIB_Q||LIB_CAT||LIB_TYPE);
+  $('#libCount').textContent = filtering
+    ? ('匹配 '+list.length+' / 共 '+CAPS.length+' 个')
+    : (CAPS.length+' 个标准字段');
+  if(!list.length){
+    $('#libRows').innerHTML='<tr><td colspan="8" class="libempty">没有匹配的标准字段，换个关键词或点「重置」</td></tr>';
+    return;
+  }
+  $('#libRows').innerHTML=list.map(c=>{
     const refs=PRODUCTS.filter(p=>p.caps.includes(c.key)).length;
     const newTag=c._new?' <span class="tag orange" style="font-size:9.5px">新增</span>':'';
     const k=nmEsc(c.key);
@@ -2333,7 +2373,7 @@ function nmMatch(c){
   if(isNaN(th) || th>parseFloat(a.need.thick.replace('≤',''))) bad.push('层厚超限（需 '+a.need.thick+'）');
   return bad;
 }
-/* ===== V3.36 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
+/* ===== V3.37 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
 function nmNow(){ const d=new Date(); const p=function(n){return ('0'+n).slice(-2);};
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
 function nmModels(){
@@ -2437,7 +2477,7 @@ function nmModelListCard(){
         </tr></thead>
         <tbody>${rows}</tbody></table></div></div>`;
 }
-/* ===== V3.36 发布范围与版本撤回 ===== */
+/* ===== V3.37 发布范围与版本撤回 ===== */
 function nmPubScopeUI(){
   const mode = NM.pubScope || 'all';
   const ORGS = ['浮梁县人民医院','江西省人民医院','金华广福医院','遂川县人民医院',
@@ -3020,7 +3060,7 @@ function nmCorpusCopy(){
   catch(e){ toast('复制失败，请手动选择文本'); }
 }
 
-/* ===== V3.36 最终报告输出：与输出语料同源（nmSections） ===== */
+/* ===== V3.37 最终报告输出：与输出语料同源（nmSections） ===== */
 function nmReportCol(sec){
   const t = sec === 'findings' ? '影像所见' : '诊断意见';
   const arr = (nmSections()[sec] || []).map(x => x.txt || '');
@@ -3030,7 +3070,7 @@ function nmReportCol(sec){
        || '<div class="mut" style="padding:6px 0">（无）</div>')
     + '</div></div>';
 }
-/* ===== V3.36 纯文本段落渲染（去占位符、去来源标注） ===== */
+/* ===== V3.37 纯文本段落渲染（去占位符、去来源标注） ===== */
 function nmPlainSec(findings, impression){
   function clean(arr){
     return (arr || [])
@@ -3055,8 +3095,8 @@ function nmPlainSec(findings, impression){
   }
   return blk('影像所见', findings) + blk('诊断意见', impression);
 }
-/* ===== V3.36 未绑定基础 AIR 提示 ===== */
-/* ===== V3.36 第三方小模型：筛选 / 列表 ===== */
+/* ===== V3.37 未绑定基础 AIR 提示 ===== */
+/* ===== V3.37 第三方小模型：筛选 / 列表 ===== */
 function nmSmList(){
   const q = (NM.smQ||'').trim().toLowerCase(), f = NM.smF||{};
   return nmSmalls().filter(p=>{
@@ -3101,7 +3141,7 @@ function nmSmRefresh(){
 }
 function nmSmSet(k, v){ (NM.smF=NM.smF||{})[k]=v; nmSmRefresh(); }
 function nmClearSel(){ NM.sel=[]; NM.pick={}; NM.slot={}; NM.prio={}; NM.ran=false; renderNewModel(); toast('已清空所选小模型'); }
-/* ===== V3.36 发布校验（两态清单）+ 保存草稿 ===== */
+/* ===== V3.37 发布校验（两态清单）+ 保存草稿 ===== */
 function nmChecks(){
   const rowsOn = nmRows().filter(r=>r.on);
   const errM = Object.keys(NM.rerr).filter(k=>NM.rerr[k]);
