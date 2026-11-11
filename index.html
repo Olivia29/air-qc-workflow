@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.30（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.31（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.30 工程规则代码输入 ===== */
+/* ===== V3.31 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.30 结构化语料输入（入参）===== */
+/* ===== V3.31 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,13 +456,13 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.30 规则执行结果 ===== */
+/* ===== V3.31 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
-/* ===== V3.30 入参代码输入 ===== */
+/* ===== V3.31 入参代码输入 ===== */
 .ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
 .ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
 .ymtab:hover{background:#F2F7FE}
@@ -471,7 +471,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymjson-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#EEF4FD;
   border-bottom:1px solid #E3ECF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .ym-ok{color:#12805C}
-/* ===== V3.30 报告输出列 & 入参单栏 ===== */
+/* ===== V3.31 报告输出列 & 入参单栏 ===== */
 .rpcol{border:1px solid #E3ECF9;border-radius:9px;background:#fff;overflow:hidden}
 .rpcol-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F3F7FD;
   border-bottom:1px solid #E3ECF9;font-size:13px;font-weight:700;color:#2E4A6B}
@@ -481,14 +481,14 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .rp-n{flex:0 0 16px;color:#A9BBD6;font-family:ui-monospace,Consolas,monospace;font-size:11px;padding-top:2px}
 .rp-t{flex:1;min-width:0}
 .ymgrid.one{grid-template-columns:1fr}
-/* ===== V3.30 发布范围 chips ===== */
+/* ===== V3.31 发布范围 chips ===== */
 .chips{display:flex;flex-wrap:wrap;gap:6px;max-width:780px}
 .chip{border:1px solid #D6E4F7;background:#fff;color:#4B6285;border-radius:14px;padding:3px 10px;
   font-size:12px;cursor:pointer;font-family:inherit;line-height:1.6}
 .chip:hover{background:#F2F7FE}
 .chip.on{background:#0B63CE;border-color:#0B63CE;color:#fff;font-weight:600}
 .chip-warn{color:#C0392B;font-size:12px;align-self:center}
-/* ===== V3.30 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
+/* ===== V3.31 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
 #pg-newmodel{padding:20px 24px 32px}
 #pg-newmodel .ph{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 16px}
 #pg-newmodel .ph h2{font-size:20px;font-weight:600;color:#1F2329;margin:0;display:flex;align-items:center;gap:8px}
@@ -558,7 +558,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel > div:last-child{margin-top:16px;position:sticky;bottom:0;background:#fff;
   border-top:1px solid #F0F1F3;padding:12px 0 4px;z-index:5}
 @media (max-width:1280px){#pg-newmodel .nmgrid{grid-template-columns:1fr}}
-/* ===== V3.30 基础 AIR 列表 ===== */
+/* ===== V3.31 基础 AIR 列表 ===== */
 #pg-newmodel .airtbl tbody tr.airrow{cursor:pointer}
 #pg-newmodel .airtbl tbody tr.airrow:hover td{background:#F5F9FF}
 #pg-newmodel .airtbl tbody tr.airrow.on td{background:#EEF5FF}
@@ -569,7 +569,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .radio.on:after{content:'';position:absolute;left:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#0B63CE}
 #pg-newmodel .noairbar{margin:0 0 16px;padding:10px 14px;border:1px solid #FFE0B2;background:#FFF8E1;
   color:#B25E00;font-size:12.5px;border-radius:6px;line-height:1.7}
-/* ===== V3.30 小模型筛选与表格 ===== */
+/* ===== V3.31 小模型筛选与表格 ===== */
 #pg-newmodel .smbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0 0 12px}
 #pg-newmodel .smbar .smq{width:240px}
 #pg-newmodel .smbar .smf{width:120px}
@@ -587,6 +587,41 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .chk.on:after{content:'';position:absolute;left:4px;top:1px;width:5px;height:9px;
   border:2px solid #fff;border-top:0;border-left:0;transform:rotate(42deg)}
 #pg-newmodel .smempty{padding:28px 0;text-align:center;color:#86909C;font-size:12.5px}
+/* ===== V3.31 第④步 模型整合 ===== */
+#pg-newmodel .nmrc .ch{gap:10px}
+#pg-newmodel .nmrc-no{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;
+  background:#E8F1FE;color:#0B63CE;font-size:12px;font-weight:600;letter-spacing:.2px}
+#pg-newmodel .nmrc-nm{font-size:14.5px;font-weight:600;color:#1F2329}
+#pg-newmodel .nmrc .ch .r{gap:8px}
+#pg-newmodel .nmstat{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#4E5969}
+#pg-newmodel .nmstat:before{content:'';width:6px;height:6px;border-radius:50%;background:#C9CDD4}
+#pg-newmodel .nmstat.green:before{background:#12805C}
+#pg-newmodel .nmstat.red:before{background:#C0392B}
+#pg-newmodel .nmstat.orange:before{background:#E08A00}
+#pg-newmodel .nmrcb{padding:14px 18px 18px !important}
+#pg-newmodel .nmtbl{margin-bottom:12px}
+#pg-newmodel .nmtbl td{padding:9px 12px !important}
+#pg-newmodel .nmtbl th{padding:9px 12px !important}
+#pg-newmodel .nmfld-cn{display:block;font-size:13px;color:#1F2329}
+#pg-newmodel .nmfld-key{display:block;font-size:11px;color:#A0A8B4;margin-top:2px}
+#pg-newmodel .nmvdr{display:inline-block;padding:1px 8px;border-radius:3px;background:#F2F3F5;color:#6B7280;font-size:11.5px}
+#pg-newmodel .nmval{font-size:12px;color:#4E5969}
+#pg-newmodel .nmval.num{text-align:right;font-variant-numeric:tabular-nums}
+#pg-newmodel .nmtbl tr.onrow td{background:#F8FBFF}
+#pg-newmodel .nmrc .ch .r{align-items:center}
+#pg-newmodel .nmrc .ch .tag,#pg-newmodel .nmrc .ch .nmstat{line-height:22px}
+#pg-newmodel .nmtbl tr.offrow td,#pg-newmodel .nmtbl tr.offrow .nmfld-cn{color:#A8B0BB}
+#pg-newmodel .nmrc.off{opacity:.72}
+#pg-newmodel .nmrc.off .nmcode{background:#F7F8FA !important;color:#8A93A0}
+#pg-newmodel .btn[disabled]{opacity:.45;cursor:not-allowed}
+#pg-newmodel .nmcodeh{display:flex;align-items:center;gap:10px}
+#pg-newmodel .nmcodebox{margin-bottom:12px}
+#pg-newmodel .nmrunbox{margin:0;border:1px solid #DCEEE3;background:#F7FCF9;border-radius:6px;overflow:hidden}
+#pg-newmodel .nmrunbox-h{padding:8px 12px;border-bottom:1px solid #E7F3EC;background:#F1FAF5;
+  font-size:12.5px;font-weight:600;color:#12805C}
+#pg-newmodel .nmrunbox-b{padding:10px 14px 12px}
+#pg-newmodel .nmrunbox .nmrp-sec{font-size:11.5px;font-weight:600;color:#86909C;margin:6px 0 4px}
+#pg-newmodel .nmrunbox .nmrp-l{font-size:13px;color:#1F2329;line-height:1.9}
 </style>
 
 </head>
@@ -1601,7 +1636,7 @@ let NM={step:0, name:'胸部 AIR 增强版（联合第三方小模型）', code:
         para:{findings:null, impression:null}, paraOpen:{findings:0, impression:0}, paraBuf:null,
         paraSrc:{findings:0, impression:0},
         pacsQ:'', pacsPulling:{}};
-const NM_STEPS=['基本信息','选择基础 AIR','第三方小模型','字段与规则整合','测试输出','预览与发布'];
+const NM_STEPS=['基本信息','选择基础 AIR','第三方小模型','模型整合','测试输出','预览与发布'];
 
 function nmAir(){ return AIRS.find(a=>a.id===NM.airId) || null; }
 function nmSmall(id){ return PRODUCTS.find(p=>p.id===id); }
@@ -2150,7 +2185,7 @@ function nmMatch(c){
   if(isNaN(th) || th>parseFloat(a.need.thick.replace('≤',''))) bad.push('层厚超限（需 '+a.need.thick+'）');
   return bad;
 }
-/* ===== V3.30 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
+/* ===== V3.31 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
 function nmNow(){ const d=new Date(); const p=function(n){return ('0'+n).slice(-2);};
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
 function nmModels(){
@@ -2254,7 +2289,7 @@ function nmModelListCard(){
         </tr></thead>
         <tbody>${rows}</tbody></table></div></div>`;
 }
-/* ===== V3.30 发布范围与版本撤回 ===== */
+/* ===== V3.31 发布范围与版本撤回 ===== */
 function nmPubScopeUI(){
   const mode = NM.pubScope || 'all';
   const ORGS = ['浮梁县人民医院','江西省人民医院','金华广福医院','遂川县人民医院',
@@ -2583,14 +2618,13 @@ function nmRulePreviewHTML(){
     if(o.err) return `<div class="nmrpb"><div class="nmrpb-h"><b>${nmEsc(g.name)}</b><span class="tag red">执行失败</span></div><div class="nmcodeerr" style="margin:8px 12px 12px">${nmEsc(o.err)}</div></div>`;
     const F = (o.findings||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>';
     const I = (o.impression||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>';
-    return `<div class="nmrpb"><div class="nmrpb-h"><b>${nmEsc(g.name)}</b><span class="tag green">已执行 ${nmEsc(o.ts||'')}</span></div>
+    return `<div class="nmrpb"><div class="nmrpb-h"><b>${nmEsc(g.name)}</b><span class="tag green">已执行</span></div>
         <div class="nmrp-sec">影像所见</div>${F}<div class="nmrp-sec">诊断意见</div>${I}</div>`;
   }).join('');
   const total = ran.reduce((a,g)=>a + (NM.rout[g.pid].findings||[]).length + (NM.rout[g.pid].impression||[]).length, 0);
   const miss = gs2.filter(g=>!NM.moff[g.pid] && !NM.rout[g.pid]).length;
-  return `<div class="card"><div class="ch">④ 整合执行结果（只读预览）
+  return `<div class="card"><div class="ch">④ 整合执行结果
       <span class="r"><span class="tag ${ran.length?'green':'gray'}">已执行 ${ran.length} / ${gs2.filter(g=>!NM.moff[g.pid]).length} 个模型</span>
-        <span class="tag blue">片段合计 ${total} 条</span>
         <button class="btn sm" onclick="nmRunAll()">▶ 全部执行</button></span></div>
     <div class="cb"><div class="nmrpwrap">${blocks}</div>
 </div></div>`;
@@ -2838,7 +2872,7 @@ function nmCorpusCopy(){
   catch(e){ toast('复制失败，请手动选择文本'); }
 }
 
-/* ===== V3.30 最终报告输出：与输出语料同源（nmSections） ===== */
+/* ===== V3.31 最终报告输出：与输出语料同源（nmSections） ===== */
 function nmReportCol(sec){
   const t = sec === 'findings' ? '影像所见' : '诊断意见';
   const arr = (nmSections()[sec] || []).map(x => x.txt || '');
@@ -2848,7 +2882,7 @@ function nmReportCol(sec){
        || '<div class="mut" style="padding:6px 0">（无）</div>')
     + '</div></div>';
 }
-/* ===== V3.30 纯文本段落渲染（去占位符、去来源标注） ===== */
+/* ===== V3.31 纯文本段落渲染（去占位符、去来源标注） ===== */
 function nmPlainSec(findings, impression){
   function clean(arr){
     return (arr || [])
@@ -2873,8 +2907,8 @@ function nmPlainSec(findings, impression){
   }
   return blk('影像所见', findings) + blk('诊断意见', impression);
 }
-/* ===== V3.30 未绑定基础 AIR 提示 ===== */
-/* ===== V3.30 第三方小模型：筛选 / 列表 ===== */
+/* ===== V3.31 未绑定基础 AIR 提示 ===== */
+/* ===== V3.31 第三方小模型：筛选 / 列表 ===== */
 function nmSmList(){
   const q = (NM.smQ||'').trim().toLowerCase(), f = NM.smF||{};
   return nmSmalls().filter(p=>{
@@ -3017,7 +3051,7 @@ if(NM.step===2){
       </div></div>`;
   }
 if(NM.step===3){
-    /* 按小模型分组：每个小模型一张卡，各自独立的字段勾选 + 工程规则 + 执行预览 */
+    /* 每个小模型一张卡：字段勾选 + 工程规则 + 执行结果 */
     const gs=[], gi={};
     rows.forEach(r=>{ if(!gi[r.pid]){ gi[r.pid]={pid:r.pid, name:r.pname, rows:[]}; gs.push(gi[r.pid]); } gi[r.pid].rows.push(r); });
     const cards = gs.map((g,i)=>{
@@ -3026,62 +3060,60 @@ if(NM.step===3){
       const rr = NM.rerr[g.pid] || null;
       const out = NM.rout[g.pid] || null;
       const dirty = (NM.rules[g.pid]!=null) && !out;
-      const statusTag = out ? (out.err ? '<span class="tag red">执行失败</span>'
-                                       : '<span class="tag green">已执行 ' + out.ts + '</span>')
-                            : (dirty ? '<span class="tag orange">代码已改 · 待执行</span>' : '<span class="tag gray">待执行</span>');
-      const trs = g.rows.map(r=>`<tr class="${r.on?'':'offrow'}">
-          <td style="text-align:center"><input type="checkbox" ${r.on?'checked':''} onchange="nmToggleField('${r.id}')"></td>
-          <td><b>${r.cn}</b><div class="mono" style="font-size:10px;color:#8AA0C8">${r.key}</div></td>
-          <td><span class="tag gray">${r.pname}</span></td>
-          <td class="mono" style="font-size:11.5px">${r.val}</td></tr>`).join('');
+      const st = out ? (out.err ? {c:'red', t:'执行失败'} : {c:'green', t:'已执行'})
+                     : (dirty ? {c:'orange', t:'代码已改 · 待执行'} : {c:'gray', t:'待执行'});
+      const trs = g.rows.map(r=>`<tr class="${r.on?'onrow':'offrow'}">
+          <td style="width:52px;text-align:center"><input type="checkbox" ${r.on?'checked':''} onchange="nmToggleField('${r.id}')"></td>
+          <td><span class="nmfld-cn">${r.cn}</span><span class="mono nmfld-key">${r.key}</span></td>
+          <td><span class="nmvdr">${r.pname}</span></td>
+          <td class="mono nmval${(r.type==='int'||r.type==='number'||r.type==='boolean')?' num':''}">${r.val}</td></tr>`).join('');
       const resBlock = out ? (out.err
-          ? `<div class="nmcodeerr" style="margin:0 18px 14px">⚠ ${nmEsc(out.err)}</div>`
-          : `<div class="nmrunbox">
-               <div class="nmrunbox-h">本次执行结果
-                 <span class="mut">影像所见 ${(out.findings||[]).length} 条 · 诊断意见 ${(out.impression||[]).length} 条 · ${nmEsc(out.ts)}</span></div>
-               <div class="nmrp-sec">影像所见</div>
-               ${(out.findings||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>'}
-               <div class="nmrp-sec">诊断意见</div>
-               ${(out.impression||[]).map(x=>`<div class="nmrp-l">· ${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>'}
-             </div>`)
+          ? `<div class="nmcodeerr">⚠ ${nmEsc(out.err)}</div>`
+          : `<div class="nmrunbox"><div class="nmrunbox-h">本次执行结果</div>
+               <div class="nmrunbox-b">
+                 <div class="nmrp-sec">影像所见</div>
+                 ${(out.findings||[]).map(x=>`<div class="nmrp-l">${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>'}
+                 <div class="nmrp-sec">诊断意见</div>
+                 ${(out.impression||[]).map(x=>`<div class="nmrp-l">${nmEsc(x)}</div>`).join('') || '<div class="nmrp-l mut">（无片段）</div>'}
+               </div></div>`)
         : '';
-      return `<div class="card" style="${off?'background:#FAFBFD':''}">
-        <div class="ch">④-${i+1} ${g.name}
+      return `<div class="card nmrc${off?' off':''}">
+        <div class="ch">
+          <span class="nmrc-no">④-${i+1}</span>
+          <span class="nmrc-nm">${g.name}</span>
           <span class="r">
-            <span class="tag ${off?'gray':'green'}">${off?'已停用 · 不参与整合':'参与整合'}</span>
-            <span class="tag blue">勾选 ${onN} / ${g.rows.length} 个字段</span>
-            ${statusTag}
-            <button class="btn sm" onclick="nmMToggle('${g.pid}')">${off?'⏻ 启用该模型整合':'⏻ 停用该模型整合'}</button>
+            <span class="nmstat ${st.c}">${st.t}</span>
+            <span class="tag blue">勾选 ${onN} / ${g.rows.length}</span>
+            <button class="btn sm" onclick="nmMToggle('${g.pid}')">${off?'⏻ 启用整合':'⏻ 停用整合'}</button>
             <button class="btn sm" onclick="nmRuleReset('${g.pid}')">↺ 恢复默认规则</button>
           </span></div>
-        <div class="cb" style="padding:4px 0 0">
-          <table class="tb" style="margin-bottom:12px">
-            <tr><th style="width:44px">拼入</th><th>第三方字段</th><th>来源模型</th><th>示例值</th></tr>
+        <div class="cb nmrcb">
+          <table class="tb nmtbl">
+            <thead><tr><th style="width:52px">拼入</th><th>第三方字段</th>
+              <th style="width:150px">来源模型</th><th style="width:170px">示例值</th></tr></thead>
             <tbody>${trs}</tbody></table>
           <div class="nmcodebox">
             <div class="nmcodeh"><b>工程规则（代码输入）</b>
-              <span class="mut">仅作用于「${g.name}」· 停用该模型后本规则不参与整合</span>
               <span style="margin-left:auto;display:flex;gap:8px">
-                <button class="btn sm pri" onclick="nmRunModel('${g.pid}')">▶ 执行规则</button>
-                <button class="btn sm" onclick="nmRunModel('${g.pid}')" title="执行并刷新下方结果">↻ 重新执行</button>
+                <button class="btn sm pri" onclick="nmRunModel('${g.pid}')"${off?' disabled':''}>▶ 执行规则</button>
+                <button class="btn sm" onclick="nmRunModel('${g.pid}')"${off?' disabled':''}>↻ 重新执行</button>
               </span></div>
             <textarea class="nmcode" spellcheck="false" oninput="nmRuleSet('${g.pid}',this.value)">${nmEsc(nmRuleGet(g.pid))}</textarea>
-            ${rr?`<div class="nmcodeerr">⚠ ${nmEsc(rr)}</div>`
-                :(out?`<div class="nmcodeok">✓ 已执行 · 输出契约 { findings, impression } 校验通过</div>`
-                     :``)}
+            ${rr ? `<div class="nmcodeerr">⚠ ${nmEsc(rr)}</div>`
+                 : (out && !out.err ? `<div class="nmcodeok">✓ 输出契约 { findings, impression } 校验通过</div>` : '')}
           </div>
           ${resBlock}
         </div></div>`;
     }).join('');
-    return `<div class="card"><div class="ch">④ 字段与工程规则：按小模型分开整合
-        <span class="r"><span class="tag blue">${gs.length} 个小模型</span>
-          <span class="tag ${gs.filter(g=>!NM.moff[g.pid]).length?'green':'gray'}">参与整合 ${gs.filter(g=>!NM.moff[g.pid]).length} 个</span>
+    const liveN = gs.filter(g=>!NM.moff[g.pid]).length;
+    return `<div class="card"><div class="ch">④ 字段与工程规则
+        <span class="r"><span class="tag ${liveN?'green':'gray'}">参与整合 ${liveN} / ${gs.length} 个</span>
           <button class="btn sm pri" onclick="nmRunAll()">▶ 全部执行</button></span></div>
       </div>
       ${cards}
       ${nmRulePreviewHTML()}`;
   }
-  if(NM.step===4){
+if(NM.step===4){
     const secs=nmSections();
     const srcTag = s => `<span class="tag ${s==='PACS 拉取'?'purple':(s==='本地上传'?'blue':'gray')}">${s}</span>`;
     const cases=nmCases().map(c=>{
