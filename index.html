@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.29（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.30（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.29 工程规则代码输入 ===== */
+/* ===== V3.30 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.29 结构化语料输入（入参）===== */
+/* ===== V3.30 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,13 +456,13 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.29 规则执行结果 ===== */
+/* ===== V3.30 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
-/* ===== V3.29 入参代码输入 ===== */
+/* ===== V3.30 入参代码输入 ===== */
 .ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
 .ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
 .ymtab:hover{background:#F2F7FE}
@@ -471,7 +471,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymjson-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#EEF4FD;
   border-bottom:1px solid #E3ECF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .ym-ok{color:#12805C}
-/* ===== V3.29 报告输出列 & 入参单栏 ===== */
+/* ===== V3.30 报告输出列 & 入参单栏 ===== */
 .rpcol{border:1px solid #E3ECF9;border-radius:9px;background:#fff;overflow:hidden}
 .rpcol-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F3F7FD;
   border-bottom:1px solid #E3ECF9;font-size:13px;font-weight:700;color:#2E4A6B}
@@ -481,14 +481,14 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .rp-n{flex:0 0 16px;color:#A9BBD6;font-family:ui-monospace,Consolas,monospace;font-size:11px;padding-top:2px}
 .rp-t{flex:1;min-width:0}
 .ymgrid.one{grid-template-columns:1fr}
-/* ===== V3.29 发布范围 chips ===== */
+/* ===== V3.30 发布范围 chips ===== */
 .chips{display:flex;flex-wrap:wrap;gap:6px;max-width:780px}
 .chip{border:1px solid #D6E4F7;background:#fff;color:#4B6285;border-radius:14px;padding:3px 10px;
   font-size:12px;cursor:pointer;font-family:inherit;line-height:1.6}
 .chip:hover{background:#F2F7FE}
 .chip.on{background:#0B63CE;border-color:#0B63CE;color:#fff;font-weight:600}
 .chip-warn{color:#C0392B;font-size:12px;align-self:center}
-/* ===== V3.29 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
+/* ===== V3.30 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
 #pg-newmodel{padding:20px 24px 32px}
 #pg-newmodel .ph{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 16px}
 #pg-newmodel .ph h2{font-size:20px;font-weight:600;color:#1F2329;margin:0;display:flex;align-items:center;gap:8px}
@@ -558,7 +558,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel > div:last-child{margin-top:16px;position:sticky;bottom:0;background:#fff;
   border-top:1px solid #F0F1F3;padding:12px 0 4px;z-index:5}
 @media (max-width:1280px){#pg-newmodel .nmgrid{grid-template-columns:1fr}}
-/* ===== V3.29 基础 AIR 列表 ===== */
+/* ===== V3.30 基础 AIR 列表 ===== */
 #pg-newmodel .airtbl tbody tr.airrow{cursor:pointer}
 #pg-newmodel .airtbl tbody tr.airrow:hover td{background:#F5F9FF}
 #pg-newmodel .airtbl tbody tr.airrow.on td{background:#EEF5FF}
@@ -569,6 +569,24 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .radio.on:after{content:'';position:absolute;left:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#0B63CE}
 #pg-newmodel .noairbar{margin:0 0 16px;padding:10px 14px;border:1px solid #FFE0B2;background:#FFF8E1;
   color:#B25E00;font-size:12.5px;border-radius:6px;line-height:1.7}
+/* ===== V3.30 小模型筛选与表格 ===== */
+#pg-newmodel .smbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0 0 12px}
+#pg-newmodel .smbar .smq{width:240px}
+#pg-newmodel .smbar .smf{width:120px}
+#pg-newmodel .smbar .smcnt{margin-left:auto;font-size:12.5px;color:#86909C}
+#pg-newmodel .smsel{margin-bottom:10px;padding:7px 10px;background:#F3F7FF;border:1px solid #DDE9FB;
+  border-radius:4px;font-size:12.5px;color:#0B63CE;line-height:1.6}
+#pg-newmodel .smtbl tbody tr.smrow{cursor:pointer}
+#pg-newmodel .smtbl tbody tr.smrow:hover td{background:#F5F9FF}
+#pg-newmodel .smtbl tbody tr.smrow.on td{background:#EEF5FF}
+#pg-newmodel .smtbl tbody tr.smrow.on td:first-child{box-shadow:inset 3px 0 0 #0B63CE}
+#pg-newmodel .smtbl tbody tr.smrow.dis{opacity:.55;cursor:not-allowed}
+#pg-newmodel .chk{width:16px;height:16px;border-radius:3px;border:1px solid #C9CDD4;background:#fff;
+  display:inline-block;position:relative}
+#pg-newmodel .chk.on{background:#0B63CE;border-color:#0B63CE}
+#pg-newmodel .chk.on:after{content:'';position:absolute;left:4px;top:1px;width:5px;height:9px;
+  border:2px solid #fff;border-top:0;border-left:0;transform:rotate(42deg)}
+#pg-newmodel .smempty{padding:28px 0;text-align:center;color:#86909C;font-size:12.5px}
 </style>
 
 </head>
@@ -849,7 +867,49 @@ const PRODUCTS=[
   need:{modal:'—',part:'—',scan:'—',series:'报告文本',thick:'—',extra:'需报告全文 + 影像检出结果'}},
  {id:'P07',name:'肺炎检出 AI',vendor:'推想',ver:'V2.0',type:'辅助诊断',modal:'CT',exam:'胸部 CT',ic:'💠',color:'#00A896',status:'测试中',
   caps:['lesion_detected','lesion_location','pleural_effusion'],
-  need:{modal:'CT',part:'胸部',scan:'平扫或增强',series:'薄层',thick:'≤1.5mm',extra:'正在接入测试'}}
+  need:{modal:'CT',part:'胸部',scan:'平扫或增强',series:'薄层',thick:'≤1.5mm',extra:'正在接入测试'}},
+ {id:'P08',name:'脑出血检出 AI',vendor:'推想',ver:'V2.3',type:'辅助诊断',modal:'CT',exam:'颅脑 CT',ic:'🧠',color:'#C0392B',status:'已接入',
+  caps:['lesion_detected','hemorrhage_volume','midline_shift','lesion_location'],
+  need:{modal:'CT',part:'颅脑',scan:'平扫',series:'常规轴位',thick:'≤5mm',extra:'需包含完整颅腔'}},
+ {id:'P09',name:'肋骨骨折检出 AI',vendor:'联影智能',ver:'V1.4',type:'辅助诊断',modal:'CT',exam:'胸部 CT',ic:'🦴',color:'#0E8A4C',status:'已接入',
+  caps:['lesion_detected','fracture_site','fracture_type','lesion_localization'],
+  need:{modal:'CT',part:'胸部',scan:'平扫',series:'骨窗',thick:'≤2mm',extra:'需包含完整胸廓'}},
+ {id:'P10',name:'肺炎辅助诊断 AI',vendor:'推想',ver:'V3.0',type:'辅助诊断',modal:'CT',exam:'胸部 CT',ic:'🫁',color:'#0B63CE',status:'已接入',
+  caps:['lesion_detected','lesion_location','calcification_type'],
+  need:{modal:'CT',part:'胸部',scan:'平扫',series:'薄层',thick:'≤1.5mm',extra:'需要完整肺野覆盖'}},
+ {id:'P11',name:'气胸检出 AI',vendor:'联影智能',ver:'V1.2',type:'辅助诊断',modal:'CT',exam:'胸部 CT',ic:'🫁',color:'#0891B2',status:'已接入',
+  caps:['lesion_detected','lesion_location'],
+  need:{modal:'CT',part:'胸部',scan:'平扫',series:'薄层',thick:'≤1.5mm',extra:'无'}},
+ {id:'P12',name:'胸腔积液检出 AI',vendor:'深睿医疗',ver:'V1.1',type:'辅助诊断',modal:'CT',exam:'胸部 CT',ic:'💧',color:'#0284C7',status:'已接入',
+  caps:['pleural_effusion','lesion_detected'],
+  need:{modal:'CT',part:'胸部',scan:'平扫',series:'厚层',thick:'≤5mm',extra:'无'}},
+ {id:'P13',name:'肝占位检出 AI',vendor:'达摩院',ver:'V2.0',type:'辅助诊断',modal:'CT',exam:'腹部 CT',ic:'🫀',color:'#7C3AED',status:'已接入',
+  caps:['lesion_detected','lesion_location','long_diameter','lesion_volume'],
+  need:{modal:'CT',part:'腹部',scan:'增强',series:'薄层',thick:'≤1mm',extra:'需动脉期 + 静脉期'}},
+ {id:'P14',name:'肾结石检出 AI',vendor:'深睿医疗',ver:'V1.0',type:'辅助诊断',modal:'CT',exam:'腹部 CT',ic:'🪨',color:'#B45309',status:'已接入',
+  caps:['lesion_detected','lesion_location','long_diameter'],
+  need:{modal:'CT',part:'腹部',scan:'平扫',series:'厚层',thick:'≤5mm',extra:'无'}},
+ {id:'P15',name:'冠脉钙化积分 AI',vendor:'数坤科技',ver:'V2.1',type:'辅助诊断',modal:'CT',exam:'冠脉 CTA',ic:'❤️',color:'#DC2626',status:'已接入',
+  caps:['calcification_type','lesion_location','lesion_detected'],
+  need:{modal:'CT',part:'心血管',scan:'平扫',series:'薄层',thick:'≤3mm',extra:'需心电门控'}},
+ {id:'P16',name:'数字乳腺钙化检出 AI',vendor:'联影智能',ver:'V1.0',type:'辅助诊断',modal:'MR',exam:'乳腺 MRI',ic:'🎗️',color:'#BE185D',status:'已接入',
+  caps:['calcification_type','lesion_detected','malignancy_probability'],
+  need:{modal:'MR',part:'乳腺',scan:'增强',series:'常规',thick:'≤3mm',extra:'无'}},
+ {id:'P17',name:'膝关节骨性关节炎分级 AI',vendor:'推想',ver:'V1.1',type:'辅助诊断',modal:'MR',exam:'膝关节 MRI',ic:'🦵',color:'#4D7C0F',status:'已接入',
+  caps:['lesion_detected','lesion_location','long_diameter'],
+  need:{modal:'MR',part:'骨关节',scan:'平扫',series:'常规',thick:'≤4mm',extra:'无'}},
+ {id:'P18',name:'颅内动脉瘤检出 AI',vendor:'数坤科技',ver:'V1.3',type:'辅助诊断',modal:'CT',exam:'颅脑 CTA',ic:'🧠',color:'#9333EA',status:'已接入',
+  caps:['lesion_detected','long_diameter','lesion_location','lesion_localization'],
+  need:{modal:'CT',part:'颅脑',scan:'增强',series:'薄层',thick:'≤1mm',extra:'需头颈联合 CTA'}},
+ {id:'P19',name:'脑白质病变分级 AI',vendor:'汇医慧影',ver:'V1.0',type:'辅助诊断',modal:'MR',exam:'颅脑 MRI',ic:'🧠',color:'#0F766E',status:'测试中',
+  caps:['lesion_detected','lesion_volume','image_quality_score'],
+  need:{modal:'MR',part:'颅脑',scan:'平扫',series:'FLAIR/T2',thick:'≤6mm',extra:'需含 FLAIR'}},
+ {id:'P20',name:'影像质控 AI',vendor:'质控服务',ver:'V2.0',type:'质量控制',modal:'CT/MR/DR',exam:'通用',ic:'📐',color:'#475569',status:'已接入',
+  caps:['image_quality_score','fragment_artifact','qc_issue_count'],
+  need:{modal:'CT/MR/DR',part:'通用',scan:'不限',series:'不限',thick:'不限',extra:'无'}},
+ {id:'P21',name:'报告质控 AI',vendor:'质控服务',ver:'V1.5',type:'质量控制',modal:'文本',exam:'通用',ic:'📝',color:'#64748B',status:'已接入',
+  caps:['report_conclusion_score','contradiction_flag','qc_issue_count'],
+  need:{modal:'文本',part:'通用',scan:'不限',series:'不限',thick:'不限',extra:'需 AIR 报告文本'}}
 ];
 const VENDOR_COLORS={'联影':'#2A7FFF','推想':'#0E8A4C','影禾自研':'#6E3FD4','质控服务':'#F59E0B'};
 
@@ -1535,7 +1595,7 @@ let NM={step:0, name:'胸部 AIR 增强版（联合第三方小模型）', code:
         pick:{}, slot:{}, prio:{}, caseId:null, ran:false, running:false, published:[],
         rules:{}, rerr:{}, moff:{}, rout:{},
         corpusTab:'view', corpusCode:null, corpusOut:null, corpusErr:null, corpusTs:'',
-        pubScope:'all', pubSel:[],
+        pubScope:'all', pubSel:[], smQ:'', smF:{vendor:'',modal:'',part:'',type:''},
         mode:'new', editId:null, editVer:'', showList:true, models:[],
         sec:{findings:[], impression:[]}, editing:null, exSeq:0, uploads:[],
         para:{findings:null, impression:null}, paraOpen:{findings:0, impression:0}, paraBuf:null,
@@ -2090,7 +2150,7 @@ function nmMatch(c){
   if(isNaN(th) || th>parseFloat(a.need.thick.replace('≤',''))) bad.push('层厚超限（需 '+a.need.thick+'）');
   return bad;
 }
-/* ===== V3.29 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
+/* ===== V3.30 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
 function nmNow(){ const d=new Date(); const p=function(n){return ('0'+n).slice(-2);};
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
 function nmModels(){
@@ -2194,7 +2254,7 @@ function nmModelListCard(){
         </tr></thead>
         <tbody>${rows}</tbody></table></div></div>`;
 }
-/* ===== V3.29 发布范围与版本撤回 ===== */
+/* ===== V3.30 发布范围与版本撤回 ===== */
 function nmPubScopeUI(){
   const mode = NM.pubScope || 'all';
   const ORGS = ['浮梁县人民医院','江西省人民医院','金华广福医院','遂川县人民医院',
@@ -2778,7 +2838,7 @@ function nmCorpusCopy(){
   catch(e){ toast('复制失败，请手动选择文本'); }
 }
 
-/* ===== V3.29 最终报告输出：与输出语料同源（nmSections） ===== */
+/* ===== V3.30 最终报告输出：与输出语料同源（nmSections） ===== */
 function nmReportCol(sec){
   const t = sec === 'findings' ? '影像所见' : '诊断意见';
   const arr = (nmSections()[sec] || []).map(x => x.txt || '');
@@ -2788,7 +2848,7 @@ function nmReportCol(sec){
        || '<div class="mut" style="padding:6px 0">（无）</div>')
     + '</div></div>';
 }
-/* ===== V3.29 纯文本段落渲染（去占位符、去来源标注） ===== */
+/* ===== V3.30 纯文本段落渲染（去占位符、去来源标注） ===== */
 function nmPlainSec(findings, impression){
   function clean(arr){
     return (arr || [])
@@ -2813,7 +2873,52 @@ function nmPlainSec(findings, impression){
   }
   return blk('影像所见', findings) + blk('诊断意见', impression);
 }
-/* ===== V3.29 未绑定基础 AIR 提示 ===== */
+/* ===== V3.30 未绑定基础 AIR 提示 ===== */
+/* ===== V3.30 第三方小模型：筛选 / 列表 ===== */
+function nmSmList(){
+  const q = (NM.smQ||'').trim().toLowerCase(), f = NM.smF||{};
+  return nmSmalls().filter(p=>{
+    if(f.vendor && p.vendor!==f.vendor) return false;
+    if(f.modal  && p.modal!==f.modal)   return false;
+    if(f.part   && p.need.part!==f.part) return false;
+    if(f.type   && p.type!==f.type)      return false;
+    if(q){
+      const hay = [p.name, p.vendor, p.exam, p.type, p.modal,
+        p.caps.map(k=>{const c=CAPS.find(x=>x.key===k); return c?c.cn:k;}).join(' ')].join(' ').toLowerCase();
+      if(hay.indexOf(q) < 0) return false;
+    }
+    return true;
+  });
+}
+function nmSmRows(list){
+  if(!list.length) return '<tr><td colspan="7" class="smempty">没有匹配的小模型，试试调整筛选条件</td></tr>';
+  return list.map(p=>{
+    const ok = p.status==='已接入', on = NM.sel.indexOf(p.id)>=0;
+    const cn = p.caps.map(k=>{const c=CAPS.find(x=>x.key===k); return c?c.cn:k;}).join('、');
+    return '<tr class="smrow' + (on?' on':'') + (ok?'':' dis') + '"' + (ok?(' onclick="nmToggle(\'' + p.id + '\')"'):'') + '>'
+      + '<td><span class="chk' + (on?' on':'') + '"></span></td>'
+      + '<td><b>' + p.name + '</b> <span class="mut" style="font-size:11.5px">' + p.ver + '</span></td>'
+      + '<td>' + p.vendor + '</td>'
+      + '<td>' + p.modal + ' · ' + p.need.part + '</td>'
+      + '<td>' + p.caps.length + ' 个 <span class="mut" style="font-size:11px" title="' + cn + '">' + cn.slice(0,10) + (cn.length>10?'…':'') + '</span></td>'
+      + '<td class="mut" style="font-size:12px">' + p.need.scan + ' · ' + p.need.thick + '</td>'
+      + '<td><span class="tag ' + (ok?'green':'gray') + '">' + (ok?'已接入':'测试中') + '</span></td></tr>';
+  }).join('');
+}
+function nmSmRefresh(){
+  const tb = document.getElementById('smTb');
+  if(tb) tb.innerHTML = nmSmRows(nmSmList());
+  const c = document.getElementById('smCnt');
+  if(c) c.textContent = '共 ' + nmSmList().length + ' 个 · 已选 ' + NM.sel.length + ' 个';
+  const sel = document.getElementById('smSel');
+  if(sel){
+    const names = NM.sel.map(id=>{const p=nmSmall(id); return p?p.name:'';}).filter(Boolean);
+    sel.style.display = names.length ? '' : 'none';
+    sel.innerHTML = '已选：' + names.join('、');
+  }
+}
+function nmSmSet(k, v){ (NM.smF=NM.smF||{})[k]=v; nmSmRefresh(); }
+function nmClearSel(){ NM.sel=[]; NM.pick={}; NM.slot={}; NM.prio={}; NM.ran=false; renderNewModel(); toast('已清空所选小模型'); }
 function nmNoAirBar(){
   if(nmAir()) return '';
   return '<div class="noairbar">未绑定基础 AIR：本模型只整合第三方小模型结果，输出不含 AIR 原文；'
@@ -2880,31 +2985,38 @@ function nmStepBody(){
         <tbody>${trs}${noBind}</tbody></table></div></div>`;
   }
 if(NM.step===2){
-    const cards=sm.map(p=>{
-      const ok=p.status==='已接入', onSel=NM.sel.indexOf(p.id)>=0;
-      return `<div class="pcard2 ${onSel?'on':''}" style="${ok?'':'opacity:.5;cursor:not-allowed'}" ${ok?`onclick="nmToggle('${p.id}')"`:''}>
-        <div class="hd"><span class="ci" style="background:${p.color}">${p.ic}</span>
-          <div style="flex:1"><b>${p.name}</b><span>${p.vendor} · ${p.ver} · ${p.type}</span></div>
-          <span class="tag ${onSel?'green':(ok?'gray':'orange')}">${onSel?'已选':(ok?'可选':p.status)}</span></div>
-        <div class="row"><span>可提供字段</span><b>${p.caps.length} 个</b></div>
-        <div class="row"><span>数据需求</span><b>${p.need.part} / ${p.need.scan} / ${p.need.thick}</b></div>
-      </div>`;}).join('');
-    const ord=NM.sel.length? NM.sel.map((id,i)=>{const p=nmSmall(id);
-      return `<div class="nmord"><span class="idx">${i+1}</span>
-        <span class="ci" style="background:${p.color}">${p.ic}</span><b>${p.name}</b>
-        <span class="mut">${p.vendor} · ${p.caps.length} 个字段</span>
-        <button class="btn sm" onclick="nmMove('${id}',-1)" ${i===0?'disabled':''}>↑</button>
-        <button class="btn sm" onclick="nmMove('${id}',1)" ${i===NM.sel.length-1?'disabled':''}>↓</button>
-        <button class="btn sm" onclick="nmToggle('${id}')">移除</button></div>`;}).join('')
-      : '<div class="mut">尚未选择第三方小模型 —— 在上方点击即可加入（「测试中」的产品必须先完成接入）。</div>';
+    const list = nmSmList();
+    const VENDORS = [...new Set(sm.map(p=>p.vendor))];
+    const MODALS  = [...new Set(sm.map(p=>p.modal))];
+    const PARTS   = [...new Set(sm.map(p=>p.need.part))];
+    const TYPES   = [...new Set(sm.map(p=>p.type))];
+    const opt = (arr, cur) => '<option value="">全部</option>' + arr.map(v=>`<option value="${v}"${cur===v?' selected':''}>${v}</option>`).join('');
+    const selNames = NM.sel.map(id=>{const p=nmSmall(id); return p?p.name:'';}).filter(Boolean);
     return `<div class="card"><div class="ch">③ 选择第三方小模型（结果将继续拼入 AIR 报告）
         <span class="r"><span class="tag blue">已选 ${NM.sel.length} 个</span></span></div>
-      <div class="cb"><div class="pgrid">${cards}</div></div></div>
-      <div class="card"><div class="ch">已选小模型与顺序
+      <div class="cb">
+        <div class="smbar">
+          <input class="inp smq" id="smQ" value="${nmEsc(NM.smQ||'')}" placeholder="搜索小模型名称 / 厂商 / 字段"
+                 oninput="NM.smQ=this.value;nmSmRefresh()">
+          <select class="inp smf" onchange="nmSmSet('vendor',this.value)">${opt(VENDORS, NM.smF.vendor)}</select>
+          <select class="inp smf" onchange="nmSmSet('modal',this.value)">${opt(MODALS, NM.smF.modal)}</select>
+          <select class="inp smf" onchange="nmSmSet('part',this.value)">${opt(PARTS, NM.smF.part)}</select>
+          <select class="inp smf" onchange="nmSmSet('type',this.value)">${opt(TYPES, NM.smF.type)}</select>
+          <span class="smcnt" id="smCnt">共 ${list.length} 个 · 已选 ${NM.sel.length} 个</span>
+          ${NM.sel.length ? '<button class="btn sm" onclick="nmClearSel()">清空已选</button>' : ''}
         </div>
-      <div class="cb">${ord}</div></div>`;
+        ${selNames.length ? `<div class="smsel" id="smSel">已选：${selNames.join('、')}</div>` : ''}
+        <div class="tbl-wrap"><table class="tb smtbl">
+          <thead><tr>
+            <th style="width:48px"></th><th style="min-width:200px">小模型</th><th style="width:110px">厂商</th>
+            <th style="width:110px">模态 · 部位</th><th style="width:130px">可提供字段</th>
+            <th style="width:200px">数据需求</th><th style="width:80px">状态</th>
+          </tr></thead>
+          <tbody id="smTb">${nmSmRows(list)}</tbody>
+        </table></div>
+      </div></div>`;
   }
-  if(NM.step===3){
+if(NM.step===3){
     /* 按小模型分组：每个小模型一张卡，各自独立的字段勾选 + 工程规则 + 执行预览 */
     const gs=[], gi={};
     rows.forEach(r=>{ if(!gi[r.pid]){ gi[r.pid]={pid:r.pid, name:r.pname, rows:[]}; gs.push(gi[r.pid]); } gi[r.pid].rows.push(r); });
