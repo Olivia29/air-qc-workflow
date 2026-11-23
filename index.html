@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.44（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.43（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.44 工程规则代码输入 ===== */
+/* ===== V3.43 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.44 结构化语料输入（入参）===== */
+/* ===== V3.43 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,13 +456,13 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.44 规则执行结果 ===== */
+/* ===== V3.43 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
-/* ===== V3.44 入参代码输入 ===== */
+/* ===== V3.43 入参代码输入 ===== */
 .ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
 .ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
 .ymtab:hover{background:#F2F7FE}
@@ -471,7 +471,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymjson-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#EEF4FD;
   border-bottom:1px solid #E3ECF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .ym-ok{color:#12805C}
-/* ===== V3.44 报告输出列 & 入参单栏 ===== */
+/* ===== V3.43 报告输出列 & 入参单栏 ===== */
 .rpcol{border:1px solid #E3ECF9;border-radius:9px;background:#fff;overflow:hidden}
 .rpcol-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F3F7FD;
   border-bottom:1px solid #E3ECF9;font-size:13px;font-weight:700;color:#2E4A6B}
@@ -481,14 +481,14 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .rp-n{flex:0 0 16px;color:#A9BBD6;font-family:ui-monospace,Consolas,monospace;font-size:11px;padding-top:2px}
 .rp-t{flex:1;min-width:0}
 .ymgrid.one{grid-template-columns:1fr}
-/* ===== V3.44 发布范围 chips ===== */
+/* ===== V3.43 发布范围 chips ===== */
 .chips{display:flex;flex-wrap:wrap;gap:6px;max-width:780px}
 .chip{border:1px solid #D6E4F7;background:#fff;color:#4B6285;border-radius:14px;padding:3px 10px;
   font-size:12px;cursor:pointer;font-family:inherit;line-height:1.6}
 .chip:hover{background:#F2F7FE}
 .chip.on{background:#0B63CE;border-color:#0B63CE;color:#fff;font-weight:600}
 .chip-warn{color:#C0392B;font-size:12px;align-self:center}
-/* ===== V3.44 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
+/* ===== V3.43 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
 #pg-newmodel{padding:20px 24px 32px}
 #pg-newmodel .ph{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 16px}
 #pg-newmodel .ph h2{font-size:20px;font-weight:600;color:#1F2329;margin:0;display:flex;align-items:center;gap:8px}
@@ -558,7 +558,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel > div:last-child{margin-top:16px;position:sticky;bottom:0;background:#fff;
   border-top:1px solid #F0F1F3;padding:12px 0 4px;z-index:5}
 @media (max-width:1280px){#pg-newmodel .nmgrid{grid-template-columns:1fr}}
-/* ===== V3.44 基础 AIR 列表 ===== */
+/* ===== V3.43 基础 AIR 列表 ===== */
 #pg-newmodel .airtbl tbody tr.airrow{cursor:pointer}
 #pg-newmodel .airtbl tbody tr.airrow:hover td{background:#F5F9FF}
 #pg-newmodel .airtbl tbody tr.airrow.on td{background:#EEF5FF}
@@ -569,7 +569,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .radio.on:after{content:'';position:absolute;left:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#0B63CE}
 #pg-newmodel .noairbar{margin:0 0 16px;padding:10px 14px;border:1px solid #FFE0B2;background:#FFF8E1;
   color:#B25E00;font-size:12.5px;border-radius:6px;line-height:1.7}
-/* ===== V3.44 小模型筛选与表格 ===== */
+/* ===== V3.43 小模型筛选与表格 ===== */
 #pg-newmodel .smbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0 0 12px}
 #pg-newmodel .smbar .smq{width:240px}
 #pg-newmodel .smbar .smf{width:120px}
@@ -587,7 +587,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .chk.on:after{content:'';position:absolute;left:4px;top:1px;width:5px;height:9px;
   border:2px solid #fff;border-top:0;border-left:0;transform:rotate(42deg)}
 #pg-newmodel .smempty{padding:28px 0;text-align:center;color:#86909C;font-size:12.5px}
-/* ===== V3.44 第④步 模型整合 ===== */
+/* ===== V3.43 第④步 模型整合 ===== */
 #pg-newmodel .nmrc .ch{gap:10px}
 #pg-newmodel .nmrc-no{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;
   background:#E8F1FE;color:#0B63CE;font-size:12px;font-weight:600;letter-spacing:.2px}
@@ -622,11 +622,11 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .nmrunbox-b{padding:10px 14px 12px}
 #pg-newmodel .nmrunbox .nmrp-sec{font-size:11.5px;font-weight:600;color:#86909C;margin:6px 0 4px}
 #pg-newmodel .nmrunbox .nmrp-l{font-size:13px;color:#1F2329;line-height:1.9}
-/* ===== V3.44 第⑤步：本地上传 ===== */
+/* ===== V3.43 第⑤步：本地上传 ===== */
 #pg-newmodel .upz.drag{border-color:#0B63CE;background:#EEF5FF}
 #pg-newmodel .upempty{margin:6px 0 4px;padding:16px;border:1px dashed #E5E6EB;border-radius:6px;
   text-align:center;color:#86909C;font-size:12.5px;background:#FCFCFD}
-/* ===== V3.44 发布校验（两态清单） ===== */
+/* ===== V3.43 发布校验（两态清单） ===== */
 #pg-newmodel .ck-h{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:6px;margin-bottom:12px}
 #pg-newmodel .ck-h.ok{background:#F1FAF5;border:1px solid #D6EEE0}
 #pg-newmodel .ck-h.bad{background:#FEF4F3;border:1px solid #F7D9D5}
@@ -648,10 +648,10 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .ck-v{flex:1;color:#6B7684;font-size:12.5px}
 #pg-newmodel .ck-row.bad .ck-v{color:#C0392B}
 #pg-newmodel .ck-btns{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
-/* ===== V3.44 标准能力字段库：示例列 ===== */
+/* ===== V3.43 标准能力字段库：示例列 ===== */
 #pg-lib .smp{background:#F6F8FA;color:#4E5969;padding:1px 6px;border-radius:4px;font-size:11.5px;
   display:inline-block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
-/* ===== V3.44 字段库就地编辑 ===== */
+/* ===== V3.43 字段库就地编辑 ===== */
 #pg-lib .libtxt{cursor:text;border-bottom:1px dashed transparent;padding-bottom:1px}
 #pg-lib .libtxt:hover{border-bottom-color:#C9CDD4;color:#0B63CE}
 #pg-lib .smp{cursor:text}
@@ -660,7 +660,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-lib tr.editing td{background:#FFFDF5}
 #pg-lib .libact{white-space:nowrap}
 #pg-lib .libact .btn+.btn{margin-left:6px}
-/* ===== V3.44 字段库编辑 / 删除弹窗 ===== */
+/* ===== V3.43 字段库编辑 / 删除弹窗 ===== */
 #maskEdit .modal .mb label.lbl{display:block;font-size:11px;color:#8AA0C8;font-weight:600;margin:10px 0 4px}
 #maskEdit .modal .mb label.lbl:first-child{margin-top:0}
 #maskEdit .modal .mb .inp{margin:0}
@@ -670,12 +670,12 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-lib .libact .btn+.btn{margin-left:6px}
 #pg-lib .libact .btn.del{color:#C0392B;border-color:#F2C9C4}
 #pg-lib .libact .btn.del:hover{background:#FEF4F3;border-color:#E7A9A2}
-/* ===== V3.44 字段库检索 ===== */
+/* ===== V3.43 字段库检索 ===== */
 #pg-lib .libbar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #F0F1F3}
 #pg-lib .libbar .libq{width:300px;height:32px;line-height:32px;font-size:12.5px}
 #pg-lib .libbar .libf{width:120px;height:32px;font-size:12.5px}
 #pg-lib .libempty{padding:30px 0;text-align:center;color:#86909C;font-size:12.5px}
-/* ===== V3.44 AI 产品库：主从布局 ===== */
+/* ===== V3.43 AI 产品库：主从布局 ===== */
 #pg-prod .pdlayout{display:grid;grid-template-columns:minmax(520px,1.08fr) minmax(400px,.92fr);gap:14px;align-items:start}
 #pg-prod .pdl .cb{padding:0 !important}
 #pg-prod .prodbar{display:flex;gap:8px;padding:12px 14px;border-bottom:1px solid #F0F1F3;flex-wrap:wrap}
@@ -700,7 +700,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-prod .prodempty{padding:40px 0;text-align:center;color:#86909C;font-size:12.5px}
 #pg-prod .pdr{position:sticky;top:0}
 #pg-prod .pdr .cb .tabs{margin-bottom:10px}
-/* ===== V3.44 模型列表分页 ===== */
+/* ===== V3.43 模型列表分页 ===== */
 #pg-models .tb-desc{max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#4E5969;font-size:12.5px}
 #pg-models .pager{display:flex;align-items:center;gap:6px;justify-content:flex-end;padding:12px 16px;border-top:1px solid #F0F1F3}
 #pg-models .pginfo{margin-right:auto;font-size:12.5px;color:#86909C}
@@ -709,31 +709,6 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-models .pgbtn:hover{border-color:#0B63CE;color:#0B63CE}
 #pg-models .pgbtn.on{background:#0B63CE;border-color:#0B63CE;color:#fff}
 #pg-models .modempty{padding:34px 0;text-align:center;color:#86909C;font-size:12.5px}
-/* ===== V3.44 AI 产品 → 标准能力 映射表 ===== */
-#pg-prod .mapsum{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:10px 14px;margin-bottom:12px;
-  background:#F7FAFF;border:1px solid #E3ECF9;border-radius:6px}
-#pg-prod .msi{display:flex;align-items:baseline;gap:6px;font-size:12.5px;color:#5E7496}
-#pg-prod .msi b{font-size:17px;color:#1F2329;font-variant-numeric:tabular-nums}
-#pg-prod .msi b.warn{color:#C0392B}
-#pg-prod .msub{font-size:11px;color:#8AA0C8;margin-left:2px}
-#pg-prod .msnote{margin-left:auto;font-size:11.5px;color:#8AA0C8;max-width:420px;line-height:1.6}
-#pg-prod table.maptbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;table-layout:fixed}
-#pg-prod table.maptbl th{background:#FAFBFC;color:#86909C;font-weight:500;font-size:12.5px;padding:9px 10px;
-  border-bottom:1px solid #F0F1F3;text-align:left;white-space:nowrap}
-#pg-prod table.maptbl td{padding:8px 10px;border-bottom:1px solid #F5F6F7;vertical-align:middle;
-  overflow:hidden;text-overflow:ellipsis}
-#pg-prod table.maptbl tbody tr:hover td{background:#F5F9FF}
-#pg-prod table.maptbl tr.unmrow td{background:#FFFCF5}
-#pg-prod .msrc{background:#F2F3F5;color:#4E5969;padding:1px 6px;border-radius:3px;font-size:11.5px}
-#pg-prod .mk{background:#E4EEFF;color:#1A5FD0;padding:1px 6px;border-radius:3px;font-size:11.5px}
-#pg-prod .mtypen{display:block;font-size:11px;color:#A0A8B4;margin-top:2px}
-#pg-prod .mun{color:#C0392B;font-size:12.5px;margin-right:6px}
-#pg-prod .munbtn{height:24px;font-size:11.5px;padding:0 8px}
-#pg-prod .maprule{font-size:12px;color:#5E7496;white-space:normal}
-#pg-prod .mapfoot{margin-top:10px;font-size:11.5px;color:#8AA0C8}
-#pg-prod .capwrap{margin-top:14px;border-top:1px dashed #E3ECF9;padding-top:10px}
-#pg-prod .capwrap summary{cursor:pointer;font-size:12.5px;color:#5E7496;outline:none;margin-bottom:10px}
-#pg-prod .capwrap summary::-webkit-details-marker{color:#B6C4DA}
 </style>
 
 </head>
@@ -1277,45 +1252,11 @@ function pdTab(t,el,keep){
       <div style="border:1px solid #E3ECF9;border-radius:9px;padding:10px 12px;background:#FAFCFF"><div style="font-size:10.5px;color:#8AA0C8;font-weight:700">适用检查</div><div style="margin-top:4px;color:#35507E">${p.exam}</div></div>
     </div>`;
   }else if(t==='caps'){
-    const mp = nmMaps(p);
-    const mapped = mp.filter(x=>x.key), unm = mp.filter(x=>!x.key);
-    const cover = mp.length ? Math.round(mapped.length*100/mp.length) : 0;
-    const mapRows = mp.map(x=>{
-      const keyCell = x.key
-        ? '<code class="mono mk">' + x.key + '</code>'
-        : '<span class="mun">— 未映射</span>'
-            + '<button class="btn sm munbtn" onclick="openNewCap()">新增为标准能力</button>';
-      const cnCell = x.key ? ('<b>' + x.cn + '</b><span class="mtypen">' + x.ctype + '</span>') : '<span class="mut">—</span>';
-      return '<tr class="' + (x.key ? '' : 'unmrow') + '">'
-        + '<td><code class="mono msrc">' + x.src + '</code></td>'
-        + '<td class="mut" style="font-size:12px">' + x.type + '</td>'
-        + '<td>' + keyCell + '</td>'
-        + '<td>' + cnCell + '</td>'
-        + '<td class="maprule">' + x.rule + '</td>'
-        + '<td class="mono" style="font-size:12px">' + nmEsc(x.sample) + '</td>'
-        + '<td>' + (x.key ? '<span class="tag green">已映射</span>' : '<span class="tag orange">未映射</span>') + '</td></tr>';
-    }).join('');
-    b.innerHTML = `
-      <div class="mapsum">
-        <div class="msi"><span>已映射</span><b>${mapped.length}</b></div>
-        <div class="msi"><span>未映射</span><b class="${unm.length?'warn':''}">${unm.length}</b></div>
-        <div class="msi"><span>覆盖率</span><b>${cover}%</b><span class="msub">${mapped.length} / ${mp.length}</span></div>
-        <div class="msnote">厂商原始字段 → 标准能力字段；未映射字段需先在「标准能力字段库」登记，登记后自动可映射</div>
-      </div>
-      <table class="tb maptbl">
-        <thead><tr>
-          <th style="width:205px">厂商原始字段</th><th style="width:84px">原始类型</th>
-          <th style="width:205px">标准能力字段</th><th style="width:150px">中文名 · 类型</th>
-          <th>映射规则</th><th style="width:108px">示例值</th><th style="width:96px">状态</th>
-        </tr></thead>
-        <tbody>${mapRows}</tbody>
-      </table>
-      <div class="mapfoot">已支持标准能力 ${p.caps.length} 项；映射关系随产品接入配置保存，模型中心按标准 Key 取数</div>
-      <details class="capwrap">
-        <summary>已支持的标准能力（${p.caps.length}）<span class="mut">· 点卡片可增减</span></summary>
-        <div class="capgrid">${CAPS.map(c=>{const on=p.caps.includes(c.key);
-          return `<div class="capitem ${on?'on':''}" onclick="toggleCap('${p.id}','${c.key}')"><span class="bx">${on?'✓':''}</span><span><span class="cn">${c.cn}</span><span class="ck">${c.key}</span></span></div>`;}).join('')}</div>
-      </details>`;
+    b.innerHTML=`<div style="font-size:12px;color:#5E7496;margin-bottom:10px">配置"这个 AI 支持哪些<b>标准能力</b>"，形成该产品在平台内的 Capability Profile（点击可切换）：</div>
+      <div class="capgrid">${CAPS.map(c=>{const on=p.caps.includes(c.key);
+        return `<div class="capitem ${on?'on':''}" onclick="toggleCap('${p.id}','${c.key}')"><span class="bx">${on?'✓':''}</span><span><span class="cn">${c.cn}</span><span class="ck">${c.key}</span></span></div>`;}).join('')}</div>
+      <div style="margin-top:14px;font-size:12px;color:#5E7496"><b>能力清单预览</b>（实际返回结果的 Key 必须来自标准能力库）：</div>
+      <div class="jsonbox" style="margin-top:6px">${capJson(p)}</div>`;
   }else{
     const n=p.need;
     b.innerHTML=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
@@ -1325,48 +1266,9 @@ function pdTab(t,el,keep){
       <div style="margin-top:12px"><button class="btn sm" onclick="goView('data');selectDataProd('${p.id}')">查看平台匹配链路 →</button></div>`;
   }
 }
-/* ===== V3.44 AI 产品 → 标准能力 字段映射 ===== */
-const NM_UNMAPPED = {
-  '联影':      ['riskLevel', 'followUpMonths'],
-  '联影智能':  ['confidenceScore', 'seriesUid'],
-  '推想':      ['piRadsScore', 'aiScore'],
-  '深睿医疗':  ['stoneDensity', 'diameterMax'],
-  '达摩院':    ['lesionStage', 'suggestedBiopsy'],
-  '数坤科技':  ['stenosisDegree', 'calciumScoreTotal'],
-  '汇医慧影':  ['fazekasGrade', 'whiteMatterVolume'],
-  '质控服务':  ['qcRuleId'],
-  '影禾自研':  ['traceId'],
-  '_default':  ['extField']
-};
-function nmVendorField(vendor, key){
-  const camel = key.replace(/_([a-z])/g, (m,c)=>c.toUpperCase());
-  if(vendor === '联影' || vendor === '联影智能') return camel;
-  if(vendor === '推想')      return 'infer_' + key;
-  if(vendor === '深睿医疗')  return 'dr_' + key;
-  if(vendor === '达摩院')    return 'result.' + camel;
-  if(vendor === '数坤科技')  return 'sk' + camel.charAt(0).toUpperCase() + camel.slice(1);
-  if(vendor === '汇医慧影')  return 'hy_' + key;
-  return key;
-}
-function nmMapRule(key, type){
-  if(key === 'malignancy_probability') return '0–1 概率；若返回百分数则 ÷100；超界置空';
-  if(type === 'boolean') return '1/0、true/false、"是/否" 归一化为布尔';
-  if(type === 'int')     return '四舍五入取整；负数置 0';
-  if(type === 'number')  return '数值直取；单位与标准一致，缺单位按字段库取值';
-  if(type === 'enum')    return '枚举值映射到标准枚举（见字段库语义说明）';
-  if(type === 'text')    return '文本直取；超长保留前 2000 字';
-  return '文本直取；去首尾空格，超长截断 80 字';
-}
-function nmMaps(p){
-  const rows = p.caps.map(k=>{
-    const c = CAPS.find(x=>x.key===k) || {key:k, cn:k, type:'string', sample:''};
-    return {src:nmVendorField(p.vendor, k), type:c.type, key:k, cn:c.cn, ctype:c.type,
-            rule:nmMapRule(k, c.type), sample:(c.sample==null?'':String(c.sample))};
-  });
-  (NM_UNMAPPED[p.vendor] || NM_UNMAPPED['_default']).forEach(x=>{
-    rows.push({src:x, type:'string', key:'', cn:'', ctype:'', rule:'标准库无对应能力，需先新增', sample:'—'});
-  });
-  return rows;
+function capJson(p){
+  const lines=p.caps.map(k=>'      "'+k+'": <值>');
+  return '{\n  "task_info": { "task_id": "T-2026-0914-001", "ai_product": "'+p.name+'", "version": "'+p.ver+'" },\n  "lesions": [\n    {\n'+lines.join(',\n')+'\n    }\n  ]\n}';
 }
 function toggleCap(pid,key){
   const p=PRODUCTS.find(x=>x.id===pid);
@@ -2567,7 +2469,7 @@ function nmMatch(c){
   if(isNaN(th) || th>parseFloat(a.need.thick.replace('≤',''))) bad.push('层厚超限（需 '+a.need.thick+'）');
   return bad;
 }
-/* ===== V3.44 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
+/* ===== V3.43 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
 function nmNow(){ const d=new Date(); const p=function(n){return ('0'+n).slice(-2);};
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
 function nmModels(){
@@ -2697,7 +2599,7 @@ function nmModelListCard(){
         <tbody>${body}</tbody></table>
         ${pager}</div></div>`;
 }
-/* ===== V3.44 发布范围与版本撤回 ===== */
+/* ===== V3.43 发布范围与版本撤回 ===== */
 function nmPubScopeUI(){
   const mode = NM.pubScope || 'all';
   const ORGS = ['浮梁县人民医院','江西省人民医院','金华广福医院','遂川县人民医院',
@@ -3280,7 +3182,7 @@ function nmCorpusCopy(){
   catch(e){ toast('复制失败，请手动选择文本'); }
 }
 
-/* ===== V3.44 最终报告输出：与输出语料同源（nmSections） ===== */
+/* ===== V3.43 最终报告输出：与输出语料同源（nmSections） ===== */
 function nmReportCol(sec){
   const t = sec === 'findings' ? '影像所见' : '诊断意见';
   const arr = (nmSections()[sec] || []).map(x => x.txt || '');
@@ -3290,7 +3192,7 @@ function nmReportCol(sec){
        || '<div class="mut" style="padding:6px 0">（无）</div>')
     + '</div></div>';
 }
-/* ===== V3.44 纯文本段落渲染（去占位符、去来源标注） ===== */
+/* ===== V3.43 纯文本段落渲染（去占位符、去来源标注） ===== */
 function nmPlainSec(findings, impression){
   function clean(arr){
     return (arr || [])
@@ -3315,8 +3217,8 @@ function nmPlainSec(findings, impression){
   }
   return blk('影像所见', findings) + blk('诊断意见', impression);
 }
-/* ===== V3.44 未绑定基础 AIR 提示 ===== */
-/* ===== V3.44 第三方小模型：筛选 / 列表 ===== */
+/* ===== V3.43 未绑定基础 AIR 提示 ===== */
+/* ===== V3.43 第三方小模型：筛选 / 列表 ===== */
 function nmSmList(){
   const q = (NM.smQ||'').trim().toLowerCase(), f = NM.smF||{};
   return nmSmalls().filter(p=>{
@@ -3361,7 +3263,7 @@ function nmSmRefresh(){
 }
 function nmSmSet(k, v){ (NM.smF=NM.smF||{})[k]=v; nmSmRefresh(); }
 function nmClearSel(){ NM.sel=[]; NM.pick={}; NM.slot={}; NM.prio={}; NM.ran=false; renderNewModel(); toast('已清空所选小模型'); }
-/* ===== V3.44 发布校验（两态清单）+ 保存草稿 ===== */
+/* ===== V3.43 发布校验（两态清单）+ 保存草稿 ===== */
 function nmChecks(){
   const rowsOn = nmRows().filter(r=>r.on);
   const errM = Object.keys(NM.rerr).filter(k=>NM.rerr[k]);
