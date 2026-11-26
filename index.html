@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 原型版本 V3.57（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
+<!-- 原型版本 V3.58（2026-10-28）：模型编码改为系统自动生成（MIIA-{类型码}-{YYMMDD}-{3位流水}）；删除「版本」「适用检查项目」「模态」三个字段，适用检查项目与模态改为随基础 AIR 自动带出；删除步骤②的「该 AIR 的报告输出结构」模块 -->
 <title>MIIA-AI·模型中心</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -418,7 +418,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:12.5px}
 .upz:hover{border-color:#2A7FFF;background:#F2F8FF}
 .upz .upic{width:34px;height:34px;border-radius:9px;background:#E4EEFF;color:#1A5FD0;
   display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-/* ===== V3.57 工程规则代码输入 ===== */
+/* ===== V3.58 工程规则代码输入 ===== */
 .nmintro{padding:12px 18px;font-size:12.5px;color:#5E7496;line-height:1.95}
 .nmcodebox{margin:0 18px 16px;border:1px solid #E3ECF9;border-radius:9px;background:#F8FAFE;overflow:hidden}
 .nmcodeh{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#EEF4FD;border-bottom:1px solid #E3ECF9;font-size:12.5px;color:#2E4A6B}
@@ -436,7 +436,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .nmrp-sec{padding:6px 12px 0;font-size:11px;color:#8AA0C8;letter-spacing:.4px}
 .nmrp-l{padding:2px 12px;font-size:12.5px;color:#2E4A6B;line-height:1.85}
 @media (max-width:1100px){.nmrpwrap{grid-template-columns:1fr}}
-/* ===== V3.57 结构化语料输入（入参）===== */
+/* ===== V3.58 结构化语料输入（入参）===== */
 .ymintro{padding:10px 18px 0;font-size:12.5px;color:#5E7496;line-height:1.95}
 .ymgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;padding:12px 18px 0}
 .ymcol{border:1px solid #E3ECF9;border-radius:9px;background:#FBFDFF;overflow:hidden;align-self:start}
@@ -456,13 +456,13 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymdiff{margin:12px 18px 16px;padding:9px 12px;border-radius:8px;background:#F7FAFE;border:1px solid #E4EDF9;font-size:12px;color:#4B6285;line-height:1.9}
 .ym-warn{color:#C0392B}
 @media (max-width:1180px){.ymgrid{grid-template-columns:1fr}}
-/* ===== V3.57 规则执行结果 ===== */
+/* ===== V3.58 规则执行结果 ===== */
 .nmcodehint{padding:7px 12px;background:#FFF9E8;color:#8A6100;font-size:11.5px;border-top:1px solid #F3E6C4}
 .nmrunbox{margin:0 18px 16px;border:1px solid #DCE8F5;border-radius:9px;background:#FCFDFF;overflow:hidden}
 .nmrunbox-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;
   background:#F3F8FE;border-bottom:1px solid #E4EDF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .nmrunbox-h .mut{font-weight:400;font-size:11px;color:#7E93B3}
-/* ===== V3.57 入参代码输入 ===== */
+/* ===== V3.58 入参代码输入 ===== */
 .ymtabs{display:inline-flex;border:1px solid #D6E4F7;border-radius:6px;overflow:hidden;margin-right:8px;vertical-align:middle}
 .ymtab{border:0;background:#fff;color:#4B6285;font-size:12px;padding:5px 11px;cursor:pointer;font-family:inherit}
 .ymtab:hover{background:#F2F7FE}
@@ -471,7 +471,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .ymjson-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#EEF4FD;
   border-bottom:1px solid #E3ECF9;font-size:12px;color:#2E4A6B;font-weight:700}
 .ym-ok{color:#12805C}
-/* ===== V3.57 报告输出列 & 入参单栏 ===== */
+/* ===== V3.58 报告输出列 & 入参单栏 ===== */
 .rpcol{border:1px solid #E3ECF9;border-radius:9px;background:#fff;overflow:hidden}
 .rpcol-h{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#F3F7FD;
   border-bottom:1px solid #E3ECF9;font-size:13px;font-weight:700;color:#2E4A6B}
@@ -481,14 +481,14 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 .rp-n{flex:0 0 16px;color:#A9BBD6;font-family:ui-monospace,Consolas,monospace;font-size:11px;padding-top:2px}
 .rp-t{flex:1;min-width:0}
 .ymgrid.one{grid-template-columns:1fr}
-/* ===== V3.57 发布范围 chips ===== */
+/* ===== V3.58 发布范围 chips ===== */
 .chips{display:flex;flex-wrap:wrap;gap:6px;max-width:780px}
 .chip{border:1px solid #D6E4F7;background:#fff;color:#4B6285;border-radius:14px;padding:3px 10px;
   font-size:12px;cursor:pointer;font-family:inherit;line-height:1.6}
 .chip:hover{background:#F2F7FE}
 .chip.on{background:#0B63CE;border-color:#0B63CE;color:#fff;font-weight:600}
 .chip-warn{color:#C0392B;font-size:12px;align-self:center}
-/* ===== V3.57 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
+/* ===== V3.58 创建模型页 · 传统后台视觉规范（Ant Design 风格） ===== */
 #pg-newmodel{padding:20px 24px 32px}
 #pg-newmodel .ph{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 16px}
 #pg-newmodel .ph h2{font-size:20px;font-weight:600;color:#1F2329;margin:0;display:flex;align-items:center;gap:8px}
@@ -558,7 +558,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel > div:last-child{margin-top:16px;position:sticky;bottom:0;background:#fff;
   border-top:1px solid #F0F1F3;padding:12px 0 4px;z-index:5}
 @media (max-width:1280px){#pg-newmodel .nmgrid{grid-template-columns:1fr}}
-/* ===== V3.57 基础 AIR 列表 ===== */
+/* ===== V3.58 基础 AIR 列表 ===== */
 #pg-newmodel .airtbl tbody tr.airrow{cursor:pointer}
 #pg-newmodel .airtbl tbody tr.airrow:hover td{background:#F5F9FF}
 #pg-newmodel .airtbl tbody tr.airrow.on td{background:#EEF5FF}
@@ -569,7 +569,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .radio.on:after{content:'';position:absolute;left:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#0B63CE}
 #pg-newmodel .noairbar{margin:0 0 16px;padding:10px 14px;border:1px solid #FFE0B2;background:#FFF8E1;
   color:#B25E00;font-size:12.5px;border-radius:6px;line-height:1.7}
-/* ===== V3.57 小模型筛选与表格 ===== */
+/* ===== V3.58 小模型筛选与表格 ===== */
 #pg-newmodel .smbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:0 0 12px}
 #pg-newmodel .smbar .smq{width:240px}
 #pg-newmodel .smbar .smf{width:120px}
@@ -587,7 +587,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .chk.on:after{content:'';position:absolute;left:4px;top:1px;width:5px;height:9px;
   border:2px solid #fff;border-top:0;border-left:0;transform:rotate(42deg)}
 #pg-newmodel .smempty{padding:28px 0;text-align:center;color:#86909C;font-size:12.5px}
-/* ===== V3.57 第④步 模型整合 ===== */
+/* ===== V3.58 第④步 模型整合 ===== */
 #pg-newmodel .nmrc .ch{gap:10px}
 #pg-newmodel .nmrc-no{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;
   background:#E8F1FE;color:#0B63CE;font-size:12px;font-weight:600;letter-spacing:.2px}
@@ -622,11 +622,11 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .nmrunbox-b{padding:10px 14px 12px}
 #pg-newmodel .nmrunbox .nmrp-sec{font-size:11.5px;font-weight:600;color:#86909C;margin:6px 0 4px}
 #pg-newmodel .nmrunbox .nmrp-l{font-size:13px;color:#1F2329;line-height:1.9}
-/* ===== V3.57 第⑤步：本地上传 ===== */
+/* ===== V3.58 第⑤步：本地上传 ===== */
 #pg-newmodel .upz.drag{border-color:#0B63CE;background:#EEF5FF}
 #pg-newmodel .upempty{margin:6px 0 4px;padding:16px;border:1px dashed #E5E6EB;border-radius:6px;
   text-align:center;color:#86909C;font-size:12.5px;background:#FCFCFD}
-/* ===== V3.57 发布校验（两态清单） ===== */
+/* ===== V3.58 发布校验（两态清单） ===== */
 #pg-newmodel .ck-h{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:6px;margin-bottom:12px}
 #pg-newmodel .ck-h.ok{background:#F1FAF5;border:1px solid #D6EEE0}
 #pg-newmodel .ck-h.bad{background:#FEF4F3;border:1px solid #F7D9D5}
@@ -648,10 +648,10 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-newmodel .ck-v{flex:1;color:#6B7684;font-size:12.5px}
 #pg-newmodel .ck-row.bad .ck-v{color:#C0392B}
 #pg-newmodel .ck-btns{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
-/* ===== V3.57 标准能力字段库：示例列 ===== */
+/* ===== V3.58 标准能力字段库：示例列 ===== */
 #pg-lib .smp{background:#F6F8FA;color:#4E5969;padding:1px 6px;border-radius:4px;font-size:11.5px;
   display:inline-block;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
-/* ===== V3.57 字段库就地编辑 ===== */
+/* ===== V3.58 字段库就地编辑 ===== */
 #pg-lib .libtxt{cursor:text;border-bottom:1px dashed transparent;padding-bottom:1px}
 #pg-lib .libtxt:hover{border-bottom-color:#C9CDD4;color:#0B63CE}
 #pg-lib .smp{cursor:text}
@@ -660,7 +660,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-lib tr.editing td{background:#FFFDF5}
 #pg-lib .libact{white-space:nowrap}
 #pg-lib .libact .btn+.btn{margin-left:6px}
-/* ===== V3.57 字段库编辑 / 删除弹窗 ===== */
+/* ===== V3.58 字段库编辑 / 删除弹窗 ===== */
 #maskEdit .modal .mb label.lbl{display:block;font-size:11px;color:#8AA0C8;font-weight:600;margin:10px 0 4px}
 #maskEdit .modal .mb label.lbl:first-child{margin-top:0}
 #maskEdit .modal .mb .inp{margin:0}
@@ -670,18 +670,24 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-lib .libact .btn+.btn{margin-left:6px}
 #pg-lib .libact .btn.del{color:#C0392B;border-color:#F2C9C4}
 #pg-lib .libact .btn.del:hover{background:#FEF4F3;border-color:#E7A9A2}
-/* ===== V3.57 字段库检索 ===== */
+/* ===== V3.58 字段库检索 ===== */
 #pg-lib .libbar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #F0F1F3}
 #pg-lib .libbar .libq{width:300px;height:32px;line-height:32px;font-size:12.5px}
 #pg-lib .libbar .libf{width:120px;height:32px;font-size:12.5px}
 #pg-lib .libempty{padding:30px 0;text-align:center;color:#86909C;font-size:12.5px}
-#pg-lib .libpager{display:flex;align-items:center;gap:6px;justify-content:flex-end;padding:12px 16px;border-top:1px solid #F0F1F3}
+#pg-lib .libpager{display:flex;align-items:center;gap:6px;justify-content:flex-end;padding:14px 16px;border-top:1px solid #F0F1F3;flex-wrap:wrap}
 #pg-lib .libpager:empty{display:none}
-#pg-lib .libpager .pginfo{margin-right:auto;color:#4E5969;font-size:12.5px}
-#pg-lib .libpager .pgbtn{min-width:28px;height:28px;padding:0 8px;border:1px solid #E5E6EB;background:#fff;border-radius:6px;color:#4E5969;font-size:12.5px;cursor:pointer;font-family:inherit}
-#pg-lib .libpager .pgbtn:hover:not(:disabled){border-color:#0B63CE;color:#0B63CE}
+#pg-lib .libpager .pginfo{color:#4E5969;font-size:12.5px;margin-right:2px}
+#pg-lib .libpager .pgbtn{min-width:30px;height:30px;padding:0 6px;border:1px solid #D9DDE3;background:#fff;border-radius:4px;color:#4E5969;font-size:12.5px;line-height:1;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center}
+#pg-lib .libpager .pgbtn.nav{font-size:13px;letter-spacing:0}
+#pg-lib .libpager .pgbtn:hover:not(:disabled):not(.on){border-color:#0B63CE;color:#0B63CE}
 #pg-lib .libpager .pgbtn.on{background:#0B63CE;border-color:#0B63CE;color:#fff;font-weight:600}
-#pg-lib .libpager .pgbtn:disabled{opacity:.45;cursor:not-allowed}
+#pg-lib .libpager .pgbtn:disabled{color:#C3C8D0;border-color:#EDEFF2;cursor:not-allowed;background:#FAFBFC}
+#pg-lib .libpager .pgmore{min-width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;color:#86909C;font-size:12.5px}
+#pg-lib .libpager .pgsel{height:30px;border:1px solid #D9DDE3;border-radius:4px;background:#fff;color:#4E5969;font-size:12.5px;padding:0 4px;font-family:inherit;cursor:pointer}
+#pg-lib .libpager .pgjump{display:inline-flex;align-items:center;gap:5px;color:#4E5969;font-size:12.5px;margin-left:4px}
+#pg-lib .libpager .pginput{width:46px;height:30px;border:1px solid #D9DDE3;border-radius:4px;text-align:center;font-size:12.5px;color:#1D2129;font-family:inherit;outline:none}
+#pg-lib .libpager .pginput:focus{border-color:#0B63CE;box-shadow:0 0 0 2px rgba(11,99,206,.12)}
 /* ===== AI 工具库：主从布局 ===== */
 #pg-prod .pdlayout{display:grid;grid-template-columns:minmax(520px,1.08fr) minmax(400px,.92fr);gap:14px;align-items:start}
 #pg-prod .pdl .cb{padding:0 !important}
@@ -707,7 +713,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-prod .prodempty{padding:40px 0;text-align:center;color:#86909C;font-size:12.5px}
 #pg-prod .pdr{position:sticky;top:0}
 #pg-prod .pdr .cb .tabs{margin-bottom:10px}
-/* ===== V3.57 模型列表分页 ===== */
+/* ===== V3.58 模型列表分页 ===== */
 #pg-models .tb-desc{max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#4E5969;font-size:12.5px}
 #pg-models .pager{display:flex;align-items:center;gap:6px;justify-content:flex-end;padding:12px 16px;border-top:1px solid #F0F1F3}
 #pg-models .pginfo{margin-right:auto;font-size:12.5px;color:#86909C}
@@ -716,7 +722,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-models .pgbtn:hover{border-color:#0B63CE;color:#0B63CE}
 #pg-models .pgbtn.on{background:#0B63CE;border-color:#0B63CE;color:#fff}
 #pg-models .modempty{padding:34px 0;text-align:center;color:#86909C;font-size:12.5px}
-/* ===== V3.57 接口字段 ↔ 标准能力映射 ===== */
+/* ===== V3.58 接口字段 ↔ 标准能力映射 ===== */
   background:#F7FAFF;border:1px solid #E3ECF9;border-radius:6px}
 #pg-prod table.maptbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;table-layout:fixed}
 #pg-prod table.maptbl th{background:#FAFBFC;color:#86909C;font-weight:500;font-size:12.5px;padding:9px 10px;
@@ -733,7 +739,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-prod .mapfoot{margin-top:10px;font-size:11.5px;color:#8AA0C8}
 #pg-prod .capwrap{margin-top:14px;border-top:1px dashed #E3ECF9;padding-top:10px}
 #pg-prod .capwrap summary{cursor:pointer;font-size:12.5px;color:#5E7496;outline:none;margin-bottom:10px}
-/* ===== V3.57.1 映射行卡片化（右栏 650px 下可读） ===== */
+/* ===== V3.58.1 映射行卡片化（右栏 650px 下可读） ===== */
 #pg-prod .maplist{border:1px solid #EEF0F3;border-radius:6px;overflow:hidden;background:#fff}
 #pg-prod .maprow{padding:10px 12px;border-bottom:1px solid #F2F4F7}
 #pg-prod .maprow:last-child{border-bottom:0}
@@ -748,7 +754,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-prod .marrow{color:#B6C4DA;font-size:13px;flex:none}
 #pg-prod .mapsel{height:30px;line-height:30px;font-size:12.5px;padding:0 8px;flex:1;min-width:0;box-sizing:border-box}
 #pg-prod .mcn{font-size:12px;color:#3D4A5C;flex:none;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* ===== V3.57 勾选标准能力 → 关联接口字段 ===== */
+/* ===== V3.58 勾选标准能力 → 关联接口字段 ===== */
 #pg-prod .capbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 #pg-prod .capkw{width:230px;height:30px;line-height:30px;font-size:12.5px}
 #pg-prod .capbar .btn.on{background:#0B63CE;border-color:#0B63CE;color:#fff}
@@ -773,7 +779,7 @@ textarea.nmcode{display:block;width:100%;box-sizing:border-box;min-height:190px;
 #pg-prod .cr-key{white-space:nowrap}
 #pg-prod .caprow:not(.on) .cr-cn{color:#5E7496;font-weight:500}
 #pg-prod .caprow:not(.on) .cr-type{color:#B6C4DA}
-/* ===== V3.57 批量导入弹窗 ===== */
+/* ===== V3.58 批量导入弹窗 ===== */
 .imp-modal{max-width:560px}
 .imp-modal .mh{display:flex;align-items:center;justify-content:space-between}
 .imp-modal .mclose{cursor:pointer;color:#A0A8B4;font-size:18px;line-height:1;padding:0 2px}
@@ -1356,7 +1362,7 @@ function pdTab(t,el,keep){
     `;
   }
 }
-/* ===== V3.57 接口字段 ↔ 标准能力 映射 ===== */
+/* ===== V3.58 接口字段 ↔ 标准能力 映射 ===== */
 const NM_PREFIX = {
   '联影':     'data.lesions[]',
   '联影智能': 'data.lesions[]',
@@ -1517,7 +1523,7 @@ function libFiltered(){
     return hay.indexOf(q)>=0;
   });
 }
-/* ===== V3.57 标准能力批量导入 ===== */
+/* ===== V3.58 标准能力批量导入 ===== */
 let IMP_FILE = null;
 function openImp(){
   IMP_FILE = null;
@@ -1613,8 +1619,32 @@ function impStart(){
   };
   reader.readAsText(IMP_FILE, 'utf-8');
 }
-let LIB_PAGE=1; const LIB_PS=10;
+let LIB_PAGE=1; let LIB_PS=10;
+const LIB_PS_OPTS=[10,20,50,100];
 function libPageGo(n){ LIB_PAGE=n; renderLib(); }
+function libPageSize(v){
+  const n=Number(v)||10;
+  LIB_PS=n; LIB_PAGE=1; renderLib();
+}
+function libJumpGo(el){
+  const pages=Math.max(1, Math.ceil(libFiltered().length/LIB_PS));
+  let n=parseInt(String(el.value||'').replace(/\D/g,''),10);
+  if(!n||isNaN(n)) n=1;
+  if(n<1) n=1; if(n>pages) n=pages;
+  el.value=n;
+  LIB_PAGE=n; renderLib();
+}
+function libPageNums(cur, pages){
+  if(pages<=7){ const a=[]; for(let i=1;i<=pages;i++) a.push(i); return a; }
+  const set=new Set([1,pages,cur]);
+  for(let d=1;d<=2;d++){ if(cur-d>=1) set.add(cur-d); if(cur+d<=pages) set.add(cur+d); }
+  if(cur<=4){ [1,2,3,4,5,6].forEach(n=>set.add(n)); }
+  if(cur>=pages-3){ for(let n=pages-5;n<=pages;n++) if(n>=1) set.add(n); }
+  const arr=[...set].filter(n=>n>=1&&n<=pages).sort((a,b)=>a-b);
+  const out=[];
+  arr.forEach((n,i)=>{ if(i>0 && n-arr[i-1]>1) out.push('…'); out.push(n); });
+  return out;
+}
 function renderLib(){
   const list=libFiltered(), filtering=!!(LIB_Q);
   const size=LIB_PS, total=list.length;
@@ -1650,15 +1680,22 @@ function renderLib(){
   }).join('');
   const pg=$('#libPager');
   if(pg){
-    if(total<=size){ pg.innerHTML=''; }
-    else{
-      let nums='';
-      for(let i=1;i<=pages;i++) nums+='<button class="pgbtn'+(i===cur?' on':'')+'" onclick="libPageGo('+i+')">'+i+'</button>';
-      pg.innerHTML='<span class="pginfo">共 '+total+' 条</span>'
-        +'<button class="pgbtn" '+(cur===1?'disabled':'')+' onclick="libPageGo('+(cur-1)+')">上一页</button>'
-        + nums
-        + '<button class="pgbtn" '+(cur===pages?'disabled':'')+' onclick="libPageGo('+(cur+1)+')">下一页</button>';
-    }
+    const multi=pages>1;
+    const nums=multi ? libPageNums(cur,pages).map(n=>{
+      return (n==='…') ? '<span class="pgmore">…</span>'
+        : '<button class="pgbtn'+(n===cur?' on':'')+'" onclick="libPageGo('+n+')">'+n+'</button>';
+    }).join('') : '';
+    const sel='<select class="pgsel" onchange="libPageSize(this.value)">'
+      + LIB_PS_OPTS.map(v=>'<option value="'+v+'"'+(v===size?' selected':'')+'>'+v+'条/页</option>').join('')
+      + '</select>';
+    pg.innerHTML='<span class="pginfo">共 '+total+' 条</span>'
+      + (multi
+          ? '<button class="pgbtn nav" '+(cur===1?'disabled':'')+' onclick="libPageGo('+(cur-1)+')" title="上一页">&lt;</button>'
+            + nums
+            + '<button class="pgbtn nav" '+(cur===pages?'disabled':'')+' onclick="libPageGo('+(cur+1)+')" title="下一页">&gt;</button>'
+          : '')
+      + sel
+      + '<span class="pgjump">前往<input class="pginput" id="libJump" value="'+cur+'" onkeydown="if(event.key===\'Enter\'){libJumpGo(this);event.preventDefault();}" onblur="libJumpGo(this)">页</span>';
   }
 }
 function libEdit(key){
@@ -2808,7 +2845,7 @@ function nmMatch(c){
   if(isNaN(th) || th>parseFloat(a.need.thick.replace('≤',''))) bad.push('层厚超限（需 '+a.need.thick+'）');
   return bad;
 }
-/* ===== V3.57 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
+/* ===== V3.58 模型管理：新建 / 编辑 / 复制 / 删除 ===== */
 function nmNow(){ const d=new Date(); const p=function(n){return ('0'+n).slice(-2);};
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes()); }
 function nmModels(){
@@ -2938,7 +2975,7 @@ function nmModelListCard(){
         <tbody>${body}</tbody></table>
         ${pager}</div></div>`;
 }
-/* ===== V3.57 发布范围与版本撤回 ===== */
+/* ===== V3.58 发布范围与版本撤回 ===== */
 function nmPubScopeUI(){
   const mode = NM.pubScope || 'all';
   const ORGS = ['浮梁县人民医院','江西省人民医院','金华广福医院','遂川县人民医院',
@@ -3521,7 +3558,7 @@ function nmCorpusCopy(){
   catch(e){ toast('复制失败，请手动选择文本'); }
 }
 
-/* ===== V3.57 最终报告输出：与输出语料同源（nmSections） ===== */
+/* ===== V3.58 最终报告输出：与输出语料同源（nmSections） ===== */
 function nmReportCol(sec){
   const t = sec === 'findings' ? '影像所见' : '诊断意见';
   const arr = (nmSections()[sec] || []).map(x => x.txt || '');
@@ -3531,7 +3568,7 @@ function nmReportCol(sec){
        || '<div class="mut" style="padding:6px 0">（无）</div>')
     + '</div></div>';
 }
-/* ===== V3.57 纯文本段落渲染（去占位符、去来源标注） ===== */
+/* ===== V3.58 纯文本段落渲染（去占位符、去来源标注） ===== */
 function nmPlainSec(findings, impression){
   function clean(arr){
     return (arr || [])
@@ -3556,8 +3593,8 @@ function nmPlainSec(findings, impression){
   }
   return blk('影像所见', findings) + blk('诊断意见', impression);
 }
-/* ===== V3.57 未绑定基础 AIR 提示 ===== */
-/* ===== V3.57 第三方小模型：筛选 / 列表 ===== */
+/* ===== V3.58 未绑定基础 AIR 提示 ===== */
+/* ===== V3.58 第三方小模型：筛选 / 列表 ===== */
 function nmSmList(){
   const q = (NM.smQ||'').trim().toLowerCase(), f = NM.smF||{};
   return nmSmalls().filter(p=>{
@@ -3602,7 +3639,7 @@ function nmSmRefresh(){
 }
 function nmSmSet(k, v){ (NM.smF=NM.smF||{})[k]=v; nmSmRefresh(); }
 function nmClearSel(){ NM.sel=[]; NM.pick={}; NM.slot={}; NM.prio={}; NM.ran=false; renderNewModel(); toast('已清空所选小模型'); }
-/* ===== V3.57 发布校验（两态清单）+ 保存草稿 ===== */
+/* ===== V3.58 发布校验（两态清单）+ 保存草稿 ===== */
 function nmChecks(){
   const rowsOn = nmRows().filter(r=>r.on);
   const errM = Object.keys(NM.rerr).filter(k=>NM.rerr[k]);
